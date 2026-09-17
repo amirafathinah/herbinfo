@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HerbInfoAI - Profil Mahasiswa & Pengguna Edukasi Herbal Terpadu Web AR dan AI Pharma Assistant." />
+  <title>Profil Pengguna — HerbInfoAI</title>
+
+  <!-- Google Fonts: Poppins & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. DESIGN SYSTEM & CSS VARIABLES
+       ========================================================================== */
+    :root {
+      --primary: #2D6A4F;       /* Hijau Tua */
+      --secondary: #52B788;     /* Hijau Medium */
+      --accent: #95D5B2;        /* Hijau Muda */
+      --bg-main: #F8FDF5;       /* Putih Kehijauan */
+      --bg-card: #FFFFFF;
+      --text-dark: #1B4332;
+      --text-muted: #52796F;
+      --text-light: #FFFFFF;
+      --border-color: rgba(82, 183, 136, 0.22);
+      --shadow-subtle: 0 10px 25px -5px rgba(45, 106, 79, 0.08), 0 8px 10px -6px rgba(45, 106, 79, 0.04);
+      --shadow-hover: 0 20px 30px -10px rgba(45, 106, 79, 0.16);
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --transition: all 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      color: var(--text-dark);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+    }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: rgba(82, 183, 136, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: #1B4332;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.22);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: var(--transition);
+      border-left: 4px solid var(--secondary);
+    }
+
+    .toast-box.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       2. NAVIGATION BAR (STICKY)
+       ========================================================================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(248, 253, 245, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .navbar-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+    }
+
+    .logo-text h1 {
+      font-size: 1.35rem;
+      letter-spacing: -0.5px;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .logo-text h1 span {
+      color: var(--secondary);
+    }
+
+    .logo-text p {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 8px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      border-radius: var(--radius-full);
+    }
+
+    .nav-item a:hover {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.12);
+    }
+
+    .nav-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-chat-ai {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--primary);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+      transition: var(--transition);
+    }
+
+    .btn-chat-ai:hover {
+      background-color: #1f4e39;
+      transform: translateY(-2px);
+    }
+
+    /* Profil Avatar Icon (Highlighted dengan Ring Hijau) */
+    .user-avatar-link {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      border: 2.5px solid var(--primary);
+      box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #E8F5E9;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.9rem;
+      position: relative;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--primary);
+      padding: 8px;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: #fff;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      border-bottom: 2px solid var(--accent);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu .nav-item a {
+      padding: 12px 16px;
+      width: 100%;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION - PROFIL HEADER & USER CARD
+       ========================================================================== */
+    .profile-hero {
+      position: relative;
+      padding-bottom: 30px;
+    }
+
+    /* Cover Banner */
+    .profile-cover-banner {
+      height: 190px;
+      background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 60%, #52B788 100%);
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .profile-cover-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(var(--accent) 1px, transparent 1px);
+      background-size: 24px 24px;
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .profile-header-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-subtle);
+      margin-top: -65px;
+      position: relative;
+      z-index: 5;
+      padding: 0 32px 28px;
+    }
+
+    .profile-header-layout {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .profile-avatar-block {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      flex-shrink: 0;
+    }
+
+    .avatar-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #FFFFFF;
+      box-shadow: var(--shadow-hover);
+      object-fit: cover;
+      background: #E2E8F0;
+    }
+
+    .avatar-pro-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .avatar-edit-floating {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      color: var(--primary);
+    }
+
+    .avatar-edit-floating:hover {
+      background: var(--bg-main);
+      color: var(--secondary);
+    }
+
+    .user-info-text {
+      padding-bottom: 4px;
+    }
+
+    .user-info-name {
+      font-size: 1.85rem;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .user-info-nim {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin: 2px 0 8px;
+    }
+
+    .user-meta-sub {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.82rem;
+      color: #64748B;
+      flex-wrap: wrap;
+    }
+
+    .profile-action-btns {
+      display: flex;
+      gap: 10px;
+      padding-bottom: 6px;
+    }
+
+    .btn-profile-edit {
+      border: 1.5px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      padding: 9px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+
+    .btn-profile-edit:hover {
+      background: rgba(45, 106, 79, 0.08);
+    }
+
+    .btn-profile-setting {
+      border: 1.5px solid #CBD5E1;
+      background: transparent;
+      color: #4A5568;
+      padding: 9px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition);
+    }
+
+    .btn-profile-setting:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* ==========================================================================
+       4. SECTION: STATISTIK DASHBOARD (4 CARDS GRID)
+       ========================================================================== */
+    .section-stats-dashboard {
+      padding: 10px 0 30px;
+    }
+
+    .stats-card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 14px;
+    }
+
+    .stat-dashboard-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-dashboard-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--secondary);
+    }
+
+    .stat-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .stat-card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      background: rgba(82, 183, 136, 0.15);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-card-number {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-card-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .stat-card-subtext {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       5. SECTION: STATUS LANGGANAN (SUBSCRIPTION CARD)
+       ========================================================================== */
+    .section-subscription {
+      padding: 0 0 36px;
+    }
+
+    .subscription-banner-card {
+      background: linear-gradient(135deg, rgba(45, 106, 79, 0.08) 0%, rgba(82, 183, 136, 0.16) 100%);
+      border: 2px solid var(--secondary);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      box-shadow: var(--shadow-subtle);
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .sub-features-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      margin-top: 14px;
+      font-size: 0.85rem;
+      color: #2D3748;
+    }
+
+    .sub-right-action {
+      background: #FFFFFF;
+      padding: 22px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.06);
+    }
+
+    .sub-price-text {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .btn-manage-sub {
+      background: var(--primary);
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.88rem;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 8px;
+      transition: var(--transition);
+    }
+
+    .btn-manage-sub:hover {
+      background: #1f4e39;
+    }
+
+    /* ==========================================================================
+       6. TAB NAVIGATION (MAIN CONTENT)
+       ========================================================================== */
+    .section-main-tabs {
+      padding-bottom: 80px;
+    }
+
+    .tabs-nav-bar {
+      display: flex;
+      gap: 10px;
+      border-bottom: 2px solid #E2E8F0;
+      padding-bottom: 14px;
+      margin-bottom: 28px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tabs-nav-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-nav-btn {
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #FFFFFF;
+      color: var(--text-dark);
+      border: 1.5px solid var(--border-color);
+      white-space: nowrap;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-nav-btn:hover {
+      border-color: var(--secondary);
+      background: rgba(82, 183, 136, 0.08);
+    }
+
+    .tab-nav-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.22);
+    }
+
+    .tab-panel-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-panel-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ---------------- TAB 1: RIWAYAT LAPORAN ---------------- */
+    .panel-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .filter-pills-mini {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter-pill-mini {
+      padding: 5px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 600;
+      border: 1px solid var(--border-color);
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .filter-pill-mini.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .report-profile-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .report-thumb-mock {
+      height: 120px;
+      background: #2D3748;
+      border-radius: 6px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      margin-bottom: 14px;
+      position: relative;
+    }
+
+    .report-thumb-mock span.format-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: #E63946;
+      color: #fff;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .report-card-title {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+      color: var(--text-dark);
+    }
+
+    .report-card-specimen {
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .report-card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: #64748B;
+      margin-bottom: 16px;
+      padding-top: 8px;
+      border-top: 1px solid #EDF2F7;
+    }
+
+    .status-badge-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    .status-badge-tag.selesai {
+      background: #E8F5E9;
+      color: var(--primary);
+    }
+
+    .status-badge-tag.draft {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .status-badge-tag.dikirim {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+
+    .report-card-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .btn-card-small {
+      flex: 1;
+      padding: 7px;
+      border: 1px solid #CBD5E1;
+      border-radius: var(--radius-sm);
+      background: #fff;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .btn-card-small:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--bg-main);
+    }
+
+    /* ---------------- TAB 2: RIWAYAT SCAN AR ---------------- */
+    .scans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .scan-card-profile {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scan-card-img {
+      height: 160px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .scan-card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .scan-confidence-bar {
+      height: 6px;
+      background: #EDF2F7;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin: 8px 0 12px;
+    }
+
+    .scan-confidence-val {
+      height: 100%;
+      background: var(--secondary);
+    }
+
+    /* ---------------- TAB 3: TANAMAN FAVORIT ---------------- */
+    .favorites-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .fav-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fav-card-img {
+      height: 160px;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    .fav-card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    /* ---------------- TAB 4: KERANJANG BELANJA ---------------- */
+    .cart-profile-layout {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .cart-items-box {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .cart-profile-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #EDF2F7;
+    }
+
+    .cart-thumb-img {
+      width: 70px;
+      height: 70px;
+      border-radius: var(--radius-sm);
+      object-fit: cover;
+      background: #E2E8F0;
+    }
+
+    .cart-qty-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #CBD5E1;
+      border-radius: var(--radius-full);
+      padding: 3px 10px;
+      font-size: 0.85rem;
+    }
+
+    .cart-qty-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .cart-summary-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .cart-summary-line {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      color: #4A5568;
+    }
+
+    .cart-summary-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 2px solid #EDF2F7;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    /* ---------------- TAB 5: PENGATURAN AKUN ---------------- */
+    .settings-container {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 850px;
+    }
+
+    .settings-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 26px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .settings-title {
+      font-size: 1.15rem;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      color: var(--text-dark);
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn-solid-primary {
+      background: var(--primary);
+      color: #fff;
+      padding: 11px 22px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+
+    .btn-solid-primary:hover {
+      background: #1f4e39;
+    }
+
+    .btn-outline-danger {
+      border: 1.5px solid #E63946;
+      background: transparent;
+      color: #E63946;
+      padding: 11px 22px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+
+    .btn-outline-danger:hover {
+      background: #FEE2E2;
+    }
+
+    /* Toggle Switch */
+    .switch-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #EDF2F7;
+      font-size: 0.88rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #CBD5E1;
+      transition: .3s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--secondary);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Empty States */
+    .empty-tab-state {
+      text-align: center;
+      padding: 50px 20px;
+      background: #FFFFFF;
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      grid-column: 1 / -1;
+    }
+
+    /* ==========================================================================
+       7. SECTION: AI ACTIVITY SUMMARY (INSIGHT BOX)
+       ========================================================================== */
+    .section-ai-insights {
+      padding: 0 0 60px;
+    }
+
+    .ai-insights-box {
+      background: rgba(240, 255, 244, 0.9);
+      border: 1.5px solid var(--accent);
+      border-radius: var(--radius-lg);
+      padding: 26px 30px;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .insights-grid-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 16px 0 20px;
+    }
+
+    .insight-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #2D3748;
+    }
+
+    /* ==========================================================================
+       8. FOOTER
+       ========================================================================== */
+    .site-footer {
+      background: #12281E;
+      color: #E2E8F0;
+      padding: 70px 0 24px;
+      border-top: 1px solid rgba(82, 183, 136, 0.2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .footer-col h4 {
+      color: #FFFFFF;
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 28px;
+      height: 2px;
+      background: var(--secondary);
+    }
+
+    .footer-desc {
+      font-size: 0.88rem;
+      color: #A0AEC0;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: #CBD5E0;
+    }
+
+    .footer-links a:hover {
+      color: var(--secondary);
+      padding-left: 4px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(82, 183, 136, 0.3);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      border-color: var(--secondary);
+    }
+
+    .newsletter-btn {
+      background: var(--secondary);
+      color: #0c2117;
+      font-weight: 600;
+      border: none;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .newsletter-btn:hover {
+      background: var(--accent);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #CBD5E0;
+    }
+
+    .social-icon:hover {
+      background: var(--secondary);
+      color: #12281E;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #A0AEC0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-links a:hover {
+      color: #FFFFFF;
+    }
+
+    /* ==========================================================================
+       9. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .stats-card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .subscription-banner-card {
+        grid-template-columns: 1fr;
+      }
+      .reports-grid, .scans-grid, .favorites-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .cart-profile-layout {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .btn-chat-ai {
+        display: none;
+      }
+      .hamburger-btn {
+        display: block;
+      }
+      .profile-header-card {
+        padding: 0 20px 24px;
+      }
+      .profile-avatar-block {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .reports-grid, .scans-grid, .favorites-grid, .stats-card-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-grid-2, .insights-grid-list, .sub-features-list {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       NAVIGATION BAR (STICKY)
+       ========================================================================== -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="index.html" class="logo-wrapper">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>HerbInfo<span>AI</span></h1>
+          <p>Explore . Learn . Preserve</p>
+        </div>
+      </a>
+
+      <!-- Menu Tengah -->
+      <ul class="nav-links">
+        <li class="nav-item"><a href="index.html">🌱 Beranda</a></li>
+        <li class="nav-item"><a href="ar-scan.html">📷 AR Scan</a></li>
+        <li class="nav-item"><a href="katalog.html">📖 Katalog Herbal</a></li>
+        <li class="nav-item"><a href="estore.html">🛒 E-Store</a></li>
+        <li class="nav-item"><a href="laporan.html">📄 Laporan Praktikum</a></li>
+      </ul>
+
+      <!-- Nav Kanan: Highlight Ring pada Avatar Profil -->
+      <div class="nav-actions">
+        <button class="btn-chat-ai" onclick="openAIChatAssistant()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+          Chat AI
+        </button>
+
+        <a href="profil.html" class="user-avatar-link" title="Profil Anda (Aktif)">
+          <span id="navAvatarInitials">AF</span>
+        </a>
+      </div>
+
+      <button class="hamburger-btn" id="menuToggle" aria-label="Buka Menu">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-menu" id="mobileMenu">
+      <li class="nav-item"><a href="index.html">🌱 Beranda</a></li>
+      <li class="nav-item"><a href="ar-scan.html">📷 AR Scan</a></li>
+      <li class="nav-item"><a href="katalog.html">📖 Katalog Herbal</a></li>
+      <li class="nav-item"><a href="estore.html">🛒 E-Store</a></li>
+      <li class="nav-item"><a href="laporan.html">📄 Laporan Praktikum</a></li>
+      <li class="nav-item active"><a href="profil.html">👤 Profil &amp; Akun Saya</a></li>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         HERO SECTION - PROFIL HEADER
+         ========================================================================== -->
+    <section class="profile-hero">
+      <div class="profile-cover-banner"></div>
+      
+      <div class="container">
+        <div class="profile-header-card">
+          <div class="profile-header-layout">
+            <div class="profile-avatar-block">
+              <!-- Avatar Circle -->
+              <div class="avatar-wrapper">
+                <img id="profileAvatarImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="Avatar Pengguna" class="avatar-img" />
+                <span class="avatar-pro-badge" id="avatarProBadge">PRO</span>
+                <button class="avatar-edit-floating" onclick="changeAvatarPrompt()" title="Ubah Foto Profil">
+                  📷
+                </button>
+              </div>
+
+              <!-- Info Teks Pengguna -->
+              <div class="user-info-text">
+                <h1 class="user-info-name">
+                  <span id="userNameDisplay">Ahmad Fauzi</span>
+                  <span class="badge" id="userRoleBadge">Mahasiswa Farmasi</span>
+                </h1>
+                <p class="user-info-nim">NIM: <strong id="userNimDisplay">22010192</strong> &bull; <span id="userUnivDisplay">Universitas Indonesia</span></p>
+                
+                <div class="user-meta-sub">
+                  <span>✉️ <span id="userEmailDisplay">ahmad.fauzi@univ.ac.id</span></span>
+                  <span>🗓️ Bergabung sejak <span id="userJoinDate">September 2025</span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="profile-action-btns">
+              <button class="btn-profile-edit" onclick="switchMainTab('settings')">
+                ✏️ Edit Profil
+              </button>
+              <button class="btn-profile-setting" onclick="switchMainTab('settings')">
+                ⚙️ Pengaturan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: STATISTIK DASHBOARD (4 CARDS GRID)
+         ========================================================================== -->
+    <section class="section-stats-dashboard">
+      <div class="container">
+        <div class="badge">Ringkasan Aktivitas Anda</div>
+        <div class="stats-card-grid">
+          <!-- Card 1: Scan AR -->
+          <div class="stat-dashboard-card">
+            <div class="stat-card-top">
+              <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">WEB AR</span>
+              <div class="stat-card-icon">🔬</div>
+            </div>
+            <div class="stat-card-number" id="statScanCount">24</div>
+            <div class="stat-card-label">Tanaman Discan</div>
+            <div class="stat-card-subtext"><span style="color:var(--secondary); font-weight:700;">+5</span> bulan ini</div>
+          </div>
+
+          <!-- Card 2: Laporan Praktikum -->
+          <div class="stat-dashboard-card">
+            <div class="stat-card-top">
+              <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">PRAKTIKUM</span>
+              <div class="stat-card-icon">📄</div>
+            </div>
+            <div class="stat-card-number" id="statReportCount">12</div>
+            <div class="stat-card-label">Laporan Dibuat</div>
+            <div class="stat-card-subtext">8 Selesai &bull; 3 Dikirim &bull; 1 Draft</div>
+          </div>
+
+          <!-- Card 3: Katalog Favorit -->
+          <div class="stat-dashboard-card">
+            <div class="stat-card-top">
+              <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">KATALOG</span>
+              <div class="stat-card-icon">⭐</div>
+            </div>
+            <div class="stat-card-number" id="statFavCount">18</div>
+            <div class="stat-card-label">Tanaman Disukai</div>
+            <div class="stat-card-subtext"><span style="color:var(--secondary); font-weight:700;">+3</span> minggu ini</div>
+          </div>
+
+          <!-- Card 4: Keranjang -->
+          <div class="stat-dashboard-card">
+            <div class="stat-card-top">
+              <span style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">E-STORE</span>
+              <div class="stat-card-icon">🛒</div>
+            </div>
+            <div class="stat-card-number" id="statCartCount">3</div>
+            <div class="stat-card-label">Item di Keranjang</div>
+            <div class="stat-card-subtext" id="statCartTotalDisplay">Rp 105.000 total</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: STATUS LANGGANAN (SUBSCRIPTION CARD)
+         ========================================================================== -->
+    <section class="section-subscription">
+      <div class="container">
+        <div class="subscription-banner-card" id="subscriptionCard">
+          <div>
+            <span class="badge" id="subStatusBadge" style="background:#fff;">⚡ Akun Pro B2C</span>
+            <h3 style="font-size:1.45rem; margin:8px 0 4px; color:var(--primary);" id="subTitleText">HerbLearn Pro Subscription</h3>
+            <p style="font-size:0.88rem; color:var(--text-muted);" id="subExpiryText">✅ Aktif hingga 17 Oktober 2026 (Perpanjangan Otomatis)</p>
+            
+            <ul class="sub-features-list">
+              <li>✔ AI Pharma Assistant 24/7 Tanpa Batas</li>
+              <li>✔ Unlimited Export Laporan PDF &amp; DOC</li>
+              <li>✔ Akses Seluruh Spektrum 3D Fitokimia</li>
+              <li>✔ Bebas Iklan &amp; Jalur Prioritas Server</li>
+            </ul>
+          </div>
+
+          <div class="sub-right-action">
+            <div class="sub-price-text" id="subPriceText">Rp 19.000 <span style="font-size:0.85rem; font-weight:500;">/ bln</span></div>
+            <button class="btn-manage-sub" onclick="window.location.href='estore.html'">⚡ Kelola Langganan</button>
+            <a href="javascript:void(0)" onclick="switchMainTab('settings')" style="font-size:0.78rem; color:var(--text-muted); text-decoration:underline;">Lihat riwayat pembayaran &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         MAIN TAB NAVIGATION & MULTI-TAB CONTENT
+         ========================================================================== -->
+    <section class="section-main-tabs">
+      <div class="container">
+        <!-- Horizontal Tabs Nav -->
+        <div class="tabs-nav-bar">
+          <button class="tab-nav-btn active" data-target="reports" onclick="switchMainTab('reports')">📁 Riwayat Laporan</button>
+          <button class="tab-nav-btn" data-target="scans" onclick="switchMainTab('scans')">🔬 Riwayat Scan AR</button>
+          <button class="tab-nav-btn" data-target="favorites" onclick="switchMainTab('favorites')">🌿 Tanaman Favorit</button>
+          <button class="tab-nav-btn" data-target="cart" onclick="switchMainTab('cart')">🛒 Keranjang Belanja (<span id="tabCartCount">3</span>)</button>
+          <button class="tab-nav-btn" data-target="settings" onclick="switchMainTab('settings')">⚙️ Pengaturan Akun</button>
+        </div>
+
+        <!-- ---------------- TAB 1: RIWAYAT LAPORAN ---------------- -->
+        <div class="tab-panel-content active" id="tab-reports">
+          <div class="panel-header-row">
+            <div>
+              <h3 style="font-size:1.3rem;">Riwayat Laporan Praktikum</h3>
+              <p style="font-size:0.85rem; color:var(--text-muted);">Kelola, sunting, dan unduh dokumen evaluasi praktikum Anda.</p>
+            </div>
+            <div style="display:flex; gap:12px; align-items:center;">
+              <div class="filter-pills-mini">
+                <button class="filter-pill-mini active" onclick="filterReportCards('semua', this)">Semua</button>
+                <button class="filter-pill-mini" onclick="filterReportCards('Selesai', this)">Selesai</button>
+                <button class="filter-pill-mini" onclick="filterReportCards('Draft', this)">Draft</button>
+                <button class="filter-pill-mini" onclick="filterReportCards('Dikirim', this)">Dikirim</button>
+              </div>
+              <a href="laporan.html" class="badge" style="background:var(--primary); color:#fff;">+ Buat Baru</a>
+            </div>
+          </div>
+
+          <div class="reports-grid" id="profileReportsGrid">
+            <!-- Disuntikkan via JS -->
+          </div>
+        </div>
+
+        <!-- ---------------- TAB 2: RIWAYAT SCAN AR ---------------- -->
+        <div class="tab-panel-content" id="tab-scans">
+          <div class="panel-header-row">
+            <div>
+              <h3 style="font-size:1.3rem;">Riwayat Scan Tanaman AR</h3>
+              <p style="font-size:0.85rem; color:var(--text-muted);">Sampel herbal yang pernah Anda pindai menggunakan kamera atau upload foto.</p>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <input type="text" id="scanSearchInput" class="form-input" style="padding:6px 14px; font-size:0.82rem;" placeholder="Cari tanaman..." oninput="searchScans(this.value)" />
+              <a href="ar-scan.html" class="badge" style="background:var(--primary); color:#fff;">📷 Scan Baru</a>
+            </div>
+          </div>
+
+          <div class="scans-grid" id="profileScansGrid">
+            <!-- Disuntikkan via JS -->
+          </div>
+        </div>
+
+        <!-- ---------------- TAB 3: TANAMAN FAVORIT ---------------- -->
+        <div class="tab-panel-content" id="tab-favorites">
+          <div class="panel-header-row">
+            <div>
+              <h3 style="font-size:1.3rem;">Tanaman Favorit Anda</h3>
+              <p style="font-size:0.85rem; color:var(--text-muted);">Daftar koleksi fitofarmaka yang telah Anda simpan dari Katalog Digital.</p>
+            </div>
+            <a href="katalog.html" class="badge" style="background:var(--primary); color:#fff;">📖 Jelajahi Katalog</a>
+          </div>
+
+          <div class="favorites-grid" id="profileFavoritesGrid">
+            <!-- Disuntikkan via JS -->
+          </div>
+        </div>
+
+        <!-- ---------------- TAB 4: KERANJANG BELANJA ---------------- -->
+        <div class="tab-panel-content" id="tab-cart">
+          <div class="panel-header-row">
+            <div>
+              <h3 style="font-size:1.3rem;">Keranjang Belanja</h3>
+              <p style="font-size:0.85rem; color:var(--text-muted);">Tinjau paket e-flashcard dan lisensi sebelum melakukan checkout pembayaran.</p>
+            </div>
+          </div>
+
+          <div class="cart-profile-layout">
+            <div class="cart-items-box" id="profileCartItemsList">
+              <!-- Item Keranjang Disuntikkan via JS -->
+            </div>
+
+            <div class="cart-summary-card">
+              <h4 style="font-size:1.1rem; color:var(--primary); margin-bottom:14px;">Ringkasan Pesanan</h4>
+              <div class="cart-summary-line">
+                <span>Subtotal Produk:</span>
+                <span id="cartProfileSubtotal">Rp 0</span>
+              </div>
+              <div class="cart-summary-line">
+                <span>Diskon Kupon:</span>
+                <span style="color:var(--secondary); font-weight:700;">- Rp 0</span>
+              </div>
+              <div class="cart-summary-line">
+                <span>Biaya Platform:</span>
+                <span>Rp 0 (Gratis)</span>
+              </div>
+
+              <div class="cart-summary-total">
+                <span>Total Tagihan:</span>
+                <span id="cartProfileTotal">Rp 0</span>
+              </div>
+
+              <button class="btn-solid-primary" style="width:100%; margin:20px 0 10px;" onclick="checkoutFromProfile()">
+                ⚡ Checkout Sekarang
+              </button>
+              <p style="font-size:0.75rem; text-align:center; color:#718096;">🔒 Transaksi terlindungi enkripsi 256-bit SSL</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ---------------- TAB 5: PENGATURAN AKUN ---------------- -->
+        <div class="tab-panel-content" id="tab-settings">
+          <div class="settings-container">
+            <!-- Section 1: Informasi Pribadi -->
+            <div class="settings-card">
+              <h4 class="settings-title">👤 Informasi Pribadi</h4>
+              <form onsubmit="event.preventDefault(); saveProfileSettings();">
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label">Nama Lengkap</label>
+                    <input type="text" id="settingName" class="form-input" value="Ahmad Fauzi" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Email Kampus / Akun (SSO)</label>
+                    <input type="email" id="settingEmail" class="form-input" value="ahmad.fauzi@univ.ac.id" readonly style="background:#F1F5F9;" />
+                  </div>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label">NIM / NIP</label>
+                    <input type="text" id="settingNim" class="form-input" value="22010192" required />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Universitas / Institusi</label>
+                    <input type="text" id="settingUniv" class="form-input" value="Universitas Indonesia" required />
+                  </div>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="form-group">
+                    <label class="form-label">Fakultas / Program Studi</label>
+                    <select id="settingFaculty" class="form-input">
+                      <option value="Farmasi" selected>Farmasi</option>
+                      <option value="Kedokteran">Kedokteran</option>
+                      <option value="Biologi / MIPA">Biologi / MIPA</option>
+                      <option value="Teknologi Pertanian">Teknologi Pertanian</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Nomor WhatsApp</label>
+                    <input type="text" id="settingPhone" class="form-input" value="081234567890" />
+                  </div>
+                </div>
+
+                <button type="submit" class="btn-solid-primary">💾 Simpan Perubahan</button>
+              </form>
+            </div>
+
+            <!-- Section 2: Keamanan -->
+            <div class="settings-card">
+              <h4 class="settings-title">🔒 Keamanan Akun</h4>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label">Kata Sandi Baru</label>
+                  <input type="password" class="form-input" placeholder="Minimal 8 karakter..." />
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Konfirmasi Kata Sandi</label>
+                  <input type="password" class="form-input" placeholder="Ulangi kata sandi baru..." />
+                </div>
+              </div>
+              <div class="switch-label">
+                <div>
+                  <strong>Two-Factor Authentication (2FA)</strong>
+                  <div style="font-size:0.75rem; color:#718096;">Wajibkan kode OTP saat login dari perangkat baru</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Section 3: Preferensi -->
+            <div class="settings-card">
+              <h4 class="settings-title">⚙️ Preferensi Aplikasi</h4>
+              <div class="switch-label">
+                <span>Notifikasi Email Pembaruan Jurnal Herbal</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="switch-label">
+                <span>Notifikasi Pengingat Jadwal Praktikum</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked />
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Section 4: Riwayat Transaksi -->
+            <div class="settings-card">
+              <h4 class="settings-title">💳 Riwayat Pembayaran &amp; Invoice</h4>
+              <div style="overflow-x:auto;">
+                <table style="width:100%; border-collapse:collapse; font-size:0.85rem; text-align:left;">
+                  <thead>
+                    <tr style="border-bottom:2px solid #EDF2F7; color:var(--text-muted);">
+                      <th style="padding:10px 6px;">ID Transaksi</th>
+                      <th style="padding:10px 6px;">Paket</th>
+                      <th style="padding:10px 6px;">Tanggal</th>
+                      <th style="padding:10px 6px;">Nominal</th>
+                      <th style="padding:10px 6px;">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid #EDF2F7;">
+                      <td style="padding:10px 6px;">TRX-94821</td>
+                      <td style="padding:10px 6px;">HerbLearn Pro (1 Bulan)</td>
+                      <td style="padding:10px 6px;">17 Sep 2026</td>
+                      <td style="padding:10px 6px;">Rp 19.000</td>
+                      <td style="padding:10px 6px;"><span class="badge" style="background:#E8F5E9; color:var(--primary);">Berhasil</span></td>
+                    </tr>
+                    <tr>
+                      <td style="padding:10px 6px;">TRX-83104</td>
+                      <td style="padding:10px 6px;">Paket E-Flashcard Digital</td>
+                      <td style="padding:10px 6px;">15 Agu 2026</td>
+                      <td style="padding:10px 6px;">Rp 35.000</td>
+                      <td style="padding:10px 6px;"><span class="badge" style="background:#E8F5E9; color:var(--primary);">Berhasil</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Section 5: Zona Bahaya & Logout -->
+            <div class="settings-card" style="border-color:#FCA5A5;">
+              <h4 class="settings-title" style="color:#DC2626;">⚠️ Zona Pengaturan Data</h4>
+              <p style="font-size:0.85rem; color:#64748B; margin-bottom:16px;">Unduh salinan data observasi fitokimia Anda atau putuskan sesi login dari perangkat.</p>
+              
+              <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <button class="btn-solid-primary" style="background:#4B5563;" onclick="exportMyDataJSON()">📥 Unduh Seluruh Data Saya (JSON)</button>
+                <button class="btn-outline-danger" onclick="logoutSession()">🚪 Keluar dari Akun</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: AI ACTIVITY SUMMARY
+         ========================================================================== -->
+    <section class="section-ai-insights">
+      <div class="container">
+        <div class="ai-insights-box">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:1.5rem;">🤖</span>
+            <h3 style="font-size:1.25rem; color:var(--primary);">Ringkasan AI Assistant untuk Anda</h3>
+          </div>
+
+          <div class="insights-grid-list">
+            <div class="insight-item">
+              <span>📈</span>
+              <span>Anda telah memindai <strong>24 tanaman</strong> bulan ini, meningkat <strong>20%</strong> dari capaian bulan lalu.</span>
+            </div>
+            <div class="insight-item">
+              <span>🌿</span>
+              <span>Topik paling sering Anda pelajari: <strong>Fitokimia Rimpang (Zingiberaceae)</strong>.</span>
+            </div>
+            <div class="insight-item">
+              <span>💡</span>
+              <span>Rekomendasi AI: Coba eksplorasi tanaman dari famili <strong>Lamiaceae</strong> untuk melengkapi koleksi fitofarmaka.</span>
+            </div>
+            <div class="insight-item">
+              <span>📊</span>
+              <span>Laporan praktikum otomatis Anda rata-rata memperoleh evaluasi akademik setara nilai <strong>A-</strong>.</span>
+            </div>
+          </div>
+
+          <button class="btn-solid-primary" style="padding:8px 18px; font-size:0.82rem;" onclick="alert('Membuka visualisasi analisis komprehensif pembelajaran fitofarmaka...');">
+            Lihat Analisis Lengkap &rarr;
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo-wrapper" style="margin-bottom: 12px;">
+            <div class="logo-icon" style="background:var(--secondary); color:#12281E;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </div>
+            <div class="logo-text">
+              <h2 style="font-size:1.3rem; color:#fff;">HerbInfo<span style="color:var(--secondary);">AI</span></h2>
+              <p style="color:#A0AEC0;">Explore . Learn . Preserve</p>
+            </div>
+          </div>
+          <p class="footer-desc">
+            Platform teknologi farmasi terpadu Web AR dan AI Pharma Assistant untuk preservasi dan edukasi saintifik tanaman obat tradisional Indonesia.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="ar-scan.html">AR Scan Praktikum</a></li>
+            <li><a href="katalog.html">Katalog Herbal 3D</a></li>
+            <li><a href="estore.html">E-Store Simplisia</a></li>
+            <li><a href="laporan.html">Laporan Praktikum Otomatis</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul class="footer-links">
+            <li><a href="tentang.html">Tentang Kami</a></li>
+            <li><a href="faq.html">Tanya Jawab (FAQ)</a></li>
+            <li><a href="blog.html">Jurnal &amp; Artikel Fitokimia</a></li>
+            <li><a href="kontak.html">Kontak &amp; Kerjasama Kampus</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Tetap Terhubung</h4>
+          <p style="font-size:0.85rem; color:#A0AEC0; margin-bottom: 12px;">Dapatkan wawasan fitofarmaka mingguan langsung di email Anda.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); handleSubscribe();">
+            <input type="email" id="newsEmail" placeholder="Email kampus/pribadi..." class="newsletter-input" required />
+            <button type="submit" class="newsletter-btn">Daftar</button>
+          </form>
+
+          <div class="social-links">
+            <a href="#" class="social-icon" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.</div>
+        <div class="footer-legal-links">
+          <a href="privacy.html">Kebijakan Privasi</a>
+          <a href="terms.html">Syarat &amp; Ketentuan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Box -->
+  <div class="toast-box" id="appToast">
+    <span id="toastMessage">Pemberitahuan berhasil</span>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC: USER STATE, TAB SWITCHING & LOCALSTORAGE SYNC
+       ========================================================================== -->
+  <script>
+    /* --------------------------------------------------------------------------
+       1. INITIAL DEFAULT DATASETS (JIKA LOCALSTORAGE MASIH KOSONG)
+       -------------------------------------------------------------------------- */
+    const defaultUser = {
+      name: "Ahmad Fauzi",
+      nim: "22010192",
+      email: "ahmad.fauzi@univ.ac.id",
+      university: "Universitas Indonesia",
+      faculty: "Farmasi",
+      phone: "081234567890",
+      joinDate: "September 2025",
+      isPro: true,
+      subscriptionExpiry: "17 Oktober 2026"
+    };
+
+    const demoReports = [
+      { id: "RPT-101", title: "Identitas & Fitokimia Kunyit", specimen: "Curcuma longa L.", date: "15 Sep 2026", status: "Selesai" },
+      { id: "RPT-102", title: "Uji Aktivitas Antioksidan Jahe", specimen: "Zingiber officinale Roscoe", date: "10 Sep 2026", status: "Dikirim" },
+      { id: "RPT-103", title: "Anatomi Daun Sirih", specimen: "Piper betle L.", date: "5 Sep 2026", status: "Draft" },
+      { id: "RPT-104", title: "Formulasi Kapsul Temulawak", specimen: "Curcuma xanthorrhiza Roxb.", date: "28 Agu 2026", status: "Selesai" }
+    ];
+
+    const demoScans = [
+      { name: "Kunyit", latin: "Curcuma longa L.", conf: 95, date: "12 Sep 2026, 14:30", img: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80" },
+      { name: "Jahe", latin: "Zingiber officinale Roscoe", conf: 92, date: "10 Sep 2026, 10:15", img: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=400&q=80" },
+      { name: "Temulawak", latin: "Curcuma xanthorrhiza Roxb.", conf: 88, date: "8 Sep 2026, 11:20", img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80" },
+      { name: "Lidah Buaya", latin: "Aloe vera", conf: 90, date: "5 Sep 2026, 09:40", img: "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=400&q=80" },
+      { name: "Sirih", latin: "Piper betle L.", conf: 87, date: "1 Sep 2026, 16:05", img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=400&q=80" },
+      { name: "Jahe Merah", latin: "Zingiber officinale var. rubrum", conf: 93, date: "28 Agu 2026, 13:50", img: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=400&q=80" }
+    ];
+
+    const demoFavorites = [
+      { id: 1, name: "Kunyit", latin: "Curcuma longa L.", indication: "Immunomodulator", compound: "Kurkumin", img: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80" },
+      { id: 2, name: "Jahe", latin: "Zingiber officinale Roscoe", indication: "Analgesik", compound: "Gingerol", img: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=400&q=80" },
+      { id: 3, name: "Temulawak", latin: "Curcuma xanthorrhiza Roxb.", indication: "Hepatoprotektor", compound: "Xanthorrhizol", img: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80" },
+      { id: 4, name: "Sirih", latin: "Piper betle L.", indication: "Antiinflamasi", compound: "Eugenol", img: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=400&q=80" },
+      { id: 5, name: "Daun Kelor", latin: "Moringa oleifera Lam.", indication: "Antidiabetes", compound: "Flavonoid", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" },
+      { id: 6, name: "Sambiloto", latin: "Andrographis paniculata Nees", indication: "Imunostimulan", compound: "Andrographolide", img: "https://images.unsplash.com/photo-1514733670139-4d87a1941d55?auto=format&fit=crop&w=400&q=80" }
+    ];
+
+    const demoCart = [
+      { productId: 1, name: "Paket E-Flashcard Digital", type: "E-Flashcard Bundling", price: 35000, quantity: 1, img: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=150&q=80" },
+      { productId: 2, name: "HerbLearn Pro Subscription (1 Bulan)", type: "Subscription", price: 19000, quantity: 1, img: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=150&q=80" },
+      { productId: 2, name: "HerbLearn Pro Subscription (Gift)", type: "Subscription", price: 19000, quantity: 1, img: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=150&q=80" }
+    ];
+
+    /* --------------------------------------------------------------------------
+       2. LIFECYCLE & INITIALIZATION
+       -------------------------------------------------------------------------- */
+    document.addEventListener("DOMContentLoaded", () => {
+      initMobileMenu();
+      initUserData();
+      renderAllTabs();
+      handleHashNavigation();
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById("appToast");
+      const text = document.getElementById("toastMessage");
+      text.innerText = msg;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3500);
+    }
+
+    function initMobileMenu() {
+      const toggle = document.getElementById("menuToggle");
+      const menu = document.getElementById("mobileMenu");
+      if (toggle && menu) {
+        toggle.addEventListener("click", () => {
+          menu.classList.toggle("open");
+        });
+      }
+    }
+
+    function openAIChatAssistant() {
+      alert("Membuka sesi konsultasi AI Pharma Assistant...");
+    }
+
+    function handleSubscribe() {
+      const email = document.getElementById("newsEmail");
+      if (email && email.value) {
+        showToast("Terima kasih! " + email.value + " berhasil didaftarkan.");
+        email.value = "";
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       3. USER DATA & SUBSCRIPTION SYNC
+       -------------------------------------------------------------------------- */
+    function initUserData() {
+      let user = JSON.parse(localStorage.getItem("herbinfo_user") || "null");
+      if (!user) {
+        user = defaultUser;
+        localStorage.setItem("herbinfo_user", JSON.stringify(defaultUser));
+      }
+
+      // Populate Hero & Settings
+      document.getElementById("userNameDisplay").innerText = user.name;
+      document.getElementById("userNimDisplay").innerText = user.nim;
+      document.getElementById("userEmailDisplay").innerText = user.email;
+      document.getElementById("userUnivDisplay").innerText = user.university;
+      document.getElementById("userJoinDate").innerText = user.joinDate || "September 2025";
+
+      document.getElementById("settingName").value = user.name;
+      document.getElementById("settingNim").value = user.nim;
+      document.getElementById("settingUniv").value = user.university;
+      document.getElementById("settingEmail").value = user.email;
+      document.getElementById("settingPhone").value = user.phone || "081234567890";
+      if (user.faculty) document.getElementById("settingFaculty").value = user.faculty;
+
+      // Inisial Navbar
+      const initials = user.name.split(" ").map(n => n[0]).join("").slice(0, 2);
+      document.getElementById("navAvatarInitials").innerText = initials;
+
+      // Subscription Pro Banner Sync
+      const badge = document.getElementById("avatarProBadge");
+      const card = document.getElementById("subscriptionCard");
+      if (user.isPro) {
+        badge.style.display = "block";
+        card.style.display = "grid";
+      } else {
+        badge.style.display = "none";
+        document.getElementById("subStatusBadge").innerText = "🆓 Akun Gratis";
+        document.getElementById("subTitleText").innerText = "Tingkatkan ke HerbLearn Pro";
+        document.getElementById("subExpiryText").innerText = "Buka akses AI Pharma 24/7 dan ekspor laporan tak terbatas.";
+      }
+    }
+
+    function saveProfileSettings() {
+      let user = JSON.parse(localStorage.getItem("herbinfo_user") || "{}");
+      user.name = document.getElementById("settingName").value;
+      user.nim = document.getElementById("settingNim").value;
+      user.university = document.getElementById("settingUniv").value;
+      user.faculty = document.getElementById("settingFaculty").value;
+      user.phone = document.getElementById("settingPhone").value;
+
+      localStorage.setItem("herbinfo_user", JSON.stringify(user));
+      initUserData();
+      showToast("✓ Informasi profil berhasil diperbarui!");
+    }
+
+    function changeAvatarPrompt() {
+      const url = prompt("Masukkan URL foto profil baru Anda:", "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80");
+      if (url) {
+        document.getElementById("profileAvatarImg").src = url;
+        showToast("Foto profil berhasil diganti.");
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       4. TAB NAVIGATION CONTROLLER
+       -------------------------------------------------------------------------- */
+    function switchMainTab(tabKey) {
+      document.querySelectorAll(".tab-nav-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.target === tabKey);
+      });
+
+      document.querySelectorAll(".tab-panel-content").forEach(panel => {
+        panel.classList.toggle("active", panel.id === `tab-${tabKey}`);
+      });
+
+      window.location.hash = tabKey;
+    }
+
+    function handleHashNavigation() {
+      const hash = window.location.hash.replace("#", "");
+      if (["reports", "scans", "favorites", "cart", "settings"].includes(hash)) {
+        switchMainTab(hash);
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       5. RENDER ALL TABS & LOCALSTORAGE SYNC
+       -------------------------------------------------------------------------- */
+    function renderAllTabs() {
+      renderReportsTab();
+      renderScansTab();
+      renderFavoritesTab();
+      renderCartTab();
+    }
+
+    // 5.1 Render Riwayat Laporan
+    function renderReportsTab() {
+      const container = document.getElementById("profileReportsGrid");
+      let reports = JSON.parse(localStorage.getItem("herbinfo_laporan_history") || "null");
+      if (!reports || reports.length === 0) {
+        reports = demoReports;
+        localStorage.setItem("herbinfo_laporan_history", JSON.stringify(demoReports));
+      }
+
+      document.getElementById("statReportCount").innerText = reports.length;
+
+      container.innerHTML = reports.map((rpt, idx) => `
+        <div class="report-profile-card" data-status="${rpt.status}">
+          <div class="report-thumb-mock">
+            <span class="format-badge">PDF</span>
+            📄 ${rpt.id}
+          </div>
+          <h4 class="report-card-title">${rpt.title}</h4>
+          <span class="report-card-specimen">${rpt.specimen || "Curcuma longa L."}</span>
+          <div class="report-card-meta">
+            <span>🗓️ ${rpt.date}</span>
+            <span class="status-badge-tag ${rpt.status.toLowerCase()}">${rpt.status}</span>
+          </div>
+          <div class="report-card-actions">
+            <button class="btn-card-small" onclick="window.location.href='laporan.html'">👁️ Lihat</button>
+            <button class="btn-card-small" onclick="showToast('Mengunduh berkas ${rpt.id}.pdf...')">⬇️ Unduh</button>
+            <button class="btn-card-small" onclick="deleteReport(${idx})" style="color:#DC2626;">🗑️ Hapus</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterReportCards(status, btn) {
+      document.querySelectorAll(".filter-pill-mini").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+
+      document.querySelectorAll("#profileReportsGrid .report-profile-card").forEach(card => {
+        if (status === "semua" || card.dataset.status === status) {
+          card.style.display = "flex";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    function deleteReport(idx) {
+      let reports = JSON.parse(localStorage.getItem("herbinfo_laporan_history") || "[]");
+      reports.splice(idx, 1);
+      localStorage.setItem("herbinfo_laporan_history", JSON.stringify(reports));
+      renderReportsTab();
+      showToast("Laporan berhasil dihapus.");
+    }
+
+    // 5.2 Render Riwayat Scan AR
+    function renderScansTab() {
+      const container = document.getElementById("profileScansGrid");
+      let scans = JSON.parse(localStorage.getItem("herbinfo_scan_history") || "null");
+      if (!scans || scans.length === 0) {
+        scans = demoScans;
+        localStorage.setItem("herbinfo_scan_history", JSON.stringify(demoScans));
+      }
+
+      document.getElementById("statScanCount").innerText = scans.length;
+
+      container.innerHTML = scans.map((scn, idx) => `
+        <div class="scan-card-profile">
+          <img src="${scn.image || scn.img}" alt="${scn.plantName || scn.name}" class="scan-card-img" />
+          <div class="scan-card-body">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <h4 style="font-size:1.1rem;">${scn.plantName || scn.name}</h4>
+              <span class="badge" style="font-size:0.68rem; padding:2px 8px;">Terverifikasi</span>
+            </div>
+            <em style="font-size:0.8rem; color:var(--text-muted);">${scn.latinName || scn.latin}</em>
+
+            <div class="scan-confidence-bar">
+              <div class="scan-confidence-val" style="width:${scn.confidence || scn.conf}%;"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:#64748B; margin-bottom:12px;">
+              <span>Akurasi: ${scn.confidence || scn.conf}%</span>
+              <span>${scn.timestamp || scn.date}</span>
+            </div>
+
+            <div class="report-card-actions">
+              <a href="laporan.html?sample=${encodeURIComponent(scn.plantName || scn.name)}" class="btn-card-small">📄 Laporan</a>
+              <a href="ar-scan.html?plant=${encodeURIComponent(scn.plantName || scn.name)}" class="btn-card-small">🔍 Detail</a>
+              <button class="btn-card-small" onclick="deleteScan(${idx})" style="color:#DC2626;">🗑️</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function searchScans(query) {
+      const q = query.toLowerCase();
+      document.querySelectorAll("#profileScansGrid .scan-card-profile").forEach(card => {
+        const text = card.innerText.toLowerCase();
+        card.style.display = text.includes(q) ? "flex" : "none";
+      });
+    }
+
+    function deleteScan(idx) {
+      let scans = JSON.parse(localStorage.getItem("herbinfo_scan_history") || "[]");
+      scans.splice(idx, 1);
+      localStorage.setItem("herbinfo_scan_history", JSON.stringify(scans));
+      renderScansTab();
+      showToast("Riwayat scan dihapus.");
+    }
+
+    // 5.3 Render Tanaman Favorit
+    function renderFavoritesTab() {
+      const container = document.getElementById("profileFavoritesGrid");
+      let favs = JSON.parse(localStorage.getItem("herbinfo_favorites_full") || "null");
+      if (!favs || favs.length === 0) {
+        favs = demoFavorites;
+        localStorage.setItem("herbinfo_favorites_full", JSON.stringify(demoFavorites));
+      }
+
+      document.getElementById("statFavCount").innerText = favs.length;
+
+      container.innerHTML = favs.map((fav, idx) => `
+        <div class="fav-card">
+          <img src="${fav.img}" alt="${fav.name}" class="fav-card-img" />
+          <div class="fav-card-body">
+            <h4 style="font-size:1.1rem;">${fav.name}</h4>
+            <em style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">${fav.latin}</em>
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px;">
+              <span class="badge" style="font-size:0.7rem;">${fav.indication}</span>
+              <span class="badge" style="font-size:0.7rem; background:#EBF5EE;">🔬 ${fav.compound}</span>
+            </div>
+            <div class="report-card-actions">
+              <a href="katalog.html?id=${fav.id}" class="btn-card-small">🔍 Detail</a>
+              <a href="estore.html" class="btn-card-small">🛒 E-Store</a>
+              <button class="btn-card-small" onclick="removeFavorite(${idx})" style="color:#DC2626;">⭐ Hapus</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function removeFavorite(idx) {
+      let favs = JSON.parse(localStorage.getItem("herbinfo_favorites_full") || "[]");
+      favs.splice(idx, 1);
+      localStorage.setItem("herbinfo_favorites_full", JSON.stringify(favs));
+      renderFavoritesTab();
+      showToast("Dihapus dari tanaman favorit.");
+    }
+
+    // 5.4 Render Keranjang Belanja
+    function renderCartTab() {
+      const container = document.getElementById("profileCartItemsList");
+      let cart = JSON.parse(localStorage.getItem("herbinfo_cart") || "null");
+      if (!cart || cart.length === 0) {
+        cart = demoCart;
+        localStorage.setItem("herbinfo_cart", JSON.stringify(demoCart));
+      }
+
+      const totalItems = cart.reduce((acc, c) => acc + (c.quantity || 1), 0);
+      document.getElementById("tabCartCount").innerText = totalItems;
+      document.getElementById("statCartCount").innerText = totalItems;
+
+      let subtotal = 0;
+      container.innerHTML = cart.map((item, idx) => {
+        const itemTotal = item.price * (item.quantity || 1);
+        subtotal += itemTotal;
+        return `
+          <div class="cart-profile-row">
+            <img src="${item.img || 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=150&q=80'}" alt="${item.name}" class="cart-thumb-img" />
+            <div style="flex:1;">
+              <h4 style="font-size:0.95rem; margin-bottom:2px;">${item.name}</h4>
+              <span style="font-size:0.76rem; color:var(--text-muted);">${item.type || 'Fitofarmaka Bundle'}</span>
+              <div style="font-weight:700; color:var(--primary); font-size:0.92rem; margin-top:4px;">
+                Rp ${item.price.toLocaleString("id-ID")}
+              </div>
+            </div>
+
+            <div class="cart-qty-ctrl">
+              <button class="cart-qty-btn" onclick="updateCartQuantity(${idx}, -1)">−</button>
+              <span>${item.quantity || 1}</span>
+              <button class="cart-qty-btn" onclick="updateCartQuantity(${idx}, 1)">+</button>
+            </div>
+
+            <button onclick="deleteCartItem(${idx})" style="background:none; border:none; color:#DC2626; cursor:pointer; font-size:1rem;">🗑️</button>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById("cartProfileSubtotal").innerText = "Rp " + subtotal.toLocaleString("id-ID");
+      document.getElementById("cartProfileTotal").innerText = "Rp " + subtotal.toLocaleString("id-ID");
+      document.getElementById("statCartTotalDisplay").innerText = "Rp " + subtotal.toLocaleString("id-ID") + " total";
+    }
+
+    function updateCartQuantity(idx, change) {
+      let cart = JSON.parse(localStorage.getItem("herbinfo_cart") || "[]");
+      if (!cart[idx]) return;
+
+      cart[idx].quantity = (cart[idx].quantity || 1) + change;
+      if (cart[idx].quantity <= 0) {
+        cart.splice(idx, 1);
+      }
+      localStorage.setItem("herbinfo_cart", JSON.stringify(cart));
+      renderCartTab();
+    }
+
+    function deleteCartItem(idx) {
+      let cart = JSON.parse(localStorage.getItem("herbinfo_cart") || "[]");
+      cart.splice(idx, 1);
+      localStorage.setItem("herbinfo_cart", JSON.stringify(cart));
+      renderCartTab();
+      showToast("Item dihapus dari keranjang.");
+    }
+
+    function checkoutFromProfile() {
+      let cart = JSON.parse(localStorage.getItem("herbinfo_cart") || "[]");
+      if (cart.length === 0) {
+        showToast("Keranjang belanja kosong!");
+        return;
+      }
+      showToast("Menghubungkan ke gateway pembayaran bank...");
+      setTimeout(() => {
+        window.location.href = "estore.html";
+      }, 1200);
+    }
+
+    /* --------------------------------------------------------------------------
+       6. EXPORT DATA & LOGOUT
+       -------------------------------------------------------------------------- */
+    function exportMyDataJSON() {
+      const fullData = {
+        user: JSON.parse(localStorage.getItem("herbinfo_user") || "{}"),
+        reports: JSON.parse(localStorage.getItem("herbinfo_laporan_history") || "[]"),
+        scans: JSON.parse(localStorage.getItem("herbinfo_scan_history") || "[]"),
+        cart: JSON.parse(localStorage.getItem("herbinfo_cart") || "[]")
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fullData, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `herbinfo_backup_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("✓ Seluruh data profil berhasil diekspor!");
+    }
+
+    function logoutSession() {
+      if (confirm("Apakah Anda yakin ingin keluar dari akun HerbInfoAI?")) {
+        localStorage.removeItem("herb_user_session");
+        showToast("Berhasil keluar. Mengalihkan ke beranda...");
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1200);
+      }
+    }
+  </script>
+</body>
+</html>
