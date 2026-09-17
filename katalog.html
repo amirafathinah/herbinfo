@@ -1,0 +1,2650 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HerbInfoAI - Katalog Herbal Digital Terstandar Sains, Web AR, dan AI Pharma Assistant." />
+  <title>Katalog Herbal — HerbInfoAI</title>
+
+  <!-- Google Fonts: Poppins & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & DESIGN SYSTEM (IDENTIK DENGAN BERANDA & AR SCAN)
+       ========================================================================== */
+    :root {
+      --primary: #2D6A4F;       /* Hijau Tua */
+      --secondary: #52B788;     /* Hijau Medium */
+      --accent: #95D5B2;        /* Hijau Muda */
+      --bg-main: #F8FDF5;       /* Putih Kehijauan */
+      --bg-card: #FFFFFF;
+      --text-dark: #1B4332;
+      --text-muted: #52796F;
+      --text-light: #FFFFFF;
+      --border-color: rgba(82, 183, 136, 0.22);
+      --shadow-subtle: 0 10px 25px -5px rgba(45, 106, 79, 0.08), 0 8px 10px -6px rgba(45, 106, 79, 0.04);
+      --shadow-hover: 0 20px 30px -10px rgba(45, 106, 79, 0.16);
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      color: var(--text-dark);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+    }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(82, 183, 136, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: #1B4332;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.22);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: var(--transition);
+      border-left: 4px solid var(--secondary);
+    }
+
+    .toast-box.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       2. NAVIGATION BAR (STICKY)
+       ========================================================================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(248, 253, 245, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .navbar-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+    }
+
+    .logo-text h1 {
+      font-size: 1.35rem;
+      letter-spacing: -0.5px;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .logo-text h1 span {
+      color: var(--secondary);
+    }
+
+    .logo-text p {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 8px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      border-radius: var(--radius-full);
+    }
+
+    .nav-item a:hover {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.12);
+    }
+
+    .nav-item.active a {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.18);
+      font-weight: 600;
+    }
+
+    .nav-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-chat-ai {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--primary);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+      transition: var(--transition);
+    }
+
+    .btn-chat-ai:hover {
+      background-color: #1f4e39;
+      transform: translateY(-2px);
+    }
+
+    .user-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #E8F5E9;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--primary);
+      padding: 8px;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: #fff;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      border-bottom: 2px solid var(--accent);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu .nav-item a {
+      padding: 12px 16px;
+      width: 100%;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION - KATALOG HERBAL
+       ========================================================================== */
+    .katalog-hero {
+      position: relative;
+      padding: 56px 0 42px;
+      background: radial-gradient(circle at 10% 20%, rgba(149, 213, 178, 0.25) 0%, transparent 60%),
+                  radial-gradient(circle at 90% 80%, rgba(82, 183, 136, 0.18) 0%, transparent 60%);
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* PLACEHOLDER: hero-molecule-pattern.png */
+    .hero-pattern-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(var(--accent) 0.85px, transparent 0.85px);
+      background-size: 26px 26px;
+      opacity: 0.28;
+      pointer-events: none;
+    }
+
+    /* PLACEHOLDER: hero-leaves-pattern.png & hero-mortar-pestle.png */
+    .hero-deco-left {
+      position: absolute;
+      left: -20px;
+      bottom: -10px;
+      width: 170px;
+      height: 170px;
+      background: radial-gradient(circle, rgba(82,183,136,0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-deco-right {
+      position: absolute;
+      right: 40px;
+      top: 15px;
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .katalog-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .katalog-hero-content h1 {
+      font-size: 2.85rem;
+      letter-spacing: -0.8px;
+      margin: 12px 0 10px;
+      color: var(--primary);
+    }
+
+    .katalog-hero-content p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ==========================================================================
+       4. FULL-WIDTH SEARCH & FILTER BAR
+       ========================================================================== */
+    .section-search-filter {
+      padding: 30px 0 10px;
+    }
+
+    .search-bar-wrapper {
+      display: flex;
+      align-items: center;
+      background: #FFFFFF;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 6px 8px 6px 22px;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      margin-bottom: 22px;
+    }
+
+    .search-bar-wrapper:focus-within {
+      border-color: var(--secondary);
+      box-shadow: 0 8px 24px rgba(45, 106, 79, 0.14);
+    }
+
+    .search-icon {
+      color: var(--primary);
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 0.98rem;
+      color: var(--text-dark);
+      background: transparent;
+    }
+
+    .search-input::placeholder {
+      color: #94A3B8;
+    }
+
+    .btn-search-exec {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      padding: 12px 28px;
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-search-exec:hover {
+      background: #1f4e39;
+    }
+
+    .filter-pills-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+
+    .filter-pills-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-pill-label {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--primary);
+      white-space: nowrap;
+      min-width: 105px;
+    }
+
+    .pills-scroll-container {
+      display: flex;
+      gap: 8px;
+      flex-wrap: nowrap;
+    }
+
+    .filter-chip {
+      background: #FFFFFF;
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+      padding: 7px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .filter-chip:hover {
+      border-color: var(--secondary);
+      background: rgba(82, 183, 136, 0.08);
+    }
+
+    .filter-chip.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(45, 106, 79, 0.2);
+    }
+
+    /* Mobile Sidebar Toggle Button */
+    .mobile-filter-toggle {
+      display: none;
+      width: 100%;
+      margin: 10px 0 20px;
+      padding: 10px 18px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       5. MAIN LAYOUT: SIDEBAR + CONTENT GRID
+       ========================================================================== */
+    .catalog-main-layout {
+      padding: 24px 0 80px;
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* 5.1 SIDEBAR */
+    .catalog-sidebar {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 24px 20px;
+      box-shadow: var(--shadow-subtle);
+      position: sticky;
+      top: 100px;
+    }
+
+    .sidebar-section {
+      margin-bottom: 26px;
+      padding-bottom: 22px;
+      border-bottom: 1px solid #EDF2F7;
+    }
+
+    .sidebar-section:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .sidebar-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* List Kategori */
+    .category-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .category-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      transition: var(--transition);
+    }
+
+    .category-item:hover {
+      background: rgba(82, 183, 136, 0.12);
+      color: var(--primary);
+    }
+
+    .category-item.active {
+      background: rgba(45, 106, 79, 0.12);
+      color: var(--primary);
+      font-weight: 700;
+      border-left: 3px solid var(--primary);
+    }
+
+    .category-count {
+      font-size: 0.76rem;
+      background: #EDF2F7;
+      color: #64748B;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+    }
+
+    .category-item.active .category-count {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    /* Famili Checkboxes */
+    .family-checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      max-height: 190px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .family-checklist::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .family-checklist::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 4px;
+    }
+
+    .family-check-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.86rem;
+      cursor: pointer;
+      user-select: none;
+      color: #334155;
+    }
+
+    .family-check-label input {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    /* Sort Radio Buttons */
+    .sort-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sort-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.86rem;
+      cursor: pointer;
+      color: #334155;
+    }
+
+    .sort-label input {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Sidebar Info Box */
+    .sidebar-info-card {
+      background: rgba(240, 255, 244, 0.9);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .sidebar-info-card svg {
+      flex-shrink: 0;
+      color: var(--primary);
+    }
+
+    .sidebar-info-card p {
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* 5.2 MAIN CONTENT AREA */
+    .catalog-content-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .content-count-text {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .content-count-text strong {
+      color: var(--primary);
+    }
+
+    .content-view-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .view-toggle-btns {
+      display: flex;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: #FFFFFF;
+    }
+
+    .view-toggle-btn {
+      background: transparent;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+
+    .view-toggle-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .items-per-page-select {
+      padding: 8px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background: #FFFFFF;
+      font-size: 0.85rem;
+      color: var(--text-dark);
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* Grid View Cards */
+    .plant-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .plant-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .plant-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--secondary);
+    }
+
+    .plant-img-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      background: #E2E8F0;
+    }
+
+    .plant-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .plant-card:hover .plant-img-wrapper img {
+      transform: scale(1.06);
+    }
+
+    /* Indication Tag Color Variations */
+    .indication-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.72rem;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    .indication-badge.green {
+      background: rgba(45, 106, 79, 0.88);
+      color: #FFFFFF;
+    }
+
+    .indication-badge.blue {
+      background: rgba(30, 64, 175, 0.88);
+      color: #FFFFFF;
+    }
+
+    .indication-badge.orange {
+      background: rgba(194, 65, 12, 0.88);
+      color: #FFFFFF;
+    }
+
+    .indication-badge.purple {
+      background: rgba(109, 40, 217, 0.88);
+      color: #FFFFFF;
+    }
+
+    .favorite-toggle-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.88);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94A3B8;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      transition: var(--transition);
+    }
+
+    .favorite-toggle-btn:hover {
+      background: #FFFFFF;
+      transform: scale(1.1);
+    }
+
+    .favorite-toggle-btn.favorited {
+      color: #EAB308;
+    }
+
+    .plant-card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .plant-common-name {
+      font-size: 1.22rem;
+      margin-bottom: 2px;
+      color: var(--text-dark);
+    }
+
+    .plant-latin-name {
+      font-style: italic;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .plant-meta-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.8rem;
+      color: #4A5568;
+      margin-bottom: 14px;
+    }
+
+    .plant-meta-bar span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .active-compound-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(82, 183, 136, 0.14);
+      color: var(--primary);
+      border: 1px solid var(--accent);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.74rem;
+      font-weight: 600;
+      margin-bottom: 18px;
+      width: fit-content;
+    }
+
+    .plant-card-actions {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .btn-card-detail {
+      background: transparent;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .btn-card-detail:hover {
+      background: rgba(45, 106, 79, 0.08);
+    }
+
+    .btn-card-ar {
+      background: var(--primary);
+      border: 1.5px solid var(--primary);
+      color: #FFFFFF;
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .btn-card-ar:hover {
+      background: #1f4e39;
+    }
+
+    /* List View Layout Transformation */
+    .plant-grid.list-view {
+      grid-template-columns: 1fr;
+    }
+
+    .plant-grid.list-view .plant-card {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .plant-grid.list-view .plant-img-wrapper {
+      width: 260px;
+      height: 100%;
+      aspect-ratio: auto;
+      flex-shrink: 0;
+    }
+
+    .plant-grid.list-view .plant-card-body {
+      flex: 1;
+    }
+
+    .plant-grid.list-view .plant-card-actions {
+      grid-template-columns: 150px 180px;
+      margin-top: 14px;
+    }
+
+    /* Skeleton Loading State */
+    .skeleton-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .skeleton-box {
+      background: linear-gradient(90deg, #E2E8F0 25%, #EDF2F7 50%, #E2E8F0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* Empty State */
+    /* PLACEHOLDER: empty-state-katalog.svg */
+    .empty-catalog-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: #FFFFFF;
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-lg);
+    }
+
+    .empty-state-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 16px;
+      color: var(--secondary);
+      background: rgba(82, 183, 136, 0.12);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .empty-catalog-state h3 {
+      font-size: 1.3rem;
+      margin-bottom: 6px;
+    }
+
+    .empty-catalog-state p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 20px;
+    }
+
+    /* Pagination */
+    .pagination-wrapper {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .page-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border-color);
+      background: #FFFFFF;
+      color: var(--text-dark);
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .page-btn:hover:not(:disabled) {
+      background: rgba(82, 183, 136, 0.12);
+      border-color: var(--secondary);
+    }
+
+    .page-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    .page-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ==========================================================================
+       6. FEATURED PLANTS (HIGHLIGHT MINGGU INI)
+       ========================================================================== */
+    .section-featured-plants {
+      padding: 70px 0;
+      background: linear-gradient(180deg, rgba(82, 183, 136, 0.06) 0%, transparent 100%);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .featured-scroll-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 30px;
+    }
+
+    .featured-big-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .featured-big-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .featured-img-top {
+      position: relative;
+      height: 180px;
+    }
+
+    .featured-img-top img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .star-tag-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #F59E0B;
+      color: #FFFFFF;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .featured-card-body {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .featured-card-desc {
+      font-size: 0.86rem;
+      color: #4A5568;
+      margin: 10px 0 20px;
+      line-height: 1.55;
+    }
+
+    /* ==========================================================================
+       7. SECTION: STATISTIK KATALOG
+       ========================================================================== */
+    .section-catalog-stats {
+      padding: 60px 0;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .catalog-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 24px;
+      border-radius: var(--radius-md);
+      background: var(--bg-main);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .stat-box-icon {
+      width: 50px;
+      height: 50px;
+      margin: 0 auto 12px;
+      color: var(--primary);
+      background: rgba(82, 183, 136, 0.18);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-box-number {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-box-label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       8. SECTION: AI RECOMMENDATION
+       ========================================================================== */
+    .section-ai-rec {
+      padding: 70px 0 90px;
+    }
+
+    .ai-rec-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .ai-pick-card {
+      border: 2px solid #F59E0B !important;
+      background: #FFFFFF;
+      position: relative;
+    }
+
+    .ai-pick-badge {
+      position: absolute;
+      top: -12px;
+      right: 18px;
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      color: #FFFFFF;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 5;
+    }
+
+    /* ==========================================================================
+       9. DETAIL MODAL DIALOG
+       ========================================================================== */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 40, 30, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .detail-modal {
+      background: #FFFFFF;
+      max-width: 640px;
+      width: 100%;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-hover);
+      position: relative;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(0,0,0,0.4);
+      color: #FFFFFF;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .modal-header-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .modal-content-scroll {
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    /* ==========================================================================
+       10. FOOTER (IDENTIK DENGAN HALAMAN SEBELUMNYA)
+       ========================================================================== */
+    .site-footer {
+      background: #12281E;
+      color: #E2E8F0;
+      padding: 70px 0 24px;
+      border-top: 1px solid rgba(82, 183, 136, 0.2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .footer-col h4 {
+      color: #FFFFFF;
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 28px;
+      height: 2px;
+      background: var(--secondary);
+    }
+
+    .footer-desc {
+      font-size: 0.88rem;
+      color: #A0AEC0;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: #CBD5E0;
+    }
+
+    .footer-links a:hover {
+      color: var(--secondary);
+      padding-left: 4px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(82, 183, 136, 0.3);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      border-color: var(--secondary);
+    }
+
+    .newsletter-btn {
+      background: var(--secondary);
+      color: #0c2117;
+      font-weight: 600;
+      border: none;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .newsletter-btn:hover {
+      background: var(--accent);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #CBD5E0;
+      transition: var(--transition);
+    }
+
+    .social-icon:hover {
+      background: var(--secondary);
+      color: #12281E;
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #A0AEC0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-links a:hover {
+      color: #FFFFFF;
+    }
+
+    /* ==========================================================================
+       11. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .layout-grid {
+        grid-template-columns: 240px 1fr;
+        gap: 20px;
+      }
+      .plant-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .featured-scroll-row, .ai-rec-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .catalog-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-actions {
+        display: none;
+      }
+      .hamburger-btn {
+        display: block;
+      }
+      .mobile-filter-toggle {
+        display: flex;
+      }
+      .layout-grid {
+        grid-template-columns: 1fr;
+      }
+      .catalog-sidebar {
+        display: none;
+      }
+      .catalog-sidebar.mobile-open {
+        display: block;
+        position: static;
+        margin-bottom: 24px;
+      }
+      .plant-grid {
+        grid-template-columns: 1fr;
+      }
+      .plant-grid.list-view .plant-card {
+        flex-direction: column;
+      }
+      .plant-grid.list-view .plant-img-wrapper {
+        width: 100%;
+        height: 180px;
+      }
+      .featured-scroll-row, .ai-rec-grid, .catalog-stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       NAVIGATION BAR (Sticky Top)
+       ========================================================================== */ -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="index.html" class="logo-wrapper">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>HerbInfo<span>AI</span></h1>
+          <p>Explore . Learn . Preserve</p>
+        </div>
+      </a>
+
+      <!-- Menu Tengah: Katalog Herbal Aktif -->
+      <ul class="nav-links">
+        <li class="nav-item">
+          <a href="index.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+            Beranda
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="ar-scan.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-.9-.9"/></svg></span>
+            AR Scan
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="katalog.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg></span>
+            Katalog Herbal
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="estore.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
+            E-Store
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="laporan.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg></span>
+            Laporan Praktikum
+          </a>
+        </li>
+      </ul>
+
+      <!-- Nav Kanan -->
+      <div class="nav-actions">
+        <button class="btn-chat-ai" onclick="openAIChatAssistant()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+          Chat AI
+        </button>
+        <a href="profil.html" class="user-avatar" title="Profil Pengguna">
+          <span>HI</span>
+        </a>
+      </div>
+
+      <!-- Hamburger Button (Mobile) -->
+      <button class="hamburger-btn" id="menuToggle" aria-label="Buka Menu">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-menu" id="mobileMenu">
+      <li class="nav-item"><a href="index.html">🌱 Beranda</a></li>
+      <li class="nav-item"><a href="ar-scan.html">📷 AR Scan</a></li>
+      <li class="nav-item active"><a href="katalog.html">📖 Katalog Herbal</a></li>
+      <li class="nav-item"><a href="estore.html">🛒 E-Store</a></li>
+      <li class="nav-item"><a href="laporan.html">📄 Laporan Praktikum</a></li>
+      <div style="margin-top: 16px;">
+        <button class="btn-chat-ai" style="width: 100%; justify-content: center;" onclick="openAIChatAssistant()">🤖 Chat AI Pharma</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         HERO SECTION - KATALOG HERBAL
+         ========================================================================== -->
+    <section class="katalog-hero">
+      <!-- PLACEHOLDER: hero-molecule-pattern.png -->
+      <div class="hero-pattern-overlay"></div>
+      <!-- PLACEHOLDER: hero-leaves-pattern.png -->
+      <div class="hero-deco-left"></div>
+      
+      <!-- PLACEHOLDER: hero-mortar-pestle.png -->
+      <div class="hero-deco-right">
+        <svg width="130" height="130" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="m19 11-4-7"/><path d="m13 14 4.5 4.5"/><path d="M4 11a8 8 0 0 0 16 0H4Z"/><path d="M7 19h10"/>
+        </svg>
+      </div>
+
+      <div class="container katalog-hero-content">
+        <div class="badge">🍃 Digital Herbarium</div>
+        <h1>Katalog Herbal</h1>
+        <p>Jelajahi kekayaan tanaman obat Indonesia dengan informasi lengkap, uji fitokimia terverifikasi, dan visualisasi 3D Web AR yang terstandar secara ilmiah.</p>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SEARCH & FILTER BAR (FULL WIDTH)
+         ========================================================================== -->
+    <section class="section-search-filter">
+      <div class="container">
+        <!-- Search Input Bar -->
+        <div class="search-bar-wrapper">
+          <span class="search-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </span>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Cari nama latin, nama lokal, atau indikasi medis (contoh: Kunyit, Zingiber, Antiinflamasi)..." 
+            oninput="handleSearchInput()" 
+          />
+          <button class="btn-search-exec" onclick="applyAllFilters()">Cari Spesies</button>
+        </div>
+
+        <!-- Filter Indikasi (Horizontal Pills) -->
+        <div class="filter-pills-row">
+          <span class="filter-pill-label">Filter Indikasi:</span>
+          <div class="pills-scroll-container" id="indicationPillsGroup">
+            <button class="filter-chip active" data-indication="Semua" onclick="setIndicationFilter('Semua')">Semua</button>
+            <button class="filter-chip" data-indication="Immunomodulator" onclick="setIndicationFilter('Immunomodulator')">Immunomodulator</button>
+            <button class="filter-chip" data-indication="Antiinflamasi" onclick="setIndicationFilter('Antiinflamasi')">Antiinflamasi</button>
+            <button class="filter-chip" data-indication="Analgesik" onclick="setIndicationFilter('Analgesik')">Analgesik</button>
+            <button class="filter-chip" data-indication="Antidiabetes" onclick="setIndicationFilter('Antidiabetes')">Antidiabetes</button>
+            <button class="filter-chip" data-indication="Hepatoprotektor" onclick="setIndicationFilter('Hepatoprotektor')">Hepatoprotektor</button>
+          </div>
+        </div>
+
+        <!-- Filter Organ (Horizontal Pills) -->
+        <div class="filter-pills-row">
+          <span class="filter-pill-label">Filter Organ:</span>
+          <div class="pills-scroll-container" id="organPillsGroup">
+            <button class="filter-chip active" data-organ="Semua" onclick="setOrganFilter('Semua')">Semua Organ</button>
+            <!-- PLACEHOLDER ICON: icon-category-rimpang.svg -->
+            <button class="filter-chip" data-organ="Rimpang" onclick="setOrganFilter('Rimpang')">🫚 Rimpang</button>
+            <!-- PLACEHOLDER ICON: icon-category-daun.svg -->
+            <button class="filter-chip" data-organ="Daun" onclick="setOrganFilter('Daun')">🍃 Daun</button>
+            <!-- PLACEHOLDER ICON: icon-category-batang.svg -->
+            <button class="filter-chip" data-organ="Batang" onclick="setOrganFilter('Batang')">🌿 Batang</button>
+            <!-- PLACEHOLDER ICON: icon-category-bunga.svg -->
+            <button class="filter-chip" data-organ="Bunga" onclick="setOrganFilter('Bunga')">🌸 Bunga</button>
+          </div>
+        </div>
+
+        <!-- Tombol Buka Filter Mobile -->
+        <button class="mobile-filter-toggle" onclick="toggleMobileSidebar()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          Buka Filter Kategori &amp; Famili
+        </button>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         MAIN LAYOUT: SIDEBAR + PLANT GRID CONTENT
+         ========================================================================== -->
+    <section class="catalog-main-layout">
+      <div class="container layout-grid">
+
+        <!-- 1. SIDEBAR KIRI (Sticky & Filter controls) -->
+        <aside class="catalog-sidebar" id="catalogSidebar">
+          <!-- Kategori -->
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">🌿 Kategori Organ</h3>
+            <ul class="category-list">
+              <li class="category-item active" data-cat="Semua" onclick="selectSidebarCategory('Semua')">
+                <span>✅ Semua Tanaman</span>
+                <span class="category-count" id="countAll">48</span>
+              </li>
+              <li class="category-item" data-cat="Rimpang" onclick="selectSidebarCategory('Rimpang')">
+                <span>🫚 Rimpang</span>
+                <span class="category-count">12</span>
+              </li>
+              <li class="category-item" data-cat="Daun" onclick="selectSidebarCategory('Daun')">
+                <span>🍃 Daun</span>
+                <span class="category-count">15</span>
+              </li>
+              <li class="category-item" data-cat="Batang" onclick="selectSidebarCategory('Batang')">
+                <span>🌿 Batang</span>
+                <span class="category-count">5</span>
+              </li>
+              <li class="category-item" data-cat="Bunga" onclick="selectSidebarCategory('Bunga')">
+                <span>🌸 Bunga</span>
+                <span class="category-count">7</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Famili Botani Multi-Select -->
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">🔬 Famili Botani</h3>
+            <div class="family-checklist">
+              <label class="family-check-label">
+                <input type="checkbox" value="Zingiberaceae" onchange="handleFamilyChange(this)"> Zingiberaceae
+              </label>
+              <label class="family-check-label">
+                <input type="checkbox" value="Piperaceae" onchange="handleFamilyChange(this)"> Piperaceae
+              </label>
+              <label class="family-check-label">
+                <input type="checkbox" value="Apiaceae" onchange="handleFamilyChange(this)"> Apiaceae
+              </label>
+              <label class="family-check-label">
+                <input type="checkbox" value="Asteraceae" onchange="handleFamilyChange(this)"> Asteraceae
+              </label>
+              <label class="family-check-label">
+                <input type="checkbox" value="Moringaceae" onchange="handleFamilyChange(this)"> Moringaceae
+              </label>
+              <label class="family-check-label">
+                <input type="checkbox" value="Acanthaceae" onchange="handleFamilyChange(this)"> Acanthaceae
+              </label>
+              <label class="family-check-label">
+                <input type="checkbox" value="Phyllanthaceae" onchange="handleFamilyChange(this)"> Phyllanthaceae
+              </label>
+              <label class="family-check-label">
+                <input type="checkbox" value="Lamiaceae" onchange="handleFamilyChange(this)"> Lamiaceae
+              </label>
+            </div>
+          </div>
+
+          <!-- Urutkan Berdasarkan -->
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">📊 Urutkan Berdasarkan</h3>
+            <div class="sort-options">
+              <label class="sort-label">
+                <input type="radio" name="sortPlants" value="name-asc" checked onchange="handleSortChange(this.value)"> Nama A-Z (Default)
+              </label>
+              <label class="sort-label">
+                <input type="radio" name="sortPlants" value="name-desc" onchange="handleSortChange(this.value)"> Nama Z-A
+              </label>
+              <label class="sort-label">
+                <input type="radio" name="sortPlants" value="popular" onchange="handleSortChange(this.value)"> Indikasi (Populer)
+              </label>
+              <label class="sort-label">
+                <input type="radio" name="sortPlants" value="active-asc" onchange="handleSortChange(this.value)"> Zat Aktif (A-Z)
+              </label>
+            </div>
+          </div>
+
+          <!-- Bottom Info Card -->
+          <div class="sidebar-info-card">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            <p>Informasi lengkap terstandar Farmakope Herbal Indonesia, untuk keputusan terapi yang lebih aman.</p>
+          </div>
+        </aside>
+
+        <!-- 2. MAIN CONTENT - GRID TANAMAN -->
+        <div class="catalog-main-content">
+          <!-- Header Bar: Count & View Switcher -->
+          <div class="catalog-content-header">
+            <p class="content-count-text" id="displayCountText">Menampilkan <strong>0</strong> dari <strong>0</strong> tanaman</p>
+            
+            <div class="content-view-controls">
+              <div class="view-toggle-btns">
+                <button class="view-toggle-btn active" id="btnGridView" onclick="setViewMode('grid')" title="Tampilan Grid">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                </button>
+                <button class="view-toggle-btn" id="btnListView" onclick="setViewMode('list')" title="Tampilan Daftar">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></svg>
+                </button>
+              </div>
+
+              <select class="items-per-page-select" id="itemsPerPageSelect" onchange="handlePerPageChange(this.value)">
+                <option value="12">12 per halaman</option>
+                <option value="24">24 per halaman</option>
+                <option value="36">36 per halaman</option>
+                <option value="48">48 per halaman</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- The Active Plants Grid Container -->
+          <div class="plant-grid" id="plantsGrid">
+            <!-- Disuntikkan secara dinamis melalui JavaScript -->
+          </div>
+
+          <!-- Pagination Bar -->
+          <div class="pagination-wrapper" id="paginationControls">
+            <!-- Navigasi pagination dinamis -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: TANAMAN HIGHLIGHT / FEATURED
+         ========================================================================== -->
+    <section class="section-featured-plants">
+      <div class="container">
+        <div class="badge">Pilihan Farmakolog</div>
+        <h2 style="font-size: 2rem; margin-top: 6px;">🌟 Tanaman Unggulan Minggu Ini</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Riset dan monografi terbaru dengan data klinis teruji untuk kajian fitoterapi modern.</p>
+
+        <div class="featured-scroll-row">
+          <!-- Featured 1: Kunyit -->
+          <div class="featured-big-card">
+            <div class="featured-img-top">
+              <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80" alt="Kunyit" />
+              <span class="star-tag-badge">★ Featured</span>
+            </div>
+            <div class="featured-card-body">
+              <h3 style="font-size: 1.25rem;">Kunyit</h3>
+              <em style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 6px;">Curcuma longa L. | Zingiberaceae</em>
+              <p class="featured-card-desc">Kandungan kurkuminoid tinggi berperan vital dalam meregulasi ekspresi sitokin dan proteksi epitel lambung dari inflamasi kronis.</p>
+              <button class="btn-card-detail" style="width:100%;" onclick="openPlantDetailModal(1)">Pelajari Lebih Lanjut &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Featured 2: Pegagan -->
+          <div class="featured-big-card">
+            <div class="featured-img-top">
+              <img src="https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80" alt="Pegagan" />
+              <span class="star-tag-badge">★ Featured</span>
+            </div>
+            <div class="featured-card-body">
+              <h3 style="font-size: 1.25rem;">Pegagan</h3>
+              <em style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 6px;">Centella asiatica (L.) Urban | Apiaceae</em>
+              <p class="featured-card-desc">Mengandung triterpenoid asiatikosida yang secara ilmiah menstimulasi sintesis kolagen mikrosirkulasi dan regenerasi sel neuron serebral.</p>
+              <button class="btn-card-detail" style="width:100%;" onclick="openPlantDetailModal(7)">Pelajari Lebih Lanjut &rarr;</button>
+            </div>
+          </div>
+
+          <!-- Featured 3: Sambiloto -->
+          <div class="featured-big-card">
+            <div class="featured-img-top">
+              <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80" alt="Sambiloto" />
+              <span class="star-tag-badge">★ Featured</span>
+            </div>
+            <div class="featured-card-body">
+              <h3 style="font-size: 1.25rem;">Sambiloto</h3>
+              <em style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 6px;">Andrographis paniculata Nees | Acanthaceae</em>
+              <p class="featured-card-desc">Senyawa pahit andrografolid terbukti meningkatkan aktivitas fagositosis limfosit dan respon imunitas adaptif melawan patogen pernapasan.</p>
+              <button class="btn-card-detail" style="width:100%;" onclick="openPlantDetailModal(6)">Pelajari Lebih Lanjut &rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: STATISTIK KATALOG
+         ========================================================================== -->
+    <section class="section-catalog-stats">
+      <div class="container catalog-stats-grid">
+        <div class="stat-box">
+          <div class="stat-box-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          </div>
+          <div class="stat-box-number">48+</div>
+          <div class="stat-box-label">Spesies Tanaman Terkurasi</div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-box-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+          </div>
+          <div class="stat-box-number">15+</div>
+          <div class="stat-box-label">Famili Botani Farmasi</div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-box-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="m10.5 10.5-4 7"/><path d="m13.5 13.5 4-7"/></svg>
+          </div>
+          <div class="stat-box-number">120+</div>
+          <div class="stat-box-label">Senyawa Fitokimia 3D</div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-box-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><polyline points="10 2 10 10 13 7 16 10 16 2"/></svg>
+          </div>
+          <div class="stat-box-number">200+</div>
+          <div class="stat-box-label">Referensi Ilmiah &amp; Jurnal</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: AI RECOMMENDATION
+         ========================================================================== -->
+    <section class="section-ai-rec">
+      <div class="container">
+        <div style="text-align: center; max-width: 680px; margin: 0 auto;">
+          <div class="badge">Smart Assistant Suggestion</div>
+          <h2 style="font-size: 2rem; margin-top: 6px;">🤖 Rekomendasi AI untuk Anda</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Berdasarkan tren pencarian praktikum farmakognosi dan literatur fitoterapi terkini.</p>
+        </div>
+
+        <div class="ai-rec-grid" id="aiRecContainer">
+          <!-- Item Rekomendasi AI Diinjeksi via JS -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+     DETAIL MODAL POPUP
+     ========================================================================== -->
+  <div class="modal-backdrop" id="detailModalBackdrop" onclick="closeModalOnOutsideClick(event)">
+    <div class="detail-modal" id="detailModalContent">
+      <button class="modal-close-btn" onclick="closePlantDetailModal()">✕</button>
+      <img id="modalImg" src="" alt="Detail Tanaman" class="modal-header-img" />
+      <div class="modal-content-scroll">
+        <span class="badge" id="modalBadge" style="margin-bottom: 8px;">Indikasi Medis</span>
+        <h2 id="modalCommonName" style="font-size: 1.8rem; margin-bottom: 2px;">Nama Tanaman</h2>
+        <em id="modalLatinName" style="color: var(--text-muted); font-size: 1rem; display:block; margin-bottom: 14px;">Nama Latin</em>
+
+        <div style="background:#F8FDF5; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:16px; margin-bottom:18px;">
+          <p style="font-size: 0.88rem; margin-bottom: 6px;"><strong>Famili:</strong> <span id="modalFamily">-</span></p>
+          <p style="font-size: 0.88rem; margin-bottom: 6px;"><strong>Organ Utama:</strong> <span id="modalOrgan">-</span></p>
+          <p style="font-size: 0.88rem;"><strong>Kandungan Kunci:</strong> <span id="modalCompound" style="color:var(--primary); font-weight:700;">-</span></p>
+        </div>
+
+        <h4 style="font-size: 1.05rem; margin-bottom: 6px;">Deskripsi &amp; Kajian Farmakologi</h4>
+        <p id="modalDescription" style="font-size: 0.9rem; color: #4A5568; line-height: 1.6; margin-bottom: 24px;">Deskripsi lengkap tanaman...</p>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a id="modalBtnAR" href="ar-scan.html" class="btn-card-ar" style="flex:1; padding: 12px; font-size:0.9rem;">
+            🌿 Buka di Studio AR 3D
+          </a>
+          <button class="btn-card-detail" style="flex:1; padding: 12px; font-size:0.9rem;" onclick="saveModalToWishlist()">
+            ⭐ Simpan ke Favorit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       FOOTER (SAMA PERSIS DENGAN HALAMAN SEBELUMNYA)
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1 -->
+        <div class="footer-col">
+          <div class="logo-wrapper" style="margin-bottom: 12px;">
+            <div class="logo-icon" style="background:var(--secondary); color:#12281E;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </div>
+            <div class="logo-text">
+              <h2 style="font-size:1.3rem; color:#fff;">HerbInfo<span style="color:var(--secondary);">AI</span></h2>
+              <p style="color:#A0AEC0;">Explore . Learn . Preserve</p>
+            </div>
+          </div>
+          <p class="footer-desc">
+            HerbInfoAI adalah platform teknologi farmasi terintegrasi Web AR dan kecerdasan buatan untuk preservasi serta edukasi saintifik tanaman obat nusantara.
+          </p>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="ar-scan.html">AR Scan Praktikum</a></li>
+            <li><a href="katalog.html">Katalog Herbal 3D</a></li>
+            <li><a href="estore.html">E-Store Simplisia</a></li>
+            <li><a href="laporan.html">Laporan Praktikum Otomatis</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul class="footer-links">
+            <li><a href="tentang.html">Tentang Kami</a></li>
+            <li><a href="faq.html">Tanya Jawab (FAQ)</a></li>
+            <li><a href="blog.html">Jurnal &amp; Artikel Fitokimia</a></li>
+            <li><a href="kontak.html">Kontak &amp; Kerjasama Kampus</a></li>
+            <li><a href="panduan.html">Panduan Praktikum AR</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4 -->
+        <div class="footer-col">
+          <h4>Tetap Terhubung</h4>
+          <p style="font-size:0.85rem; color:#A0AEC0; margin-bottom: 12px;">Dapatkan wawasan fitofarmaka mingguan langsung di email Anda.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); handleSubscribe();">
+            <input type="email" id="newsEmail" placeholder="Email kampus/pribadi..." class="newsletter-input" required />
+            <button type="submit" class="newsletter-btn">Daftar</button>
+          </form>
+
+          <div class="social-links">
+            <a href="#" class="social-icon" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="GitHub">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <div>&copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.</div>
+        <div class="footer-legal-links">
+          <a href="privacy.html">Kebijakan Privasi</a>
+          <a href="terms.html">Syarat &amp; Ketentuan</a>
+          <a href="disclaimer.html">Medical Disclaimer</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Box -->
+  <div class="toast-box" id="appToast">
+    <span id="toastMessage">Pemberitahuan berhasil</span>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC: DATASET, FILTERING, SORTING, PAGINATION & LOCALSTORAGE
+       ========================================================================== -->
+  <script>
+    /* --------------------------------------------------------------------------
+       1. DATA TANAMAN DEMO (12 DATASET LENGKAP & STRUKTUR SIAP API)
+       -------------------------------------------------------------------------- */
+    const plantDatabase = [
+      {
+        id: 1,
+        commonName: "Kunyit",
+        latinName: "Curcuma longa L.",
+        family: "Zingiberaceae",
+        localName: "Kunyit",
+        activeCompound: "Kurkumin",
+        indication: "Immunomodulator",
+        organ: "Rimpang",
+        colorBadge: "green",
+        image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80",
+        description: "Rimpang kunyit kaya akan kurkuminoid dan minyak atsiri. Diindikasikan sebagai imunomodulator dan pelindung membran hepatosit dari peroksidasi lipid."
+      },
+      {
+        id: 2,
+        commonName: "Sirih",
+        latinName: "Piper betle L.",
+        family: "Piperaceae",
+        localName: "Sirih",
+        activeCompound: "Eugenol",
+        indication: "Antiinflamasi",
+        organ: "Daun",
+        colorBadge: "blue",
+        image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80",
+        description: "Daun sirih mengandung senyawa fenolik eugenol dan kavikol dengan daya antibakteri dan antiinflamasi alami terhadap jaringan mukosa."
+      },
+      {
+        id: 3,
+        commonName: "Jahe",
+        latinName: "Zingiber officinale Roscoe",
+        family: "Zingiberaceae",
+        localName: "Jahe",
+        activeCompound: "Gingerol",
+        indication: "Analgesik",
+        organ: "Rimpang",
+        colorBadge: "orange",
+        image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=600&q=80",
+        description: "Gingerol dan shogaol menekan enzim siklooksigenase (COX-2) dan prostaglandin, meredakan nyeri muskuloskeletal dan mual."
+      },
+      {
+        id: 4,
+        commonName: "Temulawak",
+        latinName: "Curcuma xanthorrhiza Roxb.",
+        family: "Zingiberaceae",
+        localName: "Temulawak",
+        activeCompound: "Xanthorrhizol",
+        indication: "Hepatoprotektor",
+        organ: "Rimpang",
+        colorBadge: "green",
+        image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80",
+        description: "Xanthorrhizol spesifik merangsang sekresi empedu, memulihkan enzim transaminase hepar, dan meredakan peradangan lambung."
+      },
+      {
+        id: 5,
+        commonName: "Daun Kelor",
+        latinName: "Moringa oleifera Lam.",
+        family: "Moringaceae",
+        localName: "Kelor",
+        activeCompound: "Flavonoid",
+        indication: "Antidiabetes",
+        organ: "Daun",
+        colorBadge: "purple",
+        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
+        description: "Kandungan kuersetin dan klorogenat membantu meningkatkan sensitivitas insulin dan menghambat penyerapan glukosa intestinal."
+      },
+      {
+        id: 6,
+        commonName: "Sambiloto",
+        latinName: "Andrographis paniculata Nees",
+        family: "Acanthaceae",
+        localName: "Sambiloto",
+        activeCompound: "Andrographolide",
+        indication: "Immunomodulator",
+        organ: "Daun",
+        colorBadge: "green",
+        image: "https://images.unsplash.com/photo-1514733670139-4d87a1941d55?auto=format&fit=crop&w=600&q=80",
+        description: "Dikenal sebagai rajanya tanaman pahit, andrografolid mengaktifkan respon proliferasi sel imun terhadap infeksi virus."
+      },
+      {
+        id: 7,
+        commonName: "Pegagan",
+        latinName: "Centella asiatica (L.) Urban",
+        family: "Apiaceae",
+        localName: "Pegagan",
+        activeCompound: "Asiaticoside",
+        indication: "Antiinflamasi",
+        organ: "Daun",
+        colorBadge: "blue",
+        image: "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80",
+        description: "Triterpen glikosida menstimulasi sirkulasi mikrovaskular otak, perbaikan jaringan kolagen, dan stabilitas transmisi saraf."
+      },
+      {
+        id: 8,
+        commonName: "Sambung Nyawa",
+        latinName: "Gynura procumbens (Lour.) Merr.",
+        family: "Asteraceae",
+        localName: "Sambung Nyawa",
+        activeCompound: "Flavonoid",
+        indication: "Antiinflamasi",
+        organ: "Daun",
+        colorBadge: "blue",
+        image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=600&q=80",
+        description: "Kaya antioksidan fenolik yang menurunkan resistensi vaskular perifer dan meredakan peradangan sistemik."
+      },
+      {
+        id: 9,
+        commonName: "Kencur",
+        latinName: "Kaempferia galanga L.",
+        family: "Zingiberaceae",
+        localName: "Kencur",
+        activeCompound: "Etil p-metoksisinamat",
+        indication: "Analgesik",
+        organ: "Rimpang",
+        colorBadge: "orange",
+        image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=600&q=80",
+        description: "EPMS (etil p-metoksisinamat) menunjukkan efek analgesik sentral dan perifer serta antispasmodik pada saluran napas."
+      },
+      {
+        id: 10,
+        commonName: "Lengkuas",
+        latinName: "Alpinia galanga (L.) Willd.",
+        family: "Zingiberaceae",
+        localName: "Lengkuas",
+        activeCompound: "Galangin",
+        indication: "Immunomodulator",
+        organ: "Rimpang",
+        colorBadge: "green",
+        image: "https://images.unsplash.com/photo-1588691893409-f81d1136c1e3?auto=format&fit=crop&w=600&q=80",
+        description: "Flavonol galangin dan 1'-asetoksikavikol asetat terbukti menghambat replikasi sel mikroba patogen dan modulasi sitokin."
+      },
+      {
+        id: 11,
+        commonName: "Jahe Merah",
+        latinName: "Zingiber officinale var. rubrum",
+        family: "Zingiberaceae",
+        localName: "Jahe Merah",
+        activeCompound: "Zingeron",
+        indication: "Antiinflamasi",
+        organ: "Rimpang",
+        colorBadge: "blue",
+        image: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80",
+        description: "Konsentrasi oleoresin dan minyak atsiri lebih tinggi, efektif untuk inflamasi sendi artritis dan kehangatan metabolik."
+      },
+      {
+        id: 12,
+        commonName: "Meniran",
+        latinName: "Phyllanthus niruri L.",
+        family: "Phyllanthaceae",
+        localName: "Meniran",
+        activeCompound: "Filantin",
+        indication: "Immunomodulator",
+        organ: "Batang",
+        colorBadge: "green",
+        image: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=600&q=80",
+        description: "Senyawa lignan filantin dan hipofilantin telah teruji klinis sebagai imunostimulan lini pertama fitofarmaka Indonesia."
+      }
+    ];
+
+    /* --------------------------------------------------------------------------
+       2. APPLICATION STATE & FILTER STORE
+       -------------------------------------------------------------------------- */
+    let currentFilterState = {
+      search: "",
+      indication: "Semua",
+      organ: "Semua",
+      sidebarCategory: "Semua",
+      families: [],
+      sortBy: "name-asc",
+      currentPage: 1,
+      itemsPerPage: 12,
+      viewMode: "grid"
+    };
+
+    let activePlantForModal = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initMobileMenu();
+      loadFilterPreferences();
+      renderAIRecSection();
+      applyAllFilters();
+    });
+
+    /* --------------------------------------------------------------------------
+       3. TOAST & MOBILE TOGGLE HANDLERS
+       -------------------------------------------------------------------------- */
+    function showToast(message) {
+      const toast = document.getElementById("appToast");
+      const msg = document.getElementById("toastMessage");
+      msg.innerText = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3500);
+    }
+
+    function initMobileMenu() {
+      const toggle = document.getElementById("menuToggle");
+      const menu = document.getElementById("mobileMenu");
+      if (toggle && menu) {
+        toggle.addEventListener("click", () => {
+          menu.classList.toggle("open");
+        });
+      }
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById("catalogSidebar");
+      sidebar.classList.toggle("mobile-open");
+    }
+
+    function openAIChatAssistant() {
+      alert("Membuka sesi konsultasi AI Pharma Assistant untuk data fitofarmaka...");
+    }
+
+    function handleSubscribe() {
+      const email = document.getElementById("newsEmail");
+      if (email && email.value) {
+        showToast("Terima kasih! " + email.value + " berhasil terdaftar di buletin HerbInfoAI.");
+        email.value = "";
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       4. FILTERING & SEARCH CONTROLS
+       -------------------------------------------------------------------------- */
+    function handleSearchInput() {
+      currentFilterState.search = document.getElementById("searchInput").value.trim().toLowerCase();
+      currentFilterState.currentPage = 1;
+      applyAllFilters();
+    }
+
+    function setIndicationFilter(indicationName) {
+      currentFilterState.indication = indicationName;
+      currentFilterState.currentPage = 1;
+
+      document.querySelectorAll("#indicationPillsGroup .filter-chip").forEach(btn => {
+        if (btn.dataset.indication === indicationName) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+
+      saveFilterPreferences();
+      applyAllFilters();
+    }
+
+    function setOrganFilter(organName) {
+      currentFilterState.organ = organName;
+      currentFilterState.currentPage = 1;
+
+      document.querySelectorAll("#organPillsGroup .filter-chip").forEach(btn => {
+        if (btn.dataset.organ === organName) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+
+      saveFilterPreferences();
+      applyAllFilters();
+    }
+
+    function selectSidebarCategory(catName) {
+      currentFilterState.sidebarCategory = catName;
+      currentFilterState.currentPage = 1;
+
+      document.querySelectorAll(".category-list .category-item").forEach(item => {
+        if (item.dataset.cat === catName) {
+          item.classList.add("active");
+        } else {
+          item.classList.remove("active");
+        }
+      });
+
+      saveFilterPreferences();
+      applyAllFilters();
+    }
+
+    function handleFamilyChange(checkbox) {
+      const checkedBoxes = document.querySelectorAll(".family-checklist input:checked");
+      currentFilterState.families = Array.from(checkedBoxes).map(cb => cb.value);
+      currentFilterState.currentPage = 1;
+      saveFilterPreferences();
+      applyAllFilters();
+    }
+
+    function handleSortChange(sortVal) {
+      currentFilterState.sortBy = sortVal;
+      saveFilterPreferences();
+      applyAllFilters();
+    }
+
+    function handlePerPageChange(val) {
+      currentFilterState.itemsPerPage = parseInt(val, 10);
+      currentFilterState.currentPage = 1;
+      applyAllFilters();
+    }
+
+    function setViewMode(mode) {
+      currentFilterState.viewMode = mode;
+      const grid = document.getElementById("plantsGrid");
+      const btnGrid = document.getElementById("btnGridView");
+      const btnList = document.getElementById("btnListView");
+
+      if (mode === 'list') {
+        grid.classList.add("list-view");
+        btnList.classList.add("active");
+        btnGrid.classList.remove("active");
+      } else {
+        grid.classList.remove("list-view");
+        btnGrid.classList.add("active");
+        btnList.classList.remove("active");
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       5. CORE FILTERING, SKELETON SIMULATION, & RENDERING
+       -------------------------------------------------------------------------- */
+    function applyAllFilters() {
+      const grid = document.getElementById("plantsGrid");
+      
+      // Render Skeleton Loading singkat untuk feedback interaksi visual
+      renderSkeletonCards(grid);
+
+      setTimeout(() => {
+        let filtered = plantDatabase.filter(item => {
+          // 1. Search Query
+          if (currentFilterState.search) {
+            const q = currentFilterState.search;
+            const matchName = item.commonName.toLowerCase().includes(q);
+            const matchLatin = item.latinName.toLowerCase().includes(q);
+            const matchIndic = item.indication.toLowerCase().includes(q);
+            const matchCompound = item.activeCompound.toLowerCase().includes(q);
+            if (!matchName && !matchLatin && !matchIndic && !matchCompound) return false;
+          }
+
+          // 2. Filter Indikasi
+          if (currentFilterState.indication !== "Semua") {
+            if (item.indication !== currentFilterState.indication) return false;
+          }
+
+          // 3. Filter Organ (Top Pill)
+          if (currentFilterState.organ !== "Semua") {
+            if (item.organ !== currentFilterState.organ) return false;
+          }
+
+          // 4. Sidebar Category
+          if (currentFilterState.sidebarCategory !== "Semua") {
+            if (item.organ !== currentFilterState.sidebarCategory) return false;
+          }
+
+          // 5. Famili Botani Multi-Select
+          if (currentFilterState.families.length > 0) {
+            if (!currentFilterState.families.includes(item.family)) return false;
+          }
+
+          return true;
+        });
+
+        // Sorting Logic
+        if (currentFilterState.sortBy === "name-asc") {
+          filtered.sort((a, b) => a.commonName.localeCompare(b.commonName));
+        } else if (currentFilterState.sortBy === "name-desc") {
+          filtered.sort((a, b) => b.commonName.localeCompare(a.commonName));
+        } else if (currentFilterState.sortBy === "popular") {
+          filtered.sort((a, b) => a.indication.localeCompare(b.indication));
+        } else if (currentFilterState.sortBy === "active-asc") {
+          filtered.sort((a, b) => a.activeCompound.localeCompare(b.activeCompound));
+        }
+
+        renderPlantGrid(filtered);
+      }, 180);
+    }
+
+    function renderSkeletonCards(container) {
+      container.innerHTML = Array(6).fill(0).map(() => `
+        <div class="skeleton-card">
+          <div class="skeleton-box" style="height: 160px; width: 100%;"></div>
+          <div class="skeleton-box" style="height: 22px; width: 60%;"></div>
+          <div class="skeleton-box" style="height: 14px; width: 85%;"></div>
+          <div class="skeleton-box" style="height: 14px; width: 40%;"></div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <div class="skeleton-box" style="height: 36px; flex:1;"></div>
+            <div class="skeleton-box" style="height: 36px; flex:1;"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderPlantGrid(items) {
+      const grid = document.getElementById("plantsGrid");
+      const countText = document.getElementById("displayCountText");
+      const pagination = document.getElementById("paginationControls");
+      const favorites = getFavoritesFromStorage();
+
+      const totalItems = items.length;
+      countText.innerHTML = `Menampilkan <strong>${Math.min(items.length, currentFilterState.itemsPerPage)}</strong> dari <strong>${totalItems}</strong> tanaman`;
+
+      if (totalItems === 0) {
+        grid.innerHTML = `
+          <!-- PLACEHOLDER: empty-state-katalog.svg -->
+          <div class="empty-catalog-state">
+            <div class="empty-state-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+            </div>
+            <h3>Tidak ada tanaman yang cocok</h3>
+            <p>Cobalah menyetel ulang kata kunci pencarian atau matikan beberapa checklist famili botani Anda.</p>
+            <button class="btn-primary" onclick="resetAllFilters()">Reset Semua Filter</button>
+          </div>
+        `;
+        pagination.innerHTML = "";
+        return;
+      }
+
+      // Pagination slice
+      const startIndex = (currentFilterState.currentPage - 1) * currentFilterState.itemsPerPage;
+      const endIndex = startIndex + currentFilterState.itemsPerPage;
+      const paginatedItems = items.slice(startIndex, endIndex);
+
+      grid.innerHTML = paginatedItems.map(plant => {
+        const isFav = favorites.includes(plant.id);
+        return `
+          <div class="plant-card">
+            <div class="plant-img-wrapper">
+              <img src="${plant.image}" alt="${plant.commonName}" loading="lazy" />
+              <span class="indication-badge ${plant.colorBadge}">${plant.indication}</span>
+              <button 
+                class="favorite-toggle-btn ${isFav ? 'favorited' : ''}" 
+                onclick="toggleFavoritePlant(${plant.id}, event)" 
+                title="${isFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </button>
+            </div>
+
+            <div class="plant-card-body">
+              <h3 class="plant-common-name">${plant.commonName}</h3>
+              <span class="plant-latin-name">${plant.latinName}</span>
+
+              <div class="plant-meta-bar">
+                <span>🧬 Famili: <strong>${plant.family}</strong></span>
+                <span>📍 Nama Lokal: ${plant.localName}</span>
+              </div>
+
+              <span class="active-compound-pill">
+                🔬 Zat Aktif: ${plant.activeCompound}
+              </span>
+
+              <div class="plant-card-actions">
+                <button class="btn-card-detail" onclick="openPlantDetailModal(${plant.id})">
+                  🔍 Detail Medis
+                </button>
+                <a href="ar-scan.html?plantId=${plant.id}&plant=${encodeURIComponent(plant.commonName)}" class="btn-card-ar">
+                  🌿 Studio AR 3D
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      renderPagination(totalItems);
+    }
+
+    /* --------------------------------------------------------------------------
+       6. PAGINATION CONTROLLER
+       -------------------------------------------------------------------------- */
+    function renderPagination(totalItems) {
+      const container = document.getElementById("paginationControls");
+      const totalPages = Math.ceil(totalItems / currentFilterState.itemsPerPage);
+
+      if (totalPages <= 1) {
+        container.innerHTML = "";
+        return;
+      }
+
+      let html = `
+        <button class="page-btn" ${currentFilterState.currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentFilterState.currentPage - 1})">
+          &larr; Sebelumnya
+        </button>
+      `;
+
+      for (let i = 1; i <= totalPages; i++) {
+        html += `
+          <button class="page-btn ${currentFilterState.currentPage === i ? 'active' : ''}" onclick="goToPage(${i})">
+            ${i}
+          </button>
+        `;
+      }
+
+      html += `
+        <button class="page-btn" ${currentFilterState.currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentFilterState.currentPage + 1})">
+          Selanjutnya &rarr;
+        </button>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function goToPage(page) {
+      currentFilterState.currentPage = page;
+      applyAllFilters();
+      window.scrollTo({ top: 380, behavior: 'smooth' });
+    }
+
+    function resetAllFilters() {
+      currentFilterState.search = "";
+      currentFilterState.indication = "Semua";
+      currentFilterState.organ = "Semua";
+      currentFilterState.sidebarCategory = "Semua";
+      currentFilterState.families = [];
+      currentFilterState.currentPage = 1;
+
+      document.getElementById("searchInput").value = "";
+      document.querySelectorAll(".family-checklist input").forEach(cb => cb.checked = false);
+      setIndicationFilter("Semua");
+      setOrganFilter("Semua");
+      selectSidebarCategory("Semua");
+      localStorage.removeItem("herbinfo_katalog_filters");
+      showToast("Filter berhasil disetel ulang.");
+    }
+
+    /* --------------------------------------------------------------------------
+       7. AI RECOMMENDATION SECTION BUILDER
+       -------------------------------------------------------------------------- */
+    function renderAIRecSection() {
+      const container = document.getElementById("aiRecContainer");
+      const aiRecItems = [plantDatabase[0], plantDatabase[3], plantDatabase[6]]; // Kunyit, Temulawak, Pegagan
+
+      container.innerHTML = aiRecItems.map(plant => `
+        <div class="plant-card ai-pick-card">
+          <div class="ai-pick-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            AI Pick
+          </div>
+          <div class="plant-img-wrapper">
+            <img src="${plant.image}" alt="${plant.commonName}" />
+            <span class="indication-badge ${plant.colorBadge}">${plant.indication}</span>
+          </div>
+          <div class="plant-card-body">
+            <h3 class="plant-common-name">${plant.commonName}</h3>
+            <span class="plant-latin-name">${plant.latinName}</span>
+            <span class="active-compound-pill" style="margin-bottom: 12px;">🔬 ${plant.activeCompound}</span>
+            <p style="font-size:0.83rem; color:#4A5568; margin-bottom:16px;">${plant.description.substring(0, 85)}...</p>
+            <div class="plant-card-actions">
+              <button class="btn-card-detail" onclick="openPlantDetailModal(${plant.id})">Detail Medis</button>
+              <a href="ar-scan.html?plantId=${plant.id}&plant=${encodeURIComponent(plant.commonName)}" class="btn-card-ar">Studio AR 3D</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* --------------------------------------------------------------------------
+       8. MODAL DETAIL POPUP
+       -------------------------------------------------------------------------- */
+    function openPlantDetailModal(plantId) {
+      const plant = plantDatabase.find(p => p.id === plantId);
+      if (!plant) return;
+
+      activePlantForModal = plant;
+      document.getElementById("modalImg").src = plant.image;
+      document.getElementById("modalBadge").innerText = plant.indication;
+      document.getElementById("modalCommonName").innerText = plant.commonName;
+      document.getElementById("modalLatinName").innerText = plant.latinName;
+      document.getElementById("modalFamily").innerText = plant.family;
+      document.getElementById("modalOrgan").innerText = plant.organ;
+      document.getElementById("modalCompound").innerText = plant.activeCompound;
+      document.getElementById("modalDescription").innerText = plant.description;
+      document.getElementById("modalBtnAR").href = `ar-scan.html?plantId=${plant.id}&plant=${encodeURIComponent(plant.commonName)}`;
+
+      document.getElementById("detailModalBackdrop").style.display = "flex";
+    }
+
+    function closePlantDetailModal() {
+      document.getElementById("detailModalBackdrop").style.display = "none";
+      activePlantForModal = null;
+    }
+
+    function closeModalOnOutsideClick(event) {
+      if (event.target.id === "detailModalBackdrop") {
+        closePlantDetailModal();
+      }
+    }
+
+    function saveModalToWishlist() {
+      if (activePlantForModal) {
+        toggleFavoritePlant(activePlantForModal.id);
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       9. LOCALSTORAGE PERSISTENCE (FAVORITES & FILTERS)
+       -------------------------------------------------------------------------- */
+    function getFavoritesFromStorage() {
+      try {
+        return JSON.parse(localStorage.getItem("herbinfo_favorites") || "[]");
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function toggleFavoritePlant(plantId, event) {
+      if (event) event.stopPropagation();
+      let favorites = getFavoritesFromStorage();
+      const idx = favorites.indexOf(plantId);
+
+      if (idx > -1) {
+        favorites.splice(idx, 1);
+        showToast("Tanaman dihapus dari daftar favorit.");
+      } else {
+        favorites.push(plantId);
+        showToast("Tanaman disimpan ke daftar favorit!");
+      }
+
+      localStorage.setItem("herbinfo_favorites", JSON.stringify(favorites));
+      applyAllFilters();
+    }
+
+    function saveFilterPreferences() {
+      const toSave = {
+        indication: currentFilterState.indication,
+        organ: currentFilterState.organ,
+        sidebarCategory: currentFilterState.sidebarCategory,
+        families: currentFilterState.families,
+        sortBy: currentFilterState.sortBy
+      };
+      localStorage.setItem("herbinfo_katalog_filters", JSON.stringify(toSave));
+    }
+
+    function loadFilterPreferences() {
+      const saved = localStorage.getItem("herbinfo_katalog_filters");
+      if (!saved) return;
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.indication) setIndicationFilter(parsed.indication);
+        if (parsed.organ) setOrganFilter(parsed.organ);
+        if (parsed.sidebarCategory) selectSidebarCategory(parsed.sidebarCategory);
+        if (parsed.sortBy) {
+          currentFilterState.sortBy = parsed.sortBy;
+          const r = document.querySelector(`input[name="sortPlants"][value="${parsed.sortBy}"]`);
+          if (r) r.checked = true;
+        }
+        if (Array.isArray(parsed.families) && parsed.families.length > 0) {
+          currentFilterState.families = parsed.families;
+          document.querySelectorAll(".family-checklist input").forEach(cb => {
+            cb.checked = parsed.families.includes(cb.value);
+          });
+        }
+      } catch (e) {
+        console.warn("Gagal memuat preferensi filter:", e);
+      }
+    }
+  </script>
+</body>
+</html>
