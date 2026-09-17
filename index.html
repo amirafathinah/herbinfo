@@ -1,0 +1,1842 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HerbInfoAI - Platform Edukasi Herbal Berbasis Teknologi Web AR dan AI Pharma Assistant." />
+  <title>HerbInfoAI — Explore . Learn . Preserve</title>
+
+  <!-- Google Fonts: Poppins & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & DESIGN SYSTEM
+       ========================================================================== */
+    :root {
+      --primary: #2D6A4F;       /* Hijau Tua */
+      --secondary: #52B788;     /* Hijau Medium */
+      --accent: #95D5B2;        /* Hijau Muda */
+      --bg-main: #F8FDF5;       /* Putih Kehijauan */
+      --bg-card: #FFFFFF;
+      --text-dark: #1B4332;
+      --text-muted: #52796F;
+      --text-light: #FFFFFF;
+      --border-color: rgba(82, 183, 136, 0.2);
+      --shadow-subtle: 0 10px 25px -5px rgba(45, 106, 79, 0.08), 0 8px 10px -6px rgba(45, 106, 79, 0.04);
+      --shadow-hover: 0 20px 30px -10px rgba(45, 106, 79, 0.16);
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ==========================================================================
+       2. RESET & BASE STYLES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      color: var(--text-dark);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(82, 183, 136, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    /* ==========================================================================
+       3. NAVIGATION BAR (STICKY)
+       ========================================================================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(248, 253, 245, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .navbar-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+
+    /* Logo Brand */
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+    }
+
+    .logo-text h1 {
+      font-size: 1.35rem;
+      letter-spacing: -0.5px;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .logo-text h1 span {
+      color: var(--secondary);
+    }
+
+    .logo-text p {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    /* Menu Links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 8px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      border-radius: var(--radius-full);
+      position: relative;
+    }
+
+    .nav-item a:hover {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.12);
+    }
+
+    .nav-item.active a {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.18);
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+
+    /* Nav Actions (Right) */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-chat-ai {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--primary);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+      transition: var(--transition);
+    }
+
+    .btn-chat-ai:hover {
+      background-color: #1f4e39;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(45, 106, 79, 0.35);
+    }
+
+    .user-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #E8F5E9;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--primary);
+      padding: 8px;
+    }
+
+    /* Mobile Nav Drawer */
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: #fff;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      border-bottom: 2px solid var(--accent);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu .nav-item a {
+      padding: 12px 16px;
+      width: 100%;
+    }
+
+    /* ==========================================================================
+       4. HERO SECTION
+       ========================================================================== */
+    .hero-section {
+      position: relative;
+      padding: 60px 0 100px;
+      background: radial-gradient(circle at 10% 20%, rgba(149, 213, 178, 0.18) 0%, transparent 60%),
+                  radial-gradient(circle at 90% 80%, rgba(82, 183, 136, 0.14) 0%, transparent 60%);
+      overflow: hidden;
+    }
+
+    /* Background Leaf Texture Manual Placeholder Note */
+    /* PLACEHOLDER: hero-bg-leaves.png - ganti CSS background-image ini bila file sudah tersedia */
+    .hero-bg-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: radial-gradient(var(--accent) 0.8px, transparent 0.8px);
+      background-size: 28px 28px;
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.05fr 1.15fr;
+      align-items: center;
+      gap: 50px;
+    }
+
+    .hero-content {
+      max-width: 560px;
+    }
+
+    .hero-content h1 {
+      font-size: 3rem;
+      line-height: 1.15;
+      margin: 20px 0 18px;
+      letter-spacing: -0.8px;
+    }
+
+    .hero-content h1 span {
+      background: linear-gradient(120deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-content p {
+      font-size: 1.08rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary-hero {
+      background: var(--primary);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(45, 106, 79, 0.28);
+      transition: var(--transition);
+    }
+
+    .btn-primary-hero:hover {
+      background: #1f4e39;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 26px rgba(45, 106, 79, 0.38);
+    }
+
+    .btn-secondary-hero {
+      background: transparent;
+      color: var(--primary);
+      padding: 13px 26px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      border: 2px solid var(--primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .btn-secondary-hero:hover {
+      background: rgba(45, 106, 79, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Visual & Interactive AR Mockup */
+    .hero-visual-wrapper {
+      position: relative;
+    }
+
+    /* Laptop Frame Mockup */
+    .laptop-frame {
+      position: relative;
+      background: #1E293B;
+      border: 10px solid #0F172A;
+      border-radius: 20px 20px 6px 6px;
+      box-shadow: 0 30px 60px -15px rgba(27, 67, 50, 0.3), 0 0 0 1px rgba(255,255,255,0.08);
+      overflow: hidden;
+      aspect-ratio: 16/10.5;
+    }
+
+    .laptop-base {
+      width: 116%;
+      height: 14px;
+      background: #334155;
+      margin: 0 auto;
+      border-radius: 0 0 12px 12px;
+      position: relative;
+      left: -8%;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+    }
+
+    .laptop-base::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 5px;
+      background: #475569;
+      border-radius: 0 0 6px 6px;
+    }
+
+    /* AR Screen Content */
+    .ar-screen {
+      height: 100%;
+      background: linear-gradient(145deg, #0A1B14, #12281E);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .ar-screen-header {
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(82, 183, 136, 0.2);
+      background: rgba(10, 27, 20, 0.7);
+      backdrop-filter: blur(8px);
+      font-size: 0.78rem;
+    }
+
+    .ar-pill {
+      background: rgba(82, 183, 136, 0.25);
+      border: 1px solid var(--secondary);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      color: #95D5B2;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .ar-pill span.pulse {
+      width: 7px;
+      height: 7px;
+      background: #52B788;
+      border-radius: 50%;
+      animation: pulse 1.6s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.4; }
+      50% { opacity: 1; transform: scale(1.15); }
+      100% { opacity: 0.4; }
+    }
+
+    .ar-screen-body {
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      flex: 1;
+      position: relative;
+    }
+
+    .ar-viewport {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    /* 3D Wireframe Overlay */
+    .ar-target-box {
+      position: absolute;
+      width: 170px;
+      height: 170px;
+      border: 1px dashed rgba(149, 213, 178, 0.5);
+      border-radius: 50%;
+      animation: spinSlow 20s linear infinite;
+    }
+
+    @keyframes spinSlow {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Visual kunyit dalam AR viewport */
+    .ar-plant-image {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      box-shadow: 0 0 35px rgba(82, 183, 136, 0.45);
+      position: relative;
+      z-index: 2;
+      border: 3px solid rgba(149, 213, 178, 0.6);
+    }
+
+    .ar-tags-overlay {
+      position: absolute;
+      font-size: 0.68rem;
+      background: rgba(18, 40, 30, 0.85);
+      border: 1px solid var(--accent);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: #E8F5E9;
+    }
+
+    .tag-rhizome {
+      top: 18%;
+      left: 12%;
+    }
+
+    .tag-curcumin {
+      bottom: 16%;
+      left: 14%;
+    }
+
+    .ar-side-panel {
+      background: rgba(10, 27, 20, 0.7);
+      border-left: 1px solid rgba(82, 183, 136, 0.2);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 0.75rem;
+    }
+
+    .herb-title h4 {
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .herb-title em {
+      color: var(--accent);
+      font-size: 0.75rem;
+      display: block;
+    }
+
+    .active-compounds {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .compound-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 6px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      font-size: 0.7rem;
+    }
+
+    .ar-action-btns {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ar-btn {
+      padding: 5px;
+      font-size: 0.68rem;
+      font-weight: 600;
+      border-radius: 4px;
+      border: 1px solid var(--secondary);
+      background: rgba(82, 183, 136, 0.2);
+      color: #fff;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .ar-btn.active {
+      background: var(--secondary);
+      color: #0c2117;
+    }
+
+    /* Floating Card AI Pharma Assistant */
+    .floating-ai-card {
+      position: absolute;
+      bottom: -22px;
+      left: -25px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(82, 183, 136, 0.4);
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 16px 36px rgba(45, 106, 79, 0.18);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 320px;
+      z-index: 10;
+      animation: floatUpDown 4.5s ease-in-out infinite;
+    }
+
+    @keyframes floatUpDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .floating-ai-avatar {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .floating-ai-text p.title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .floating-ai-text p.bubble {
+      font-size: 0.72rem;
+      color: #334155;
+      line-height: 1.3;
+    }
+
+    /* ==========================================================================
+       5. FEATURES SECTION: "Kenapa Harus HerbInfoAI?"
+       ========================================================================== */
+    .section-features {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 54px;
+    }
+
+    .section-header h2 {
+      font-size: 2.25rem;
+      letter-spacing: -0.5px;
+      margin: 12px 0 10px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon-box {
+      width: 58px;
+      height: 58px;
+      border-radius: var(--radius-md);
+      background: rgba(82, 183, 136, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      margin-bottom: 22px;
+      transition: var(--transition);
+    }
+
+    .feature-card:hover .feature-icon-box {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .feature-icon-box svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: #4A5568;
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       6. STATISTIK / TRUST INDICATORS
+       ========================================================================== */
+    .section-stats {
+      padding: 60px 0;
+      background: linear-gradient(135deg, rgba(45, 106, 79, 0.05), rgba(82, 183, 136, 0.1));
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 10px;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 12px;
+      color: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-number {
+      font-size: 2.3rem;
+      font-family: var(--font-heading);
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       7. FEATURED HERBS PREVIEW
+       ========================================================================== */
+    .section-herbs {
+      padding: 100px 0;
+    }
+
+    .herbs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 40px;
+    }
+
+    .herb-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .herb-card:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--secondary);
+    }
+
+    .herb-img-wrapper {
+      position: relative;
+      height: 200px;
+      overflow: hidden;
+      background: #E2E8F0;
+    }
+
+    .herb-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .herb-card:hover .herb-img-wrapper img {
+      transform: scale(1.08);
+    }
+
+    .herb-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.9);
+      color: var(--primary);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      backdrop-filter: blur(4px);
+    }
+
+    .herb-body {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .herb-common-name {
+      font-size: 1.25rem;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .herb-latin-name {
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .herb-snippet {
+      font-size: 0.88rem;
+      color: #4A5568;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .herb-footer {
+      margin-top: auto;
+      border-top: 1px solid #EDF2F7;
+      padding-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-detail {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-detail:hover {
+      color: var(--secondary);
+      gap: 9px;
+    }
+
+    /* ==========================================================================
+       8. CTA BANNER
+       ========================================================================== */
+    .section-cta-banner {
+      padding: 0 0 100px;
+    }
+
+    .cta-banner-box {
+      background: linear-gradient(135deg, var(--primary) 0%, #1a4f38 100%);
+      border-radius: var(--radius-lg);
+      padding: 60px 48px;
+      color: #fff;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 24px 48px rgba(45, 106, 79, 0.28);
+    }
+
+    .cta-banner-box::after {
+      content: '';
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(149, 213, 178, 0.2) 0%, transparent 70%);
+      top: -100px;
+      right: -80px;
+      border-radius: 50%;
+    }
+
+    .cta-banner-box h2 {
+      color: #fff;
+      font-size: 2.3rem;
+      margin-bottom: 12px;
+    }
+
+    .cta-banner-box p {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+
+    .cta-button-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+
+    .btn-cta-white {
+      background: #FFFFFF;
+      color: var(--primary);
+      padding: 13px 28px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .btn-cta-white:hover {
+      background: var(--bg-main);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-cta-outline {
+      background: transparent;
+      color: #FFFFFF;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      padding: 12px 28px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .btn-cta-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #FFFFFF;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       9. FOOTER
+       ========================================================================== */
+    .site-footer {
+      background: #12281E;
+      color: #E2E8F0;
+      padding: 70px 0 24px;
+      border-top: 1px solid rgba(82, 183, 136, 0.2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .footer-col h4 {
+      color: #FFFFFF;
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 28px;
+      height: 2px;
+      background: var(--secondary);
+    }
+
+    .footer-desc {
+      font-size: 0.88rem;
+      color: #A0AEC0;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: #CBD5E0;
+    }
+
+    .footer-links a:hover {
+      color: var(--secondary);
+      padding-left: 4px;
+    }
+
+    /* Newsletter Box */
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(82, 183, 136, 0.3);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      border-color: var(--secondary);
+    }
+
+    .newsletter-btn {
+      background: var(--secondary);
+      color: #0c2117;
+      font-weight: 600;
+      border: none;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .newsletter-btn:hover {
+      background: var(--accent);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #CBD5E0;
+      transition: var(--transition);
+    }
+
+    .social-icon:hover {
+      background: var(--secondary);
+      color: #12281E;
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #A0AEC0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-links a:hover {
+      color: #FFFFFF;
+    }
+
+    /* ==========================================================================
+       10. ANIMATIONS & REVEAL EFFECTS
+       ========================================================================== */
+    .fade-in-scroll {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       11. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 60px;
+        text-align: center;
+      }
+
+      .hero-content {
+        margin: 0 auto;
+      }
+
+      .hero-cta-group {
+        justify-content: center;
+      }
+
+      .laptop-frame {
+        max-width: 580px;
+        margin: 0 auto;
+      }
+
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .herbs-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 36px;
+      }
+
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-actions {
+        display: none;
+      }
+
+      .hamburger-btn {
+        display: block;
+      }
+
+      .hero-content h1 {
+        font-size: 2.2rem;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .herbs-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .floating-ai-card {
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        bottom: -35px;
+      }
+
+      .ar-screen-body {
+        grid-template-columns: 1fr;
+      }
+
+      .ar-side-panel {
+        display: none; /* Hide side-panel in mini mockups on tiny screens */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       NAVIGATION BAR (Sticky Top)
+       ========================================================================== -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <!-- Logo Kiri -->
+      <!-- PLACEHOLDER LOGO: logo-herbinfoai.svg 
+           Ganti ikon SVG di bawah dengan <img src="logo-herbinfoai.svg" alt="HerbInfoAI"> jika file tersedia -->
+      <a href="index.html" class="logo-wrapper">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>HerbInfo<span>AI</span></h1>
+          <p>Explore . Learn . Preserve</p>
+        </div>
+      </a>
+
+      <!-- Menu Tengah -->
+      <ul class="nav-links">
+        <li class="nav-item active">
+          <a href="index.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </span>
+            Beranda
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="ar-scan.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-.9-.9"/></svg>
+            </span>
+            AR Scan
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="katalog.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+            </span>
+            Katalog Herbal
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="estore.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            </span>
+            E-Store
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="laporan.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+            </span>
+            Laporan Praktikum
+          </a>
+        </li>
+      </ul>
+
+      <!-- Nav Kanan -->
+      <div class="nav-actions">
+        <button class="btn-chat-ai" onclick="openAIChat()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+          Chat AI
+        </button>
+        <a href="profil.html" class="user-avatar" title="Akun Pengguna">
+          <!-- Placeholder avatar: inisial atau foto profil pengguna -->
+          <span>HI</span>
+        </a>
+      </div>
+
+      <!-- Hamburger Button (Mobile) -->
+      <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Navigation">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-menu" id="mobileMenu">
+      <li class="nav-item active"><a href="index.html">🌱 Beranda</a></li>
+      <li class="nav-item"><a href="ar-scan.html">📷 AR Scan</a></li>
+      <li class="nav-item"><a href="katalog.html">📖 Katalog Herbal</a></li>
+      <li class="nav-item"><a href="estore.html">🛒 E-Store</a></li>
+      <li class="nav-item"><a href="laporan.html">📄 Laporan Praktikum</a></li>
+      <div style="margin-top: 16px; display:flex; flex-direction:column; gap:10px;">
+        <button class="btn-chat-ai" style="justify-content: center;" onclick="openAIChat()">🤖 Chat AI Pharma</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         HERO SECTION
+         ========================================================================== -->
+    <section class="hero-section">
+      <!-- Background pattern/leaves subtle -->
+      <!-- PLACEHOLDER: hero-bg-leaves.png -->
+      <div class="hero-bg-overlay"></div>
+
+      <div class="container hero-grid">
+        <!-- Hero Content -->
+        <div class="hero-content">
+          <div class="badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+            Edukasi Herbal Berbasis Teknologi
+          </div>
+          <h1>Transformasi Digital Edukasi Obat Tradisional Indonesia</h1>
+          <p>Eksplorasi tanaman obat, pahami kandungan dan manfaatnya dengan teknologi Web AR dan AI Pharma Assistant.</p>
+          
+          <div class="hero-cta-group">
+            <a href="ar-scan.html" class="btn-primary-hero">
+              <span>🥽</span> Coba Praktikum AR &rarr;
+            </a>
+            <a href="katalog.html" class="btn-secondary-hero">
+              <span>📖</span> Jelajahi Katalog
+            </a>
+          </div>
+        </div>
+
+        <!-- Hero Visual: Mockup Laptop & Curcuma Longa AR Display -->
+        <!-- PLACEHOLDER: hero-laptop-mockup.png 
+             (Jika Anda memiliki file hero-laptop-mockup.png yang sudah dirender utuh, ganti komponen .laptop-wrapper ini dengan <img src="hero-laptop-mockup.png" alt="AR Mockup">) -->
+        <div class="hero-visual-wrapper">
+          <div class="laptop-frame">
+            <div class="ar-screen">
+              <!-- AR Topbar -->
+              <div class="ar-screen-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="display:inline-block; width:8px; height:8px; background:#EF4444; border-radius:50%;"></span>
+                  <span style="display:inline-block; width:8px; height:8px; background:#F59E0B; border-radius:50%;"></span>
+                  <span style="display:inline-block; width:8px; height:8px; background:#10B981; border-radius:50%;"></span>
+                  <span style="margin-left: 8px; font-weight:600; font-size:0.75rem;">HerbInfoAR - Realtime View</span>
+                </div>
+                <div class="ar-pill">
+                  <span class="pulse"></span> Tracking Aktif (Webcam AR)
+                </div>
+              </div>
+
+              <!-- AR Body Viewport -->
+              <div class="ar-screen-body">
+                <div class="ar-viewport">
+                  <!-- Wireframe circular rotation effect -->
+                  <div class="ar-target-box"></div>
+                  
+                  <!-- PLACEHOLDER TANAMAN KUNYIT: herb-kunyit.jpg -->
+                  <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80" 
+                       alt="Curcuma longa (Kunyit)" 
+                       class="ar-plant-image" />
+                  
+                  <div class="ar-tags-overlay tag-rhizome">
+                    🌿 Rimpang (Rhizoma)
+                  </div>
+                  <div class="ar-tags-overlay tag-curcumin">
+                    🧬 Kurkuminoid: 77%
+                  </div>
+                </div>
+
+                <!-- AR Sidebar Data -->
+                <div class="ar-side-panel">
+                  <div class="herb-title">
+                    <h4>Kunyit</h4>
+                    <em>Curcuma longa L.</em>
+                  </div>
+
+                  <div>
+                    <span style="color:#A0AEC0; font-size:0.68rem;">Kandungan Aktif:</span>
+                    <div class="active-compounds">
+                      <div class="compound-item">
+                        <span>Kurkumin</span>
+                        <strong style="color:var(--accent);">C21H20O6</strong>
+                      </div>
+                      <div class="compound-item">
+                        <span>Minyak Atsiri</span>
+                        <strong>3 - 5%</strong>
+                      </div>
+                      <div class="compound-item">
+                        <span>Polifenol</span>
+                        <strong>Antioksidan</strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="ar-action-btns">
+                    <button class="ar-btn active">Analisis 3D</button>
+                    <button class="ar-btn">Farmakologi</button>
+                    <button class="ar-btn">Info Herbal</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Laptop Base Foot -->
+          <div class="laptop-base"></div>
+
+          <!-- Floating AI Pharma Card -->
+          <div class="floating-ai-card">
+            <div class="floating-ai-avatar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4v1H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4Z"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
+            </div>
+            <div class="floating-ai-text">
+              <p class="title">AI Pharma Assistant</p>
+              <p class="bubble">"Tanya apa saja tentang fitokimia dan obat herbal..."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: "Kenapa Harus HerbInfoAI?"
+         ========================================================================== -->
+    <section class="section-features">
+      <div class="container">
+        <div class="section-header fade-in-scroll">
+          <div class="badge">Keunggulan Platform</div>
+          <h2>Kenapa Harus HerbInfoAI?</h2>
+          <p>Solusi pembelajaran herbal yang interaktif, modern, dan terpercaya untuk akademisi, apoteker, dan masyarakat.</p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Feature 1 -->
+          <!-- PLACEHOLDER ICON: icon-feature-scan.svg -->
+          <div class="feature-card fade-in-scroll">
+            <div class="feature-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-.9-.9"/></svg>
+            </div>
+            <h3>Web Based Dual Input</h3>
+            <p>Upload file/foto atau gunakan webcam untuk scan secara langsung tanpa instalasi aplikasi tambahan.</p>
+          </div>
+
+          <!-- Feature 2 -->
+          <!-- PLACEHOLDER ICON: icon-feature-3d.svg -->
+          <div class="feature-card fade-in-scroll">
+            <div class="feature-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <h3>Interactive 3D Fitokimia & Anatomi</h3>
+            <p>Lihat struktur tanaman, senyawa aktif, dan bagian anatomi secara 3D dengan visual molekuler presisi.</p>
+          </div>
+
+          <!-- Feature 3 -->
+          <!-- PLACEHOLDER ICON: icon-feature-ai.svg -->
+          <div class="feature-card fade-in-scroll">
+            <div class="feature-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>
+            </div>
+            <h3>AI Pharma Assistant</h3>
+            <p>Tanya jawab medis real time dengan sumber literatur farmasi, fitoterapi, dan jurnal herbal terpercaya.</p>
+          </div>
+
+          <!-- Feature 4 -->
+          <!-- PLACEHOLDER ICON: icon-feature-report.svg -->
+          <div class="feature-card fade-in-scroll">
+            <div class="feature-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="m9 15 2 2 4-4"/></svg>
+            </div>
+            <h3>Generate Laporan Praktikum</h3>
+            <p>Otomatisasi laporan praktikum berbasis data pengamatan dan AI Pharma, siap diunduh dalam format DOC & PDF.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: STATISTIK / TRUST INDICATOR
+         ========================================================================== -->
+    <section class="section-stats">
+      <div class="container">
+        <div class="stats-grid">
+          <!-- Stat 1 -->
+          <div class="stat-item fade-in-scroll">
+            <div class="stat-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </div>
+            <div class="stat-number" data-target="500">500+</div>
+            <div class="stat-label">Tanaman Herbal</div>
+          </div>
+
+          <!-- Stat 2 -->
+          <div class="stat-item fade-in-scroll">
+            <div class="stat-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="m10.5 10.5-4 7"/><path d="m13.5 13.5 4-7"/></svg>
+            </div>
+            <div class="stat-number" data-target="50">50+</div>
+            <div class="stat-label">Senyawa Fitokimia 3D</div>
+          </div>
+
+          <!-- Stat 3 -->
+          <div class="stat-item fade-in-scroll">
+            <div class="stat-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div class="stat-number" data-target="10000">10.000+</div>
+            <div class="stat-label">Mahasiswa & Peneliti</div>
+          </div>
+
+          <!-- Stat 4 -->
+          <div class="stat-item fade-in-scroll">
+            <div class="stat-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Kepuasan Pengguna</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: FEATURED HERBS PREVIEW
+         ========================================================================== -->
+    <section class="section-herbs">
+      <div class="container">
+        <div class="section-header fade-in-scroll">
+          <div class="badge">Koleksi Terpopuler</div>
+          <h2>Tanaman Herbal Unggulan</h2>
+          <p>Mulai eksplorasi dari tanaman obat paling populer di Indonesia dengan data fitokimia lengkap.</p>
+        </div>
+
+        <div class="herbs-grid">
+          <!-- Card 1: Jahe -->
+          <!-- PLACEHOLDER FOTO: herb-jahe.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=600&q=80" alt="Jahe (Zingiber officinale)" />
+              <span class="herb-badge">Imunomodulator</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Jahe</h3>
+              <span class="herb-latin-name">Zingiber officinale</span>
+              <p class="herb-snippet">Kaya kandungan gingerol dan shogaol yang efektif meredakan inflamasi dan menghangatkan sistem pencernaan.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
+                <a href="katalog.html?id=jahe" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Kunyit -->
+          <!-- PLACEHOLDER FOTO: herb-kunyit.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80" alt="Kunyit (Curcuma longa)" />
+              <span class="herb-badge">Hepatoprotektor</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Kunyit</h3>
+              <span class="herb-latin-name">Curcuma longa L.</span>
+              <p class="herb-snippet">Memiliki kandungan kurkuminoid tinggi yang berperan sebagai antioksidan kuat dan pelindung fungsi organ hati.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
+                <a href="katalog.html?id=kunyit" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Temulawak -->
+          <!-- PLACEHOLDER FOTO: herb-temulawak.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80" alt="Temulawak (Curcuma xanthorrhiza)" />
+              <span class="herb-badge">Digestif</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Temulawak</h3>
+              <span class="herb-latin-name">Curcuma xanthorrhiza</span>
+              <p class="herb-snippet">Kandungan xanthorrhizol terbukti klinis meningkatkan nafsu makan dan menjaga kestabilan saluran cerna.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
+                <a href="katalog.html?id=temulawak" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Lidah Buaya -->
+          <!-- PLACEHOLDER FOTO: herb-lidah-buaya.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80" alt="Lidah Buaya (Aloe vera)" />
+              <span class="herb-badge">Dermatologis</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Lidah Buaya</h3>
+              <span class="herb-latin-name">Aloe vera</span>
+              <p class="herb-snippet">Mengandung polisakarida asemannan yang mempercepat regenerasi sel kulit dan penyembuhan luka bakar.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
+                <a href="katalog.html?id=aloevera" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5: Sirih -->
+          <!-- PLACEHOLDER FOTO: herb-sirih.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80" alt="Sirih (Piper betle)" />
+              <span class="herb-badge">Antiseptik</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Sirih Hijau</h3>
+              <span class="herb-latin-name">Piper betle</span>
+              <p class="herb-snippet">Mengandung kavikol dan eugenol dengan aktivitas bakterisidal kuat alami untuk higienitas dan kesehatan mukosa.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
+                <a href="katalog.html?id=sirih" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6: Jahe Merah -->
+          <!-- PLACEHOLDER FOTO: herb-jahe-merah.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80" alt="Jahe Merah (Zingiber officinale var. rubrum)" />
+              <span class="herb-badge">Analgesik Alami</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Jahe Merah</h3>
+              <span class="herb-latin-name">Zingiber officinale var. rubrum</span>
+              <p class="herb-snippet">Konsentrasi minyak atsiri dan oleoresin yang lebih pekat, umum diformulasikan untuk stamina dan pereda nyeri sendi.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
+                <a href="katalog.html?id=jahemerah" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: CTA BANNER
+         ========================================================================== -->
+    <section class="section-cta-banner">
+      <div class="container">
+        <div class="cta-banner-box fade-in-scroll">
+          <h2>Siap Memulai Perjalanan Herbal Kamu?</h2>
+          <p>Gabung sekarang dan akses simulasi praktikum AR, analisis molekul 3D, dan konsultasi AI Pharma Assistant secara gratis.</p>
+          <div class="cta-button-row">
+            <a href="ar-scan.html" class="btn-cta-white">🚀 Mulai Praktikum AR</a>
+            <a href="kontak.html" class="btn-cta-outline">Hubungi Kami</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Col 1 -->
+        <div class="footer-col">
+          <div class="logo-wrapper" style="margin-bottom: 12px;">
+            <div class="logo-icon" style="background:var(--secondary); color:#12281E;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </div>
+            <div class="logo-text">
+              <h2 style="font-size:1.3rem; color:#fff;">HerbInfo<span style="color:var(--secondary);">AI</span></h2>
+              <p style="color:#A0AEC0;">Explore . Learn . Preserve</p>
+            </div>
+          </div>
+          <p class="footer-desc">
+            HerbInfoAI adalah platform teknologi farmasi terintegrasi Web AR dan kecerdasan buatan untuk preservasi serta edukasi saintifik tanaman obat nusantara.
+          </p>
+        </div>
+
+        <!-- Col 2 -->
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="ar-scan.html">AR Scan Praktikum</a></li>
+            <li><a href="katalog.html">Katalog Herbal 3D</a></li>
+            <li><a href="estore.html">E-Store Simplisia</a></li>
+            <li><a href="laporan.html">Laporan Praktikum Otomatis</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3 -->
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul class="footer-links">
+            <li><a href="tentang.html">Tentang Kami</a></li>
+            <li><a href="faq.html">Tanya Jawab (FAQ)</a></li>
+            <li><a href="blog.html">Jurnal &amp; Artikel Fitokimia</a></li>
+            <li><a href="kontak.html">Kontak &amp; Kerjasama Kampus</a></li>
+            <li><a href="panduan.html">Panduan Praktikum AR</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4 -->
+        <div class="footer-col">
+          <h4>Tetap Terhubung</h4>
+          <p style="font-size:0.85rem; color:#A0AEC0; margin-bottom: 12px;">Dapatkan wawasan fitofarmaka mingguan langsung di email Anda.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); handleSubscribe();">
+            <input type="email" id="newsEmail" placeholder="Email kampus/pribadi..." class="newsletter-input" required />
+            <button type="submit" class="newsletter-btn">Daftar</button>
+          </form>
+
+          <div class="social-links">
+            <a href="#" class="social-icon" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="GitHub">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <div>&copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.</div>
+        <div class="footer-legal-links">
+          <a href="privacy.html">Kebijakan Privasi</a>
+          <a href="terms.html">Syarat &amp; Ketentuan</a>
+          <a href="disclaimer.html">Medical Disclaimer</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       12. JAVASCRIPT LOGIC & STATE PERSISTENCE
+       ========================================================================== -->
+  <script>
+    // Inisialisasi mock data dan sesi pengguna di localStorage
+    document.addEventListener("DOMContentLoaded", () => {
+      initSession();
+      initScrollReveal();
+    });
+
+    // 1. Session & Storage Mocking
+    function initSession() {
+      if (!localStorage.getItem("herb_user_session")) {
+        const dummyUser = {
+          name: "Mahasiswa Farmasi",
+          role: "Praktikan",
+          id: "USR-202609-01",
+          institution: "Fakultas Farmasi"
+        };
+        localStorage.setItem("herb_user_session", JSON.stringify(dummyUser));
+      }
+
+      if (!localStorage.getItem("herb_cart_items")) {
+        localStorage.setItem("herb_cart_items", JSON.stringify([]));
+      }
+    }
+
+    // 2. Mobile Hamburger Menu Toggle
+    const menuToggle = document.getElementById("menuToggle");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    if (menuToggle && mobileMenu) {
+      menuToggle.addEventListener("click", () => {
+        mobileMenu.classList.toggle("open");
+      });
+    }
+
+    // 3. Floating Action & AI Chat Trigger
+    function openAIChat() {
+      // Menyimpan state trigger prompt untuk halaman / modal chat
+      localStorage.setItem("herb_ai_prompt_state", "Tanya apa saja tentang fitokimia...");
+      alert("Membuka sesi konsultasi AI Pharma Assistant. Mengarahkan ke modul interaktif...");
+      // window.location.href = 'ar-scan.html?mode=ai-chat';
+    }
+
+    // 4. Newsletter Handler
+    function handleSubscribe() {
+      const emailInput = document.getElementById("newsEmail");
+      if (emailInput && emailInput.value) {
+        alert("Terima kasih! " + emailInput.value + " berhasil terdaftar di buletin HerbInfoAI.");
+        emailInput.value = "";
+      }
+    }
+
+    // 5. Scroll Reveal Effect (IntersectionObserver)
+    function initScrollReveal() {
+      const reveals = document.querySelectorAll(".fade-in-scroll");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+
+      reveals.forEach((el) => observer.observe(el));
+    }
+  </script>
+</body>
+</html>
