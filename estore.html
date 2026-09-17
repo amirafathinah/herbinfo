@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HerbInfoAI E-Store - Beli Paket E-Flashcard AR, Langganan Pro AI Pharma Assistant, dan Lisensi SaaS Kampus." />
+  <title>Digital E-Store — HerbInfoAI</title>
+
+  <!-- Google Fonts: Poppins & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. DESIGN SYSTEM & CSS VARIABLES
+       ========================================================================== */
+    :root {
+      --primary: #2D6A4F;       /* Hijau Tua */
+      --secondary: #52B788;     /* Hijau Medium */
+      --accent: #95D5B2;        /* Hijau Muda */
+      --bg-main: #F8FDF5;       /* Putih Kehijauan */
+      --bg-card: #FFFFFF;
+      --text-dark: #1B4332;
+      --text-muted: #52796F;
+      --text-light: #FFFFFF;
+      --border-color: rgba(82, 183, 136, 0.22);
+      --shadow-subtle: 0 10px 25px -5px rgba(45, 106, 79, 0.08), 0 8px 10px -6px rgba(45, 106, 79, 0.04);
+      --shadow-hover: 0 20px 30px -10px rgba(45, 106, 79, 0.16);
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      color: var(--text-dark);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+    }
+
+    button, select, input {
+      font-family: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(82, 183, 136, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: #1B4332;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.22);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: var(--transition);
+      border-left: 4px solid var(--secondary);
+    }
+
+    .toast-box.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       2. NAVIGATION BAR (STICKY & RESPONSIVE)
+       ========================================================================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(248, 253, 245, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .navbar-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+    }
+
+    .logo-text h1 {
+      font-size: 1.35rem;
+      letter-spacing: -0.5px;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .logo-text h1 span {
+      color: var(--secondary);
+    }
+
+    .logo-text p {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 8px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      border-radius: var(--radius-full);
+    }
+
+    .nav-item a:hover {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.12);
+    }
+
+    .nav-item.active a {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.18);
+      font-weight: 600;
+    }
+
+    .nav-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-chat-ai {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--primary);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+      transition: var(--transition);
+    }
+
+    .btn-chat-ai:hover {
+      background-color: #1f4e39;
+      transform: translateY(-2px);
+    }
+
+    /* PLACEHOLDER ICON: icon-cart.svg */
+    .cart-btn-wrapper {
+      position: relative;
+      cursor: pointer;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(82, 183, 136, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      border: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .cart-btn-wrapper:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #E63946;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+    }
+
+    .user-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #E8F5E9;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--primary);
+      padding: 8px;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: #fff;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      border-bottom: 2px solid var(--accent);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu .nav-item a {
+      padding: 12px 16px;
+      width: 100%;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION - E-STORE
+       ========================================================================== */
+    .estore-hero {
+      position: relative;
+      padding: 60px 0 70px;
+      background: radial-gradient(circle at 85% 20%, rgba(149, 213, 178, 0.3) 0%, transparent 60%),
+                  radial-gradient(circle at 10% 80%, rgba(82, 183, 136, 0.2) 0%, transparent 60%);
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* PLACEHOLDER: hero-herb-illustration.png */
+    .hero-pattern-bg {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(var(--accent) 0.85px, transparent 0.85px);
+      background-size: 26px 26px;
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .estore-hero-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .estore-hero-badge {
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .estore-hero-title {
+      font-size: 3.1rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--primary);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .estore-hero-sub {
+      font-size: 1.12rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 520px;
+    }
+
+    /* PLACEHOLDER: hero-laptop-phone-mockup.png */
+    .hero-mockup-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-mockup-visual {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(82, 183, 136, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-hover);
+      position: relative;
+    }
+
+    .mockup-inner-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .mock-laptop-screen {
+      background: #12281E;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      color: #fff;
+      font-size: 0.75rem;
+      border: 1px solid rgba(149, 213, 178, 0.4);
+    }
+
+    .mock-phone-screen {
+      background: #FFFFFF;
+      border-radius: 18px;
+      padding: 12px;
+      border: 3px solid #1B4332;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      font-size: 0.72rem;
+      text-align: center;
+    }
+
+    .mock-phone-img {
+      width: 100%;
+      height: 90px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin: 6px 0;
+    }
+
+    /* ==========================================================================
+       4. TAB KATEGORI PRODUK
+       ========================================================================== */
+    .section-category-tabs {
+      padding: 36px 0 16px;
+    }
+
+    .tabs-pill-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tab-pill-btn {
+      padding: 12px 24px;
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1.5px solid var(--accent);
+      background: #FFFFFF;
+      color: var(--primary);
+    }
+
+    .tab-pill-btn:hover {
+      border-color: var(--secondary);
+      background: rgba(82, 183, 136, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .tab-pill-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      box-shadow: 0 4px 14px rgba(45, 106, 79, 0.28);
+    }
+
+    /* ==========================================================================
+       5. PRODUCT CARDS GRID (3 KOLOM)
+       ========================================================================== */
+    .section-products {
+      padding: 30px 0 80px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* HIGHLIGHT CARD (PRO B2C) */
+    .product-card.featured-pro {
+      border: 2px solid var(--secondary);
+      box-shadow: 0 16px 36px rgba(45, 106, 79, 0.18);
+      position: relative;
+      background: linear-gradient(180deg, #FFFFFF 0%, #FAFEF9 100%);
+    }
+
+    .card-top-badges {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .badge-category {
+      background: rgba(82, 183, 136, 0.16);
+      color: var(--primary);
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .badge-label-right {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+    }
+
+    .badge-bestseller {
+      background: #FBBF24;
+      color: #78350F;
+    }
+
+    .badge-popular {
+      background: var(--secondary);
+      color: #FFFFFF;
+    }
+
+    .badge-institutional {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      background: transparent;
+    }
+
+    .product-title {
+      font-size: 1.45rem;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .product-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* Visual Mockups inside cards */
+    .card-visual-frame {
+      height: 160px;
+      background: #F0FFF4;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(82, 183, 136, 0.2);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* PLACEHOLDER: product-flashcard-mockup.png */
+    /* PLACEHOLDER: product-ai-laptop-mockup.png */
+    /* PLACEHOLDER: product-saas-campus.png */
+    .card-visual-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Feature List */
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-bottom: 24px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88rem;
+      color: #2D3748;
+    }
+
+    /* PLACEHOLDER ICON: icon-check.svg */
+    .check-icon {
+      color: var(--secondary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Card Bottom Area (Pricing & Buttons) */
+    .card-bottom-actions {
+      margin-top: auto;
+      border-top: 1px solid #EDF2F7;
+      padding-top: 18px;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .price-val {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .price-period {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .badge-price-type {
+      font-size: 0.74rem;
+      background: #EDF2F7;
+      color: #64748B;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+    }
+
+    .btn-group-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-action-primary {
+      background: var(--primary);
+      color: #FFFFFF;
+      border: 1.5px solid var(--primary);
+      padding: 12px 14px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .btn-action-primary:hover {
+      background: #1f4e39;
+    }
+
+    .btn-action-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+      padding: 12px 14px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: var(--transition);
+      text-align: center;
+    }
+
+    .btn-action-secondary:hover {
+      background: rgba(45, 106, 79, 0.08);
+    }
+
+    /* Subscription Dropdown Styles */
+    .duration-selector-wrap {
+      margin-bottom: 12px;
+    }
+
+    .duration-selector-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: block;
+      font-weight: 600;
+    }
+
+    .duration-select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      background: #FFFFFF;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .duration-select:focus {
+      border-color: var(--secondary);
+    }
+
+    .trust-badge-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    /* B2B Sales Box */
+    .b2b-sales-box {
+      background: rgba(240, 255, 244, 0.9);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .b2b-sales-box:hover {
+      background: rgba(149, 213, 178, 0.25);
+      transform: translateX(3px);
+    }
+
+    .b2b-sales-text {
+      font-size: 0.84rem;
+      color: var(--primary);
+    }
+
+    /* ==========================================================================
+       6. COMPARISON TABLE SECTION
+       ========================================================================== */
+    .section-comparison {
+      padding: 60px 0 80px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin-top: 36px;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    .comparison-table th, .comparison-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid #EDF2F7;
+    }
+
+    .comparison-table th {
+      background: var(--bg-main);
+      color: var(--text-dark);
+      font-family: var(--font-heading);
+      font-weight: 700;
+    }
+
+    .comparison-table th.highlight-col,
+    .comparison-table td.highlight-col {
+      background: rgba(82, 183, 136, 0.08);
+      border-left: 2px solid var(--secondary);
+      border-right: 2px solid var(--secondary);
+    }
+
+    .comparison-table th.highlight-col {
+      border-top: 3px solid var(--secondary);
+    }
+
+    .comparison-table td.feature-title-col {
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-dark);
+      width: 280px;
+    }
+
+    /* ==========================================================================
+       7. PAYMENT METHODS SECTION
+       ========================================================================== */
+    .section-payments {
+      padding: 60px 0;
+    }
+
+    .payment-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    /* PLACEHOLDER LOGOS: payment-bca.png, payment-gopay.png, payment-visa.png, etc */
+    .payment-item {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 22px;
+      box-shadow: var(--shadow-subtle);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #64748B;
+      filter: grayscale(100%);
+      opacity: 0.75;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .payment-item:hover {
+      filter: grayscale(0%);
+      opacity: 1;
+      border-color: var(--secondary);
+      color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    /* ==========================================================================
+       8. TESTIMONIALS SECTION
+       ========================================================================== */
+    .section-testimonials {
+      padding: 70px 0;
+      background: linear-gradient(180deg, rgba(82, 183, 136, 0.06) 0%, transparent 100%);
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 36px;
+    }
+
+    .testi-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-subtle);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .testi-stars {
+      color: #F59E0B;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+    }
+
+    .testi-quote {
+      font-size: 0.92rem;
+      color: #4A5568;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      font-style: italic;
+    }
+
+    .testi-user-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    /* PLACEHOLDER AVATAR: avatar-mahasiswa.jpg, avatar-dosen.jpg, avatar-peneliti.jpg */
+    .testi-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--secondary);
+    }
+
+    .testi-info h4 {
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    .testi-info span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       9. FAQ ACCORDION SECTION
+       ========================================================================== */
+    .section-faq {
+      padding: 70px 0;
+    }
+
+    .faq-container {
+      max-width: 800px;
+      margin: 36px auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .faq-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-subtle);
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .faq-header {
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+      font-size: 0.98rem;
+      color: var(--text-dark);
+    }
+
+    .faq-header:hover {
+      color: var(--primary);
+    }
+
+    .faq-icon-arrow {
+      transition: transform 0.3s ease;
+      color: var(--secondary);
+    }
+
+    .faq-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 22px;
+      font-size: 0.88rem;
+      color: #4A5568;
+      line-height: 1.6;
+    }
+
+    .faq-card.open .faq-body {
+      max-height: 200px;
+      padding-bottom: 20px;
+    }
+
+    .faq-card.open .faq-icon-arrow {
+      transform: rotate(180deg);
+    }
+
+    /* ==========================================================================
+       10. CTA BANNER SECTION
+       ========================================================================== */
+    .section-cta-banner {
+      padding: 0 0 80px;
+    }
+
+    .cta-banner-box {
+      background: linear-gradient(135deg, var(--primary) 0%, #17422E 100%);
+      border-radius: var(--radius-lg);
+      padding: 56px 40px;
+      color: #fff;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-hover);
+    }
+
+    .cta-banner-box h2 {
+      color: #FFFFFF;
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+
+    .cta-banner-box p {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    .cta-btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-cta-white {
+      background: #FFFFFF;
+      color: var(--primary);
+      padding: 13px 28px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .btn-cta-white:hover {
+      background: var(--bg-main);
+      transform: translateY(-2px);
+    }
+
+    .btn-cta-outline {
+      background: transparent;
+      color: #FFFFFF;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      padding: 12px 28px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: var(--transition);
+    }
+
+    .btn-cta-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #FFFFFF;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       11. CART SLIDE-OVER DRAWER
+       ========================================================================== */
+    .cart-drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 40, 30, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 2100;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 420px;
+      background: #FFFFFF;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 2200;
+    }
+
+    .cart-drawer.open {
+      transform: translateX(0);
+    }
+
+    .cart-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-main);
+    }
+
+    .cart-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    .cart-items-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .cart-empty-text {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    .cart-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #EDF2F7;
+    }
+
+    .cart-item-info h4 {
+      font-size: 0.92rem;
+      color: var(--text-dark);
+    }
+
+    .cart-item-info span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .cart-item-price {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+
+    .cart-item-delete {
+      background: none;
+      border: none;
+      color: #E63946;
+      cursor: pointer;
+      font-size: 0.8rem;
+      margin-left: 8px;
+    }
+
+    .cart-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-main);
+    }
+
+    .cart-subtotal-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--primary);
+    }
+
+    /* Checkout Simulation Modal */
+    .checkout-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 40, 30, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 2500;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .checkout-modal-card {
+      background: #FFFFFF;
+      max-width: 480px;
+      width: 100%;
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      text-align: center;
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* ==========================================================================
+       12. FOOTER (IDENTIK DENGAN HALAMAN SEBELUMNYA)
+       ========================================================================== */
+    .site-footer {
+      background: #12281E;
+      color: #E2E8F0;
+      padding: 70px 0 24px;
+      border-top: 1px solid rgba(82, 183, 136, 0.2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .footer-col h4 {
+      color: #FFFFFF;
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 28px;
+      height: 2px;
+      background: var(--secondary);
+    }
+
+    .footer-desc {
+      font-size: 0.88rem;
+      color: #A0AEC0;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: #CBD5E0;
+    }
+
+    .footer-links a:hover {
+      color: var(--secondary);
+      padding-left: 4px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(82, 183, 136, 0.3);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    .newsletter-input:focus {
+      outline: none;
+      border-color: var(--secondary);
+    }
+
+    .newsletter-btn {
+      background: var(--secondary);
+      color: #0c2117;
+      font-weight: 600;
+      border: none;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .newsletter-btn:hover {
+      background: var(--accent);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #CBD5E0;
+      transition: var(--transition);
+    }
+
+    .social-icon:hover {
+      background: var(--secondary);
+      color: #12281E;
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #A0AEC0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-links a:hover {
+      color: #FFFFFF;
+    }
+
+    /* ==========================================================================
+       13. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .estore-hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .estore-hero-sub {
+        margin: 0 auto;
+      }
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .testimonials-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .btn-chat-ai {
+        display: none;
+      }
+      .hamburger-btn {
+        display: block;
+      }
+      .estore-hero-title {
+        font-size: 2.3rem;
+      }
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+      .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .tabs-pill-row {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        flex-wrap: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       NAVIGATION BAR
+       ========================================================================== -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="index.html" class="logo-wrapper">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>HerbInfo<span>AI</span></h1>
+          <p>Explore . Learn . Preserve</p>
+        </div>
+      </a>
+
+      <!-- Menu Tengah: E-Store Aktif -->
+      <ul class="nav-links">
+        <li class="nav-item">
+          <a href="index.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+            Beranda
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="ar-scan.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-.9-.9"/></svg></span>
+            AR Scan
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="katalog.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg></span>
+            Katalog Herbal
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="estore.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span>
+            E-Store
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="laporan.html">
+            <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg></span>
+            Laporan Praktikum
+          </a>
+        </li>
+      </ul>
+
+      <!-- Nav Kanan: Cart Icon + Badge + Chat AI + Profil -->
+      <div class="nav-actions">
+        <!-- Cart Icon Button -->
+        <div class="cart-btn-wrapper" onclick="toggleCartDrawer()" title="Keranjang Belanja">
+          <!-- PLACEHOLDER ICON: icon-cart.svg -->
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+          </svg>
+          <span class="cart-badge" id="cartCountBadge">0</span>
+        </div>
+
+        <button class="btn-chat-ai" onclick="openAIChatAssistant()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+          Chat AI
+        </button>
+
+        <a href="profil.html" class="user-avatar" title="Akun Pengguna">
+          <span>HI</span>
+        </a>
+      </div>
+
+      <!-- Hamburger Button (Mobile) -->
+      <button class="hamburger-btn" id="menuToggle" aria-label="Buka Menu">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-menu" id="mobileMenu">
+      <li class="nav-item"><a href="index.html">🌱 Beranda</a></li>
+      <li class="nav-item"><a href="ar-scan.html">📷 AR Scan</a></li>
+      <li class="nav-item"><a href="katalog.html">📖 Katalog Herbal</a></li>
+      <li class="nav-item active"><a href="estore.html">🛒 E-Store</a></li>
+      <li class="nav-item"><a href="laporan.html">📄 Laporan Praktikum</a></li>
+      <div style="margin-top: 16px; display:flex; gap:10px;">
+        <button class="btn-chat-ai" style="flex:1; justify-content: center;" onclick="openAIChatAssistant()">🤖 Chat AI</button>
+        <button class="btn-action-primary" style="flex:1;" onclick="toggleCartDrawer()">🛒 Keranjang</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         HERO SECTION - E-STORE
+         ========================================================================== -->
+    <section class="estore-hero">
+      <!-- PLACEHOLDER: hero-herb-illustration.png -->
+      <div class="hero-pattern-bg"></div>
+      <div class="container estore-hero-grid">
+        <div>
+          <span class="estore-hero-badge">HERBLEARN</span>
+          <h1 class="estore-hero-title">DIGITAL E-STORE</h1>
+          <p class="estore-hero-sub">Dapatkan Paket E-Flashcard AR, Lisensi Kampus, dan Akses AI Pharma Assistant Tanpa Batas untuk akselerasi praktikum farmakognosi Anda.</p>
+        </div>
+
+        <!-- Hero Visual Mockup: Laptop + Phone -->
+        <!-- PLACEHOLDER: hero-laptop-phone-mockup.png -->
+        <div class="hero-mockup-wrapper">
+          <div class="hero-mockup-visual">
+            <div class="mockup-inner-grid">
+              <div class="mock-laptop-screen">
+                <div style="display:flex; gap:4px; margin-bottom:8px;">
+                  <span style="width:6px; height:6px; background:#EF4444; border-radius:50%;"></span>
+                  <span style="width:6px; height:6px; background:#F59E0B; border-radius:50%;"></span>
+                  <span style="width:6px; height:6px; background:#10B981; border-radius:50%;"></span>
+                </div>
+                <strong>HerbInfoAR Studio</strong>
+                <p style="color:var(--accent); font-size:0.68rem; margin:4px 0;">3D Fitofarmaka Active</p>
+                <div style="height:60px; background:rgba(255,255,255,0.06); border-radius:4px; display:flex; align-items:center; justify-content:center;">
+                  🌿 Curcuma 3D Mesh
+                </div>
+              </div>
+
+              <div class="mock-phone-screen">
+                <strong>Kunyit</strong>
+                <em style="display:block; font-size:0.65rem; color:#64748B;">Curcuma longa</em>
+                <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=300&q=80" alt="Kunyit AR" class="mock-phone-img" />
+                <span class="badge" style="padding:2px 8px; font-size:0.62rem;">Scan AR Ready</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         TAB KATEGORI PRODUK
+         ========================================================================== -->
+    <section class="section-category-tabs">
+      <div class="container">
+        <div class="tabs-pill-row">
+          <button class="tab-pill-btn active" onclick="filterProductTab('all', this)">🎴 Semua Produk</button>
+          <button class="tab-pill-btn" onclick="filterProductTab('flashcard', this)">📇 E-Flashcard Bundling</button>
+          <button class="tab-pill-btn" onclick="filterProductTab('pro', this)">⚡ Akun Pro B2C</button>
+          <button class="tab-pill-btn" onclick="filterProductTab('saas', this)">🏛️ SaaS Kampus (B2B)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         PRODUCT CARDS GRID (3 KOLOM)
+         ========================================================================== -->
+    <section class="section-products">
+      <div class="container">
+        <div class="products-grid">
+
+          <!-- ---------------- CARD 1: E-FLASHCARD BUNDLING ---------------- -->
+          <div class="product-card" data-category="flashcard">
+            <div class="card-top-badges">
+              <span class="badge-category">📇 E-Flashcard Bundling</span>
+              <span class="badge-label-right badge-bestseller">BEST SELLER</span>
+            </div>
+
+            <h3 class="product-title">Paket E-Flashcard Digital</h3>
+            <p class="product-subtitle">20 Spesimen Fitofarmaka 3D Standar Nasional</p>
+
+            <!-- PLACEHOLDER: product-flashcard-mockup.png -->
+            <div class="card-visual-frame">
+              <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=500&q=80" alt="Flashcard Kunyit AR" />
+              <div style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.7); color:#fff; font-size:0.72rem; padding:3px 8px; border-radius:4px;">
+                AR Marker Ready
+              </div>
+            </div>
+
+            <ul class="feature-list">
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Paket Fitofarmaka Indonesia (20 Tanaman Obat)</span>
+              </li>
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Format File High-Res Digital Print PNG/PDF</span>
+              </li>
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>AR Marker Auto-Detection Web View</span>
+              </li>
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Lisensi Penggunaan Selamanya (Lifetime Access)</span>
+              </li>
+            </ul>
+
+            <div class="card-bottom-actions">
+              <div class="price-row">
+                <span class="price-val">Rp 35.000</span>
+                <span class="badge-price-type">Sekali Beli</span>
+              </div>
+              <div class="btn-group-row">
+                <button class="btn-action-secondary" onclick="addToCart(1, 'Paket E-Flashcard Digital', 35000, 'flashcard')">
+                  🛒 + Keranjang
+                </button>
+                <button class="btn-action-primary" onclick="buyNowDirect(1, 'Paket E-Flashcard Digital', 35000, 'flashcard')">
+                  ⚡ Beli Sekarang
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ---------------- CARD 2: AKUN PRO B2C (HIGHLIGHTED) ---------------- -->
+          <div class="product-card featured-pro" data-category="pro">
+            <div class="card-top-badges">
+              <span class="badge-category">⚡ Akun Pro B2C</span>
+              <span class="badge-label-right badge-popular">Paling Populer</span>
+            </div>
+
+            <h3 class="product-title">HerbLearn Pro Subscription</h3>
+            <p class="product-subtitle">Akses AI Pharma Assistant Tanpa Batas</p>
+
+            <!-- PLACEHOLDER: product-ai-laptop-mockup.png -->
+            <div class="card-visual-frame" style="background:#0F241A; color:#95D5B2; padding:16px;">
+              <div style="font-size:0.78rem; text-align:left; width:100%;">
+                <div style="color:#FFFFFF; font-weight:700; margin-bottom:4px;">🤖 AI Pharma Assistant:</div>
+                <div style="background:rgba(255,255,255,0.08); padding:8px; border-radius:6px; border-left:3px solid var(--secondary);">
+                  "Kurkumin terbukti menghambat jalur sinyal NF-kB dan enzim COX-2 pada respons peradangan..."
+                </div>
+              </div>
+            </div>
+
+            <ul class="feature-list">
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>AI Pharma Assistant Real-Time 24/7 Tanpa Batas</span>
+              </li>
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Unlimited Export Laporan Praktikum (PDF &amp; DOC)</span>
+              </li>
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Akses Seluruh Struktur Kimia 3D Fitokimia</span>
+              </li>
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Bebas Iklan &amp; Jalur Prioritas Server Analisis</span>
+              </li>
+            </ul>
+
+            <div class="card-bottom-actions">
+              <!-- Duration Selector -->
+              <div class="duration-selector-wrap">
+                <label class="duration-selector-label" for="proDurationSelect">Langganan Personal (B2C):</label>
+                <select id="proDurationSelect" class="duration-select" onchange="handleProDurationChange(this.value)">
+                  <option value="1">1 Bulan — Rp 19.000 / bln</option>
+                  <option value="3">3 Bulan — Rp 49.000 (Hemat 15%)</option>
+                  <option value="6">6 Bulan — Rp 89.000 (Hemat 22%)</option>
+                  <option value="12">1 Tahun — Rp 159.000 (Hemat 30%)</option>
+                </select>
+              </div>
+
+              <div class="price-row">
+                <span class="price-val" id="proPriceDisplay">Rp 19.000</span>
+                <span class="price-period" id="proPeriodDisplay">/ Bulan</span>
+              </div>
+
+              <button class="btn-action-primary" style="width:100%;" onclick="subscribeProAction()">
+                ⚡ Langganan Sekarang
+              </button>
+              <p class="trust-badge-sub">🔒 Pembayaran aman &amp; mudah • Langsung aktif setelah transaksi</p>
+            </div>
+          </div>
+
+          <!-- ---------------- CARD 3: SAAS KAMPUS (B2B) ---------------- -->
+          <div class="product-card" data-category="saas">
+            <div class="card-top-badges">
+              <span class="badge-category">🏛️ SaaS Kampus (B2B)</span>
+              <span class="badge-label-right badge-institutional">Fakultas / Lab</span>
+            </div>
+
+            <h3 class="product-title">SaaS Institutional License</h3>
+            <p class="product-subtitle">Lisensi khusus praktikum satu fakultas / laboratorium.</p>
+
+            <!-- PLACEHOLDER: product-saas-campus.png -->
+            <div class="card-visual-frame" style="background:#EBF5EE; display:flex; flex-direction:column; justify-content:center; padding:14px; text-align:center;">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="color:var(--primary); margin:0 auto 6px;">
+                <path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v4M12 14v4M16 14v4"/>
+              </svg>
+              <span style="font-weight:700; font-size:0.8rem; color:var(--primary);">Dashboard Multi-User Kampus</span>
+              <span style="font-size:0.7rem; color:var(--text-muted);">Manajemen Angkatan &amp; Nilai Praktikum</span>
+            </div>
+
+            <ul class="feature-list">
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Dashboard Dosen, Asisten Lab, &amp; Administrator</span>
+              </li>
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Rekap Nilai Praktikum Otomatis Terintegrasi SIAKAD</span>
+              </li>
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Akses Semua Modul AR Scan &amp; Database Jurnal</span>
+              </li>
+              <li class="feature-item">
+                <span class="check-icon">✔</span>
+                <span>Dedicated SLA Support 24/7 &amp; Pelatihan Dosen</span>
+              </li>
+            </ul>
+
+            <div class="card-bottom-actions">
+              <div class="price-row">
+                <span class="price-val" style="font-size:1.6rem;">Kustomisasi</span>
+                <span class="badge-price-type">Per Institusi</span>
+              </div>
+
+              <!-- CTA Sales Box -->
+              <div class="b2b-sales-box" onclick="contactInstitutionalSales()">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg>
+                  <div class="b2b-sales-text">
+                    <strong>Hubungi Tim Sales</strong>
+                    <div style="font-size:0.75rem;">Dapatkan proposal &amp; uji coba institusi</div>
+                  </div>
+                </div>
+                <span style="font-size:1.2rem; font-weight:700; color:var(--primary);">&rarr;</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         COMPARISON TABLE SECTION
+         ========================================================================== -->
+    <section class="section-comparison">
+      <div class="container">
+        <div style="text-align:center; max-width:680px; margin:0 auto;">
+          <div class="badge">Matriks Fitur</div>
+          <h2 style="font-size:2rem; margin-top:6px;">Bandingkan Paket HerbLearn</h2>
+          <p style="color:var(--text-muted); font-size:0.95rem;">Pilih paket yang paling selaras dengan kebutuhan studi personal maupun kurikulum kampus.</p>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th class="feature-title-col">Fitur &amp; Kemampuan</th>
+                <th>E-Flashcard Bundling</th>
+                <th class="highlight-col">Pro B2C (Rekomendasi)</th>
+                <th>SaaS Kampus (B2B)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="feature-title-col">Biaya Investasi</td>
+                <td>Rp 35.000 (Sekali bayar)</td>
+                <td class="highlight-col"><strong>Mulai Rp 19.000 / bln</strong></td>
+                <td>Penawaran Khusus Institusi</td>
+              </tr>
+              <tr>
+                <td class="feature-title-col">Koleksi Tanaman</td>
+                <td>20 Tanaman Pilihan</td>
+                <td class="highlight-col">500+ Database Lengkap</td>
+                <td>Seluruh Database + Kustomisasi</td>
+              </tr>
+              <tr>
+                <td class="feature-title-col">Akses Web AR 3D</td>
+                <td>Marker Flashcard AR</td>
+                <td class="highlight-col">Markerless &amp; Marker AR</td>
+                <td>Akses Penuh Multi-Device</td>
+              </tr>
+              <tr>
+                <td class="feature-title-col">AI Pharma Assistant</td>
+                <td>—</td>
+                <td class="highlight-col">✅ Unlimited Real-time</td>
+                <td>✅ Unlimited + Log Dosen</td>
+              </tr>
+              <tr>
+                <td class="feature-title-col">Export Laporan Otomatis</td>
+                <td>Format Standar (Terbatas)</td>
+                <td class="highlight-col">✅ Unlimited PDF &amp; DOC</td>
+                <td>✅ Nilai Terintegrasi PDF/Excel</td>
+              </tr>
+              <tr>
+                <td class="feature-title-col">Masa Berlaku Lisensi</td>
+                <td>Selamanya (Lifetime)</td>
+                <td class="highlight-col">Sesuai Masa Berlangganan</td>
+                <td>Tahunan (Per Angkatan)</td>
+              </tr>
+              <tr>
+                <td class="feature-title-col">Layanan Bantuan Support</td>
+                <td>Komunitas &amp; Email</td>
+                <td class="highlight-col">Prioritas Email &amp; Chat</td>
+                <td>Dedicated Account Manager 24/7</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         PAYMENT METHODS SECTION
+         ========================================================================== -->
+    <section class="section-payments">
+      <div class="container" style="text-align:center;">
+        <span class="badge">Sistem Transaksi Terverifikasi</span>
+        <h3 style="font-size:1.6rem; margin-top:8px;">Metode Pembayaran yang Didukung</h3>
+        <p style="color:var(--text-muted); font-size:0.9rem;">Mendukung transfer otomatis instan, e-wallet, dan kartu debit/kredit dengan enkripsi bank berstandar PCI-DSS.</p>
+
+        <!-- PLACEHOLDER LOGOS -->
+        <div class="payment-grid">
+          <div class="payment-item">🏛️ Bank BCA</div>
+          <div class="payment-item">🏛️ Bank Mandiri</div>
+          <div class="payment-item">🏛️ Bank BNI</div>
+          <div class="payment-item">🏛️ Bank BRI</div>
+          <div class="payment-item">📱 GoPay</div>
+          <div class="payment-item">📱 OVO</div>
+          <div class="payment-item">📱 DANA</div>
+          <div class="payment-item">📱 ShopeePay</div>
+          <div class="payment-item">💳 VISA / MasterCard</div>
+          <div class="payment-item">⚡ QRIS Instan</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         TESTIMONIALS SECTION
+         ========================================================================== -->
+    <section class="section-testimonials">
+      <div class="container">
+        <div style="text-align:center; max-width:680px; margin:0 auto;">
+          <div class="badge">Ulasan Pengguna</div>
+          <h2 style="font-size:2rem; margin-top:6px;">Apa Kata Pengguna Kami?</h2>
+          <p style="color:var(--text-muted); font-size:0.95rem;">Ribuan mahasiswa, laboran, dan dosen telah mempercayai HerbInfoAI untuk pendidikan herbal digital.</p>
+        </div>
+
+        <div class="testimonials-grid">
+          <!-- Testi 1 -->
+          <div class="testi-card">
+            <!-- PLACEHOLDER ICON: icon-star.svg -->
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">"Flashcard AR sangat membantu saya menghafal struktur rimpang dan fitokimia untuk ujian OSCE. Sangat praktis saat belajar mandiri!"</p>
+            <div class="testi-user-wrap">
+              <!-- PLACEHOLDER: avatar-mahasiswa.jpg -->
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Mahasiswa Farmasi" class="testi-avatar" />
+              <div class="testi-info">
+                <h4>Annisa Rahmawati</h4>
+                <span>Mahasiswi S1 Farmasi Klinis</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testi 2 -->
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">"Implementasi SaaS Kampus mempermudah pemantauan praktikum 200+ mahasiswa farmakognosi secara serempak. Koreksi laporan jadi jauh lebih cepat."</p>
+            <div class="testi-user-wrap">
+              <!-- PLACEHOLDER: avatar-dosen.jpg -->
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Dosen Farmakognosi" class="testi-avatar" />
+              <div class="testi-info">
+                <h4>Dr. apt. Hendra Wijaya, M.Si.</h4>
+                <span>Kepala Lab Biologi Farmasi</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testi 3 -->
+          <div class="testi-card">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-quote">"AI Pharma Assistant seperti punya partner peneliti sendiri. Setiap senyawa aktif langsung dikaitkan dengan jurnal monografi fitofarmaka terbaru."</p>
+            <div class="testi-user-wrap">
+              <!-- PLACEHOLDER: avatar-peneliti.jpg -->
+              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80" alt="Peneliti Herbal" class="testi-avatar" />
+              <div class="testi-info">
+                <h4>dr. Siti Nurhaliza, Sp.FK.</h4>
+                <span>Peneliti Saintifikasi Jamu</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         FAQ ACCORDION SECTION
+         ========================================================================== -->
+    <section class="section-faq">
+      <div class="container">
+        <div style="text-align:center; max-width:680px; margin:0 auto;">
+          <div class="badge">Bantuan &amp; FAQ</div>
+          <h2 style="font-size:2rem; margin-top:6px;">Pertanyaan yang Sering Diajukan</h2>
+          <p style="color:var(--text-muted); font-size:0.95rem;">Informasi detail mengenai aktivasi akun, skema pembayaran, dan lisensi institusi.</p>
+        </div>
+
+        <div class="faq-container">
+          <!-- FAQ 1 -->
+          <div class="faq-card open">
+            <div class="faq-header" onclick="toggleFaq(this)">
+              <span>Apa perbedaan E-Flashcard dan Akun Pro?</span>
+              <span class="faq-icon-arrow">▼</span>
+            </div>
+            <div class="faq-body">
+              E-Flashcard adalah paket kartu digital (20 tanaman obat) dengan marker AR yang dibeli sekali seumur hidup. Sedangkan Akun Pro adalah langganan berkala untuk membuka seluruh database (500+ tanaman), konsultasi AI Pharma Assistant tanpa batas, serta fitur ekspor laporan praktikum tanpa limit.
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="faq-card">
+            <div class="faq-header" onclick="toggleFaq(this)">
+              <span>Apakah ada garansi pengembalian dana (refund)?</span>
+              <span class="faq-icon-arrow">▼</span>
+            </div>
+            <div class="faq-body">
+              Kami menyediakan garansi uang kembali 100% dalam kurun waktu 48 jam setelah pembelian langganan personal jika Anda mengalami kendala teknis yang tidak dapat diselesaikan oleh tim dukungan kami.
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="faq-card">
+            <div class="faq-header" onclick="toggleFaq(this)">
+              <span>Bagaimana cara akses setelah pembayaran selesai?</span>
+              <span class="faq-icon-arrow">▼</span>
+            </div>
+            <div class="faq-body">
+              Sistem verifikasi transaksi bekerja secara otomatis. Begitu pembayaran terkonfirmasi, akun Anda akan langsung mendapatkan status "Pro" dan berkas E-Flashcard dapat langsung diunduh melalui menu Profil atau modul AR Scan.
+            </div>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="faq-card">
+            <div class="faq-header" onclick="toggleFaq(this)">
+              <span>Apakah aplikasi Web AR bisa digunakan secara offline?</span>
+              <span class="faq-icon-arrow">▼</span>
+            </div>
+            <div class="faq-body">
+              Paket E-Flashcard dapat diunduh dan dicetak secara fisik. Namun untuk penayangan model 3D Web AR dan konsultasi AI Pharma, perangkat Anda memerlukan koneksi internet stabil (caching lokal didukung untuk aset yang telah dibuka sebelumnya).
+            </div>
+          </div>
+
+          <!-- FAQ 5 -->
+          <div class="faq-card">
+            <div class="faq-header" onclick="toggleFaq(this)">
+              <span>Bagaimana alur kerja lisensi kampus atau institusi (B2B)?</span>
+              <span class="faq-icon-arrow">▼</span>
+            </div>
+            <div class="faq-body">
+              Fakultas akan menerima akun Admin Utama untuk membuat akun dosen pengampu dan mahasiswa satu angkatan. Modul praktikum dapat dikustomisasi sesuai silabus akademik universitas bersangkutan dengan pendampingan teknis langsung.
+            </div>
+          </div>
+
+          <!-- FAQ 6 -->
+          <div class="faq-card">
+            <div class="faq-header" onclick="toggleFaq(this)">
+              <span>Apakah ada diskon khusus organisasi mahasiswa atau BEM?</span>
+              <span class="faq-icon-arrow">▼</span>
+            </div>
+            <div class="faq-body">
+              Ya, kami menyediakan diskon kelompok (group discount) hingga 25% untuk pembelian kolektif minimal 15 mahasiswa farmasi. Silakan hubungi customer support kami melalui tombol Chat AI atau WhatsApp resmi.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         CTA BANNER SECTION
+         ========================================================================== -->
+    <section class="section-cta-banner">
+      <div class="container">
+        <div class="cta-banner-box">
+          <h2>Mulai Perjalanan Herbal Digital Anda Sekarang</h2>
+          <p>Bergabung dengan 10.000+ pengguna HerbInfoAI dan nikmati kemudahan praktikum berbasis Web AR dan kecerdasan buatan farmasi.</p>
+          <div class="cta-btn-row">
+            <button class="btn-cta-white" onclick="subscribeProAction()">⚡ Langganan Pro</button>
+            <button class="btn-cta-outline" onclick="contactInstitutionalSales()">💬 Konsultasi Kampus</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       CART SLIDE-OVER DRAWER
+       ========================================================================== -->
+  <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCartDrawer()"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3 style="font-size:1.15rem; color:var(--primary);">🛒 Keranjang Belanja</h3>
+      <button class="cart-close-btn" onclick="toggleCartDrawer()">&times;</button>
+    </div>
+
+    <div class="cart-items-container" id="cartItemsList">
+      <!-- Item Keranjang Disuntikkan via JS -->
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-subtotal-row">
+        <span>Total Pembayaran:</span>
+        <span id="cartSubtotalDisplay">Rp 0</span>
+      </div>
+      <button class="btn-action-primary" style="width:100%;" onclick="proceedToCheckoutModal()">
+        Lanjut ke Pembayaran &rarr;
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       CHECKOUT SIMULATION MODAL
+       ========================================================================== -->
+  <div class="checkout-modal-backdrop" id="checkoutModal">
+    <div class="checkout-modal-card">
+      <div style="width:60px; height:60px; background:rgba(82,183,136,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--primary); margin:0 auto 16px;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 style="font-size:1.4rem; margin-bottom:8px;">Pembayaran Terkonfirmasi!</h3>
+      <p style="font-size:0.88rem; color:#4A5568; line-height:1.5; margin-bottom:20px;">
+        Terima kasih atas transaksi Anda. Lisensi digital dan hak akses telah diperbarui pada sesi akun Anda di platform HerbInfoAI.
+      </p>
+      <div style="background:#F8FDF5; border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:12px; font-size:0.85rem; margin-bottom:20px; text-align:left;">
+        <strong>ID Transaksi:</strong> <span id="checkoutInvoiceId">TRX-2026-HERB</span><br/>
+        <strong>Status Akses:</strong> <span style="color:var(--primary); font-weight:700;">Aktif &amp; Terbuka</span>
+      </div>
+      <button class="btn-action-primary" style="width:100%;" onclick="closeCheckoutModalAndRedirect()">
+        Buka Modul AR Scan &rarr;
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo-wrapper" style="margin-bottom: 12px;">
+            <div class="logo-icon" style="background:var(--secondary); color:#12281E;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </div>
+            <div class="logo-text">
+              <h2 style="font-size:1.3rem; color:#fff;">HerbInfo<span style="color:var(--secondary);">AI</span></h2>
+              <p style="color:#A0AEC0;">Explore . Learn . Preserve</p>
+            </div>
+          </div>
+          <p class="footer-desc">
+            HerbInfoAI adalah platform teknologi farmasi terintegrasi Web AR dan kecerdasan buatan untuk preservasi serta edukasi saintifik tanaman obat nusantara.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="ar-scan.html">AR Scan Praktikum</a></li>
+            <li><a href="katalog.html">Katalog Herbal 3D</a></li>
+            <li><a href="estore.html">E-Store Simplisia</a></li>
+            <li><a href="laporan.html">Laporan Praktikum Otomatis</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <ul class="footer-links">
+            <li><a href="tentang.html">Tentang Kami</a></li>
+            <li><a href="faq.html">Tanya Jawab (FAQ)</a></li>
+            <li><a href="blog.html">Jurnal &amp; Artikel Fitokimia</a></li>
+            <li><a href="kontak.html">Kontak &amp; Kerjasama Kampus</a></li>
+            <li><a href="refund.html">Kebijakan Refund</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Tetap Terhubung</h4>
+          <p style="font-size:0.85rem; color:#A0AEC0; margin-bottom: 12px;">Dapatkan wawasan fitofarmaka mingguan langsung di email Anda.</p>
+          <form class="newsletter-form" onsubmit="event.preventDefault(); handleSubscribe();">
+            <input type="email" id="newsEmail" placeholder="Email kampus/pribadi..." class="newsletter-input" required />
+            <button type="submit" class="newsletter-btn">Daftar</button>
+          </form>
+
+          <div class="social-links">
+            <a href="#" class="social-icon" aria-label="LinkedIn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+            </a>
+            <a href="#" class="social-icon" aria-label="GitHub">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.</div>
+        <div class="footer-legal-links">
+          <a href="privacy.html">Kebijakan Privasi</a>
+          <a href="terms.html">Syarat &amp; Ketentuan</a>
+          <a href="refund.html">Kebijakan Refund</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification Box -->
+  <div class="toast-box" id="appToast">
+    <span id="toastMessage">Pemberitahuan berhasil</span>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT: CART SYSTEM, LOCALSTORAGE & INTERACTIVITY
+       ========================================================================== -->
+  <script>
+    /* --------------------------------------------------------------------------
+       1. DURATION & PRICING CONFIGURATION (PRO B2C)
+       -------------------------------------------------------------------------- */
+    const proPricingTiers = {
+      "1": { price: 19000, label: "Rp 19.000", period: "/ Bulan", title: "HerbLearn Pro (1 Bulan)" },
+      "3": { price: 49000, label: "Rp 49.000", period: "/ 3 Bulan (Hemat 15%)", title: "HerbLearn Pro (3 Bulan)" },
+      "6": { price: 89000, label: "Rp 89.000", period: "/ 6 Bulan (Hemat 22%)", title: "HerbLearn Pro (6 Bulan)" },
+      "12": { price: 159000, label: "Rp 159.000", period: "/ 1 Tahun (Hemat 30%)", title: "HerbLearn Pro (1 Tahun)" }
+    };
+
+    let selectedProDuration = "1";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initMobileMenu();
+      updateCartBadge();
+      renderCartDrawerItems();
+    });
+
+    /* --------------------------------------------------------------------------
+       2. TOAST & NAVBAR HANDLERS
+       -------------------------------------------------------------------------- */
+    function showToast(message) {
+      const toast = document.getElementById("appToast");
+      const msg = document.getElementById("toastMessage");
+      msg.innerText = message;
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 3500);
+    }
+
+    function initMobileMenu() {
+      const toggle = document.getElementById("menuToggle");
+      const menu = document.getElementById("mobileMenu");
+      if (toggle && menu) {
+        toggle.addEventListener("click", () => {
+          menu.classList.toggle("open");
+        });
+      }
+    }
+
+    function openAIChatAssistant() {
+      alert("Membuka sesi konsultasi AI Pharma Assistant untuk rekomendasi paket dan fitoterapi...");
+    }
+
+    function handleSubscribe() {
+      const email = document.getElementById("newsEmail");
+      if (email && email.value) {
+        showToast("Terima kasih! " + email.value + " berhasil terdaftar di buletin HerbInfoAI.");
+        email.value = "";
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       3. TAB FILTERING LOGIC
+       -------------------------------------------------------------------------- */
+    function filterProductTab(category, btnElement) {
+      // Set active pill class
+      document.querySelectorAll(".tab-pill-btn").forEach(btn => btn.classList.remove("active"));
+      btnElement.classList.add("active");
+
+      // Filter product cards
+      const cards = document.querySelectorAll(".products-grid .product-card");
+      cards.forEach(card => {
+        const cardCat = card.dataset.category;
+        if (category === "all" || cardCat === category) {
+          card.style.display = "flex";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    /* --------------------------------------------------------------------------
+       4. DURATION SELECTOR & PRICE UPDATE
+       -------------------------------------------------------------------------- */
+    function handleProDurationChange(durationVal) {
+      selectedProDuration = durationVal;
+      const tier = proPricingTiers[durationVal];
+      if (tier) {
+        document.getElementById("proPriceDisplay").innerText = tier.label;
+        document.getElementById("proPeriodDisplay").innerText = tier.period;
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       5. SHOPPING CART SYSTEM (LOCALSTORAGE)
+       -------------------------------------------------------------------------- */
+    function getCartFromStorage() {
+      try {
+        return JSON.parse(localStorage.getItem("herbinfo_cart") || "[]");
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveCartToStorage(cart) {
+      localStorage.setItem("herbinfo_cart", JSON.stringify(cart));
+      updateCartBadge();
+      renderCartDrawerItems();
+    }
+
+    function updateCartBadge() {
+      const cart = getCartFromStorage();
+      const badge = document.getElementById("cartCountBadge");
+      const totalCount = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+      if (badge) {
+        badge.innerText = totalCount;
+      }
+    }
+
+    function addToCart(productId, name, price, type) {
+      const cart = getCartFromStorage();
+      const existingIdx = cart.findIndex(item => item.productId === productId && item.type === type);
+
+      if (existingIdx > -1) {
+        cart[existingIdx].quantity = (cart[existingIdx].quantity || 1) + 1;
+      } else {
+        cart.push({
+          productId: productId,
+          name: name,
+          price: price,
+          quantity: 1,
+          type: type
+        });
+      }
+
+      saveCartToStorage(cart);
+      showToast(`Berhasil menambahkan "${name}" ke keranjang belanja!`);
+    }
+
+    function removeCartItem(index) {
+      const cart = getCartFromStorage();
+      cart.splice(index, 1);
+      saveCartToStorage(cart);
+      showToast("Item dihapus dari keranjang.");
+    }
+
+    function toggleCartDrawer() {
+      const drawer = document.getElementById("cartDrawer");
+      const overlay = document.getElementById("cartOverlay");
+      const isOpen = drawer.classList.contains("open");
+
+      if (isOpen) {
+        drawer.classList.remove("open");
+        overlay.style.display = "none";
+      } else {
+        renderCartDrawerItems();
+        drawer.classList.add("open");
+        overlay.style.display = "block";
+      }
+    }
+
+    function renderCartDrawerItems() {
+      const cart = getCartFromStorage();
+      const container = document.getElementById("cartItemsList");
+      const subtotalEl = document.getElementById("cartSubtotalDisplay");
+
+      if (cart.length === 0) {
+        container.innerHTML = `<div class="cart-empty-text">Keranjang belanja Anda masih kosong.</div>`;
+        subtotalEl.innerText = "Rp 0";
+        return;
+      }
+
+      let subtotal = 0;
+      container.innerHTML = cart.map((item, idx) => {
+        const itemTotal = item.price * (item.quantity || 1);
+        subtotal += itemTotal;
+        return `
+          <div class="cart-item-row">
+            <div class="cart-item-info">
+              <h4>${item.name}</h4>
+              <span>Qty: ${item.quantity || 1} &bull; Rp ${item.price.toLocaleString("id-ID")}</span>
+            </div>
+            <div style="display:flex; align-items:center;">
+              <span class="cart-item-price">Rp ${itemTotal.toLocaleString("id-ID")}</span>
+              <button class="cart-item-delete" onclick="removeCartItem(${idx})" title="Hapus item">&times;</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      subtotalEl.innerText = "Rp " + subtotal.toLocaleString("id-ID");
+    }
+
+    /* --------------------------------------------------------------------------
+       6. CHECKOUT & IMMEDIATE ACTION HANDLERS
+       -------------------------------------------------------------------------- */
+    function buyNowDirect(productId, name, price, type) {
+      addToCart(productId, name, price, type);
+      toggleCartDrawer();
+    }
+
+    function subscribeProAction() {
+      const tier = proPricingTiers[selectedProDuration];
+      addToCart(2, tier.title, tier.price, "subscription");
+      toggleCartDrawer();
+    }
+
+    function contactInstitutionalSales() {
+      const email = "partnership@herbinfoai.id";
+      const subject = encodeURIComponent("Permintaan Proposal Lisensi SaaS Kampus HerbInfoAI");
+      const body = encodeURIComponent("Halo Tim HerbInfoAI,\n\nKami tertarik untuk mengetahui informasi lebih lanjut mengenai lisensi praktikum institusi/fakultas kami.\n\nNama Institusi:\nJumlah Mahasiswa:\nNomor Kontak:");
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    }
+
+    function proceedToCheckoutModal() {
+      const cart = getCartFromStorage();
+      if (cart.length === 0) {
+        showToast("Keranjang belanja masih kosong!");
+        return;
+      }
+
+      // Record simulated purchases to unlock features across pages
+      let purchased = JSON.parse(localStorage.getItem("herbinfo_purchased_products") || "[]");
+      cart.forEach(item => {
+        if (!purchased.includes(item.productId)) {
+          purchased.push(item.productId);
+        }
+      });
+      localStorage.setItem("herbinfo_purchased_products", JSON.stringify(purchased));
+
+      // Reset cart
+      localStorage.setItem("herbinfo_cart", JSON.stringify([]));
+      updateCartBadge();
+      toggleCartDrawer();
+
+      // Show success modal
+      document.getElementById("checkoutInvoiceId").innerText = "INV-" + Date.now().toString().slice(-6);
+      document.getElementById("checkoutModal").style.display = "flex";
+    }
+
+    function closeCheckoutModalAndRedirect() {
+      document.getElementById("checkoutModal").style.display = "none";
+      window.location.href = "ar-scan.html?ref=checkout_success";
+    }
+
+    /* --------------------------------------------------------------------------
+       7. FAQ ACCORDION HANDLER
+       -------------------------------------------------------------------------- */
+    function toggleFaq(headerElement) {
+      const card = headerElement.parentElement;
+      const isOpen = card.classList.contains("open");
+
+      // Close other cards for cleaner accordion experience
+      document.querySelectorAll(".faq-card").forEach(c => c.classList.remove("open"));
+
+      if (!isOpen) {
+        card.classList.add("open");
+      }
+    }
+  </script>
+</body>
+</html>
