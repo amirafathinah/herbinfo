@@ -1448,12 +1448,14 @@
 
     <!-- Mobile Navigation Drawer -->
     <div class="mobile-menu" id="mobileMenu">
-      <li class="nav-item"><a href="index.html">🌱 Beranda</a></li>
+      <li class="nav-item active"><a href="index.html">🌱 Beranda</a></li>
       <li class="nav-item"><a href="ar-scan.html">📷 AR Scan</a></li>
       <li class="nav-item"><a href="katalog.html">📖 Katalog Herbal</a></li>
       <li class="nav-item"><a href="estore.html">🛒 E-Store</a></li>
       <li class="nav-item"><a href="laporan.html">📄 Laporan Praktikum</a></li>
-      <li class="nav-item"><a href="profil.html">👤 Profil Pengguna</a></li>
+      <div style="margin-top: 16px; display:flex; flex-direction:column; gap:10px;">
+        <button class="btn-chat-ai" style="justify-content: center;" onclick="openAIChat()">🤖 Chat AI Pharma</button>
+      </div>
     </div>
   </header>
 
