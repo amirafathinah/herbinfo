@@ -14,6 +14,16 @@
   <!-- Google Model Viewer Library (Official Web Component) -->
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 
+  <!--
+    TensorFlow.js + Teachable Machine Image Classifier
+    CDN: @tensorflow/tfjs@1.7.4 (dipin; versi saat model dilatih per metadata.json tfjsVersion)
+    CDN: @teachablemachine/image@0.8.5 (dipin; 0.8.4-alpha2 tidak tersedia di npm registry publik)
+    ⚠️  Smoke test wajib dilakukan developer — lihat herbinfo-scan-plan.md § Keputusan Versi CDN
+    Jika ada error backend TF.js di browser, coba ganti tfjs ke @tensorflow/tfjs@2.8.6
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.4/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js"></script>
+
   <style>
     /* ==========================================================================
        1. CSS VARIABLES & DESIGN SYSTEM
@@ -1627,10 +1637,14 @@
               </div>
             </div>
 
+            <!-- Status model dan banner error -->
+            <div id="modelErrorBanner" style="display:none; background:#fff5f5; border:1px solid #fc8181; border-radius:8px; padding:10px 14px; margin-bottom:10px; font-size:0.85rem; color:#c53030;">
+              ⚠ Gagal memuat model klasifikasi. Pastikan file <code>models/plant-classifier/</code> tersedia dan koneksi internet aktif, lalu muat ulang halaman.
+            </div>
             <div class="scanner-actions">
-              <span style="font-size: 0.85rem; color: var(--text-muted);">Status: Siap memindai dataset 500+ simplisia &amp; 3D GLB</span>
+              <span id="modelStatusText" style="font-size: 0.85rem; color: var(--text-muted);">Status: memuat model untuk 3 kelas tanaman herbal...</span>
               <button class="btn-primary" id="btnScanUpload" onclick="processScan('upload')" disabled>
-                🔍 Scan &amp; Muat Model 3D
+                🔍 Scan &amp; Identifikasi Tanaman
               </button>
             </div>
           </div>
@@ -1711,19 +1725,20 @@
                   <div class="result-main-info">
                     <div class="verified-pill">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                      Terverifikasi AI Pharma
+                      Estimasi Model AI
                     </div>
-                    <h2 id="resPlantName" style="font-size:1.8rem; margin-bottom:2px;">Kunyit</h2>
-                    <span id="resLatinName" class="result-latin-name">Curcuma longa L.</span>
-                    <div id="resFamilyName" class="result-family-name">Famili: <strong>Zingiberaceae</strong></div>
+                    <h2 id="resPlantName" style="font-size:1.8rem; margin-bottom:2px;">—</h2>
+                    <span id="resLatinName" class="result-latin-name">—</span>
+                    <div id="resFamilyName" class="result-family-name"></div>
                     
                     <div class="confidence-meter">
-                      <span>Tingkat Kecocokan:</span>
+                      <span>Skor Model:</span>
                       <div class="meter-bg">
                         <div class="meter-fill" id="resConfidenceFill"></div>
                       </div>
-                      <span id="resConfidenceVal">95%</span>
+                      <span id="resConfidenceVal">—</span>
                     </div>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Skor model bukan jaminan identifikasi yang benar.</p>
 
                     <!-- Tombol Cepat Buka 3D -->
                     <div style="margin-top:14px;">
@@ -1735,27 +1750,33 @@
                 </div>
               </div>
 
-              <!-- Card Khasiat -->
+              <!-- Card Khasiat — teks farmakologi dihapus, menunggu plant-reference.json terkurasi -->
               <div class="result-card">
                 <h3 style="font-size: 1.15rem; margin-bottom: 6px;">Aktivitas Farmakologis &amp; Khasiat Medis</h3>
                 <div class="benefits-grid">
                   <div class="benefit-box">
                     <div class="benefit-title">🛡️ Anti-inflamasi</div>
-                    <div class="benefit-desc">Menghambat sintesis enzim COX-2 dan sekresi sitokin pro-inflamasi pada peradangan mukosa lambung.</div>
+                    <div class="benefit-desc" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</div>
                   </div>
                   <div class="benefit-box">
-                    <div class="benefit-title">🧪 Antioksidan Kuat</div>
-                    <div class="benefit-desc">Mendonorkan elektron pada radikal bebas oksigen peroksida untuk mencegah degenerasi sel.</div>
+                    <div class="benefit-title">🧪 Antioksidan</div>
+                    <div class="benefit-desc" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</div>
                   </div>
                   <div class="benefit-box">
                     <div class="benefit-title">🩺 Hepatoprotektor</div>
-                    <div class="benefit-desc">Menjaga stabilitas membran hepatosit serta menormalkan kadar enzim transaminase (SGOT/SGPT).</div>
+                    <div class="benefit-desc" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</div>
                   </div>
                   <div class="benefit-box">
-                    <div class="benefit-title">🦠 Antibakteri Alami</div>
-                    <div class="benefit-desc">Mekanisme lisis dinding sel peptidoglikan bakteri patogen gram positif.</div>
+                    <div class="benefit-title">🦠 Antibakteri</div>
+                    <div class="benefit-desc" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</div>
                   </div>
                 </div>
+              </div>
+
+              <!-- Panel Penolakan Identifikasi (tersembunyi default) -->
+              <div id="rejectedResultPanel" class="result-card" style="display:none; border-left: 4px solid #e53e3e;">
+                <h3 style="font-size: 1.05rem; color:#c53030; margin-bottom:8px;">⚠ Identifikasi Tidak Berhasil</h3>
+                <p id="rejectedResultMsg" style="font-size:0.9rem; color:var(--text-dark); line-height:1.6;"></p>
               </div>
             </div>
 
@@ -1815,6 +1836,12 @@
                    
                 </model-viewer>
 
+                <!-- Fallback 2D: ditampilkan saat file GLB tidak tersedia -->
+                <div id="viewer3dFallback" style="display:none; flex-direction:column; align-items:center; justify-content:center; padding:28px; text-align:center; gap:12px;">
+                  <img src="" alt="Foto tanaman" style="max-width:200px; border-radius:10px; object-fit:cover;" />
+                  <p style="font-size:0.85rem; color:var(--text-muted); font-style:italic;">Model 3D segera hadir — belum tersedia untuk tanaman ini.</p>
+                </div>
+
                 <!-- Petunjuk Anotasi Bagian Organ -->
                 <div class="viewer-bottom-guide">
                   <div class="guide-item">
@@ -1833,63 +1860,18 @@
             <div class="res-panel-content" id="panelResPhyto">
               <div class="result-card">
                 <h3 style="font-size: 1.15rem; margin-bottom: 6px;">Kandungan Fitokimia Utama</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Hasil korelasi spektroskopi digital serbuk simplisia:</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Senyawa identitas berdasarkan Farmakope Herbal Indonesia Edisi II (2017)</p>
 
+                <!-- Hanya 1 bar fitokimia — sumber data: plant-reference.json (belum tersedia) -->
                 <div class="phytochem-chart">
                   <div class="phyto-item">
                     <div class="phyto-label">
-                      <span id="phytoLabel1">Kurkuminoid (Curcumin)</span>
-                      <span id="phytoVal1">3.5%</span>
+                      <span id="phytoLabel1" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</span>
+                      <span id="phytoVal1">—</span>
                     </div>
                     <div class="phyto-bar-track">
-                      <div class="phyto-bar-val" id="phytoBar1" style="width: 75%;"></div>
+                      <div class="phyto-bar-val" id="phytoBar1" style="width: 0%;"></div>
                     </div>
-                  </div>
-
-                  <div class="phyto-item">
-                    <div class="phyto-label">
-                      <span>Minyak Atsiri (Volatile Essential Oils)</span>
-                      <span>2.8%</span>
-                    </div>
-                    <div class="phyto-bar-track">
-                      <div class="phyto-bar-val" style="width: 58%;"></div>
-                    </div>
-                  </div>
-
-                  <div class="phyto-item">
-                    <div class="phyto-label">
-                      <span>Polifenol &amp; Flavonoid</span>
-                      <span>1.2%</span>
-                    </div>
-                    <div class="phyto-bar-track">
-                      <div class="phyto-bar-val" style="width: 35%;"></div>
-                    </div>
-                  </div>
-
-                  <div class="phyto-item">
-                    <div class="phyto-label">
-                      <span>Seskuiterpen &amp; Resin</span>
-                      <span>0.9%</span>
-                    </div>
-                    <div class="phyto-bar-track">
-                      <div class="phyto-bar-val" style="width: 25%;"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Preview Molekul Kimia -->
-              <div class="result-card">
-                <h3 style="font-size: 1.15rem; margin-bottom: 6px;">Visualisasi 3D Molekul Bioaktif</h3>
-                <div class="molecule-preview-box">
-                  <!-- PLACEHOLDER: scan-molecule-3d.png -->
-                  <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=300&q=80" alt="Molekul Kurkumin 3D" class="molecule-thumb" />
-                  <div class="molecule-text">
-                    <h4 id="moleculeTitle">Kurkumin (Diferuloylmethane)</h4>
-                    <p id="moleculeFormula">Formula: C21H20O6 &bull; Bobot: 368.38 g/mol</p>
-                    <a href="katalog.html?molecule=curcumin" class="btn-primary" style="padding: 6px 14px; font-size: 0.78rem;">
-                      Lihat Spektrum 3D Lengkap &rarr;
-                    </a>
                   </div>
                 </div>
               </div>
@@ -1926,7 +1908,7 @@
 
             <div class="ai-chat-body" id="chatThread">
               <div class="chat-bubble assistant">
-                Halo! Sampel tanaman telah dipindai dan model 3D anatomi siap diinspeksi. Ada yang ingin Anda diskusikan seputar senyawa fitokimia, uji reaksi lab, atau monografi farmakope?
+                Halo! Saya AI Pharma Assistant. Setelah Anda memindai atau memilih tanaman, saya siap membantu menjawab pertanyaan seputar senyawa fitokimia, monografi farmakope, atau cara pengolahan simplisia.
               </div>
             </div>
 
@@ -1967,7 +1949,7 @@
         <div style="text-align: center; max-width: 650px; margin: 0 auto;">
           <div class="badge">Model 3D Siap Pakai</div>
           <h2 style="font-size: 2rem; margin-top: 8px;">Tanaman Populer untuk Dicoba</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem;">Uji coba instan fitur identifikasi dan penampil 3D anatomi tanpa perlu mengunggah foto.</p>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Tampilan data tanaman dari sistem — <strong>bukan hasil scan Anda</strong>. Untuk identifikasi dari foto, gunakan fitur scan di atas.</p>
         </div>
 
         <div class="popular-grid">
@@ -1975,13 +1957,13 @@
           <div class="popular-card">
             <div class="popular-img-wrapper">
               <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80" alt="Kunyit" />
-              <span class="popular-badge">3D Model</span>
+              <span class="popular-badge">Contoh Data</span>
             </div>
             <div class="popular-body">
               <h4 class="popular-name">Kunyit</h4>
               <span class="popular-latin">Curcuma longa L.</span>
-              <button class="popular-btn" onclick="demoScanPlant('Kunyit', 'Curcuma longa L.', 'Zingiberaceae', 96, 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=500&q=80', 'Kurkuminoid', '3.5%', 'models/kunyit.glb')">
-                Lihat Model 3D &rarr;
+              <button class="popular-btn" onclick="demoScanPlant('Kunyit')">
+                Lihat Data &amp; Model 3D &rarr;
               </button>
             </div>
           </div>
@@ -1990,13 +1972,13 @@
           <div class="popular-card">
             <div class="popular-img-wrapper">
               <img src="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=400&q=80" alt="Jahe" />
-              <span class="popular-badge">3D Model</span>
+              <span class="popular-badge">Contoh Data</span>
             </div>
             <div class="popular-body">
               <h4 class="popular-name">Jahe</h4>
               <span class="popular-latin">Zingiber officinale Roscoe</span>
-              <button class="popular-btn" onclick="demoScanPlant('Jahe', 'Zingiber officinale Roscoe', 'Zingiberaceae', 94, 'https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=500&q=80', 'Gingerol & Shogaol', '3.8%', 'models/jahe.glb')">
-                Lihat Model 3D &rarr;
+              <button class="popular-btn" onclick="demoScanPlant('Jahe')">
+                Lihat Data &amp; Model 3D &rarr;
               </button>
             </div>
           </div>
@@ -2005,28 +1987,13 @@
           <div class="popular-card">
             <div class="popular-img-wrapper">
               <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80" alt="Temulawak" />
-              <span class="popular-badge">3D Model</span>
+              <span class="popular-badge">Contoh Data</span>
             </div>
             <div class="popular-body">
               <h4 class="popular-name">Temulawak</h4>
               <span class="popular-latin">Curcuma xanthorrhiza Roxb.</span>
-              <button class="popular-btn" onclick="demoScanPlant('Temulawak', 'Curcuma xanthorrhiza Roxb.', 'Zingiberaceae', 92, 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=500&q=80', 'Xanthorrhizol', '2.5%', 'models/temulawak.glb')">
-                Lihat Model 3D &rarr;
-              </button>
-            </div>
-          </div>
-
-          <!-- Lidah Buaya -->
-          <div class="popular-card">
-            <div class="popular-img-wrapper">
-              <img src="https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=400&q=80" alt="Lidah Buaya" />
-              <span class="popular-badge">3D Model</span>
-            </div>
-            <div class="popular-body">
-              <h4 class="popular-name">Lidah Buaya</h4>
-              <span class="popular-latin">Aloe vera</span>
-              <button class="popular-btn" onclick="demoScanPlant('Lidah Buaya', 'Aloe vera', 'Asphodelaceae', 95, 'https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=500&q=80', 'Acemannan', '4.2%', 'models/aloevera.glb')">
-                Lihat Model 3D &rarr;
+              <button class="popular-btn" onclick="demoScanPlant('Temulawak')">
+                Lihat Data &amp; Model 3D &rarr;
               </button>
             </div>
           </div>
@@ -2092,44 +2059,164 @@
     let cameraStream = null;
     let currentActiveScanData = null;
     let isAutoRotating = true;
+    let scanInProgress = false;
 
-    // Database Model 3D Tanaman
-    const plant3dModels = {
+    // =========================================================================
+    // KONFIGURASI KLASIFIKASI MODEL
+    // Label asli dibaca dari models/plant-classifier/metadata.json
+    // labels: ["Kunyit","Temulawak","Jahe","BukanTanamanHerbal"]
+    // =========================================================================
+    const CONFIDENCE_THRESHOLD = 0.70;
+    const MODEL_PATH = "models/plant-classifier/";
+
+    // Kelas herbal yang diterima → kunci plantData (case-sensitive, sama persis dengan label model)
+    const LABEL_MAP = {
+      "Kunyit":     "Kunyit",
+      "Temulawak":  "Temulawak",
+      "Jahe":       "Jahe"
+    };
+
+    // Kelas yang selalu ditolak, berapapun skornya (array untuk antisipasi model versi berikutnya)
+    const REJECT_LABELS = ["BukanTanamanHerbal"];
+
+    let classifierModel = null;
+    let modelLoadError  = false;
+
+    // =========================================================================
+    // DATA REFERENSI TANAMAN
+    // latinName & family: diverifikasi dari Farmakope Herbal Indonesia Edisi II (2017)
+    // compound & compoundMinKadar: null — menunggu plant-reference.json terkurasi
+    // image: URL Unsplash (bukan data farmasi)
+    // =========================================================================
+    const plantData = {
       "Kunyit": {
-        glb: "models/kunyit.glb", // PLACEHOLDER FILE: models/kunyit.glb
-        fallbackGlb: "https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb",
-        hotspotRhizome: "Rimpang: Kaya kurkuminoid & desmetoksikurkumin",
-        hotspotLeaf: "Daun: Tulang daun menyirip, mengandung polifenol",
-        title: "Model 3D Anatomi: Kunyit (Curcuma longa)"
-      },
-      "Jahe": {
-        glb: "models/jahe.glb", // PLACEHOLDER FILE: models/jahe.glb
-        fallbackGlb: "https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb",
-        hotspotRhizome: "Rimpang: Berserat, kaya gingerol & shogaol",
-        hotspotLeaf: "Helai Daun: Ramping dengan kelenjar minyak atsiri",
-        title: "Model 3D Anatomi: Jahe (Zingiber officinale)"
+        latinName:        "Curcuma longa L.",
+        family:           "Zingiberaceae",
+        compound:         null,
+        compoundMinKadar: null,
+        image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=500&q=80"
       },
       "Temulawak": {
-        glb: "models/temulawak.glb", // PLACEHOLDER FILE: models/temulawak.glb
-        fallbackGlb: "https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb",
-        hotspotRhizome: "Rimpang: Besar bergaris kuning tua, kaya xanthorrhizol",
-        hotspotLeaf: "Daun: Bergaris coklat keunguan di bagian tengah",
-        title: "Model 3D Anatomi: Temulawak (Curcuma xanthorrhiza)"
+        latinName:        "Curcuma xanthorrhiza Roxb.",
+        family:           "Zingiberaceae",
+        compound:         null,
+        compoundMinKadar: null,
+        image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=500&q=80"
       },
-      "Lidah Buaya": {
-        glb: "models/aloevera.glb", // PLACEHOLDER FILE: models/aloevera.glb
-        fallbackGlb: "https://modelviewer.dev/shared-assets/models/NeilArmstrong.glb",
-        hotspotRhizome: "Pangkal Batang: Berdaging dengan perakaran serabut",
-        hotspotLeaf: "Daun Sukulen: Tebal berduri, kaya gel asemannan",
-        title: "Model 3D Anatomi: Lidah Buaya (Aloe vera)"
+      "Jahe": {
+        latinName:        "Zingiber officinale Roscoe",
+        family:           "Zingiberaceae",
+        compound:         null,
+        compoundMinKadar: null,
+        image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=500&q=80"
       }
     };
+
+    // Database konfigurasi 3D Viewer — 3 tanaman yang dikenali model
+    // fallbackGlb dihapus; file GLB yang tidak tersedia ditangani via onerror → placeholder 2D
+    const plant3dModels = {
+      "Kunyit": {
+        glb:             "models/kunyit.glb",
+        hotspotRhizome:  "Rimpang: Organ utama penyimpan senyawa aktif",
+        hotspotLeaf:     "Daun: Pertulangan menyirip",
+        title:           "Model 3D Anatomi: Kunyit (Curcuma longa)"
+      },
+      "Jahe": {
+        glb:             "models/jahe.glb",
+        hotspotRhizome:  "Rimpang: Organ utama penyimpan senyawa aktif",
+        hotspotLeaf:     "Helai Daun: Pertulangan sejajar",
+        title:           "Model 3D Anatomi: Jahe (Zingiber officinale)"
+      },
+      "Temulawak": {
+        glb:             "models/temulawak.glb",
+        hotspotRhizome:  "Rimpang: Organ utama penyimpan senyawa aktif",
+        hotspotLeaf:     "Daun: Garis coklat keunguan di bagian tengah",
+        title:           "Model 3D Anatomi: Temulawak (Curcuma xanthorrhiza)"
+      }
+    };
+
+    // =========================================================================
+    // LOAD MODEL TEACHABLE MACHINE (sekali saat halaman dibuka)
+    // =========================================================================
+    async function loadClassifierModel() {
+      const statusEl = document.getElementById("modelStatusText");
+      const bannerEl = document.getElementById("modelErrorBanner");
+      if (classifierModel) return; // sudah dimuat, tidak perlu ulang
+
+      if (statusEl) statusEl.textContent = "Memuat model klasifikasi...";
+
+      try {
+        const modelURL    = MODEL_PATH + "model.json";
+        const metaURL     = MODEL_PATH + "metadata.json";
+        classifierModel   = await tmImage.load(modelURL, metaURL);
+
+        // Verifikasi label runtime terhadap LABEL_MAP dan REJECT_LABELS
+        const runtimeLabels = classifierModel.getClassLabels();
+        const knownLabels   = [...Object.keys(LABEL_MAP), ...REJECT_LABELS];
+        runtimeLabels.forEach(lbl => {
+          if (!knownLabels.includes(lbl)) {
+            console.warn(`[HerbInfo] Label model tidak dikenali di kode: "${lbl}". Perbarui LABEL_MAP atau REJECT_LABELS.`);
+          }
+        });
+
+        if (statusEl) {
+          statusEl.textContent = "✓ Model siap";
+          statusEl.style.color = "var(--secondary)";
+        }
+      } catch (err) {
+        modelLoadError = true;
+        console.error("[HerbInfo] Gagal memuat model:", err);
+        if (statusEl) {
+          statusEl.textContent = "✗ Gagal memuat model";
+          statusEl.style.color = "#e53e3e";
+        }
+        if (bannerEl) bannerEl.style.display = "block";
+      }
+    }
+
+    // =========================================================================
+    // KLASIFIKASI GAMBAR
+    // Mengembalikan objek status terstruktur — tidak melempar exception
+    // =========================================================================
+    async function classifyImage(imgElement) {
+      if (!classifierModel) {
+        return { status: "model_unavailable" };
+      }
+
+      const predictions = await classifierModel.predict(imgElement);
+
+      // Hitung top secara eksplisit — urutan array predict() tidak dijamin
+      const top = predictions.reduce((a, b) => b.probability > a.probability ? b : a);
+
+      // Cek 1: kelas penolak
+      if (REJECT_LABELS.includes(top.className)) {
+        return { status: "rejected", reason: "non_herbal", probability: top.probability };
+      }
+
+      // Cek 2: threshold kepercayaan
+      if (top.probability < CONFIDENCE_THRESHOLD) {
+        return { status: "rejected", reason: "low_confidence", label: top.className, probability: top.probability };
+      }
+
+      // Cek 3: label ada di mapping
+      if (!(top.className in LABEL_MAP)) {
+        return { status: "rejected", reason: "unmapped_label", label: top.className };
+      }
+
+      return {
+        status:   "accepted",
+        label:    top.className,
+        plantKey: LABEL_MAP[top.className],
+        probability: top.probability
+      };
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
       initMobileMenu();
       initDragAndDrop();
       renderScanHistory();
       checkUrlParameters();
+      loadClassifierModel(); // muat model di background saat halaman dibuka
     });
 
     // 1. Toast Notification Helper
@@ -2212,17 +2299,36 @@
     }
 
     function update3dModelSource(plantName) {
-      const viewer = document.getElementById("plant-3d-viewer");
-      const titleEl = document.getElementById("viewerPlantTitle");
-      const config = plant3dModels[plantName] || plant3dModels["Kunyit"];
+      const viewer    = document.getElementById("plant-3d-viewer");
+      const titleEl   = document.getElementById("viewerPlantTitle");
+      const fallback2d = document.getElementById("viewer3dFallback");
+      const config    = plant3dModels[plantName];
 
-      // Update sumber model GLB
-      // Bila file GLB lokal belum di-upload, gunakan fallback yang kompatibel
+      if (!config) {
+        // Tanaman tidak dikenali — sembunyikan viewer, tampilkan placeholder
+        if (viewer)    viewer.style.display = "none";
+        if (fallback2d) fallback2d.style.display = "flex";
+        if (titleEl)   titleEl.innerText = "Model 3D tidak tersedia";
+        return;
+      }
+
+      // Sembunyikan fallback 2D dulu
+      if (fallback2d) fallback2d.style.display = "none";
+      if (viewer)     viewer.style.display = "";
+
       viewer.src = config.glb;
-      viewer.onerror = () => {
-        console.warn(`File ${config.glb} belum ditemukan di server lokal. Memuat cadangan online.`);
-        viewer.src = config.fallbackGlb;
-      };
+
+      // Jika GLB gagal dimuat → tampilkan placeholder 2D
+      viewer.addEventListener("error", () => {
+        console.warn(`[HerbInfo] File GLB tidak ditemukan: ${config.glb}`);
+        viewer.style.display = "none";
+        if (fallback2d) {
+          const fb = plantData[plantName];
+          const img = fallback2d.querySelector("img");
+          if (img && fb) img.src = fb.image;
+          fallback2d.style.display = "flex";
+        }
+      }, { once: true });
 
       titleEl.innerText = config.title;
 
@@ -2344,114 +2450,180 @@
     }
 
     // 7. Proses Scan & Render Hasil
-    function processScan(sourceType) {
+    async function processScan(sourceType) {
+      // Anti double-submit
+      if (scanInProgress) return;
+
+      // Validasi gambar
       if (!currentUploadedDataUrl) {
-        currentUploadedDataUrl = "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=500&q=80";
+        showToast("Tidak ada gambar. Silakan upload atau ambil foto terlebih dahulu.");
+        return;
       }
 
-      const overlay = document.getElementById("scanningOverlay");
-      const fill = document.getElementById("scanProgressFill");
-      const percentText = document.getElementById("scanPercentText");
-      const logText = document.getElementById("scanSubtitleText");
-      overlay.style.display = "flex";
+      scanInProgress = true;
 
-      let progress = 0;
+      const overlay     = document.getElementById("scanningOverlay");
+      const fill        = document.getElementById("scanProgressFill");
+      const percentText = document.getElementById("scanPercentText");
+      const logText     = document.getElementById("scanSubtitleText");
+
+      // Bersihkan hasil scan lama sebelum memulai
+      const resSection = document.getElementById("resultsSection");
+      resSection.style.display = "none";
+      document.getElementById("resPlantName").innerText  = "";
+      document.getElementById("resLatinName").innerText  = "";
+      document.getElementById("resFamilyName").innerHTML = "";
+
+      overlay.style.display = "flex";
       fill.style.width = "0%";
       percentText.innerText = "0%";
+      logText.innerText = "Mempersiapkan gambar...";
 
-      const interval = setInterval(() => {
-        progress += 4;
-        if (progress > 100) progress = 100;
-        fill.style.width = progress + "%";
-        percentText.innerText = progress + "%";
+      try {
+        // Fase 1: animasi 0–65% sambil model bekerja
+        let progress = 0;
+        const phase1 = setInterval(() => {
+          if (progress < 65) {
+            progress += 3;
+            fill.style.width = progress + "%";
+            percentText.innerText = progress + "%";
+            if (progress === 30) logText.innerText = "Menganalisis gambar dengan model AI...";
+          }
+        }, 60);
 
-        if (progress === 24) {
-          logText.innerText = "Mendeteksi morfologi daun & rimpang...";
-        } else if (progress === 56) {
-          logText.innerText = "Mencocokkan sidik spektrum fitokimia...";
-        } else if (progress === 84) {
-          logText.innerText = "Menyiapkan aset 3D GLB & koordinat WebXR...";
+        // Pilih elemen gambar sesuai sumber
+        const imgElement = sourceType === 'webcam'
+          ? document.getElementById("captureCanvas")
+          : document.getElementById("imagePreview");
+
+        // Jalankan prediksi
+        const result = await classifyImage(imgElement);
+
+        // Fase 2: selesaikan progress ke 100%
+        clearInterval(phase1);
+        fill.style.width = "100%";
+        percentText.innerText = "100%";
+        logText.innerText = "Selesai.";
+
+        await new Promise(r => setTimeout(r, 400));
+        overlay.style.display = "none";
+
+        // Keputusan berdasarkan hasil klasifikasi
+        if (result.status === "model_unavailable") {
+          displayRejectedResult("model_unavailable");
+          return;
         }
 
-        if (progress >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            overlay.style.display = "none";
-            displayScanResult({
-              plantName: "Kunyit",
-              latinName: "Curcuma longa L.",
-              family: "Zingiberaceae",
-              confidence: 96,
-              image: currentUploadedDataUrl,
-              compound: "Kurkuminoid",
-              yield: "3.5%",
-              modelFile: "models/kunyit.glb"
-            });
-          }, 400);
+        if (result.status === "rejected") {
+          displayRejectedResult(result.reason);
+          return;
         }
-      }, 60);
+
+        // Diterima — lookup data referensi
+        const ref = plantData[result.plantKey] ?? null;
+        displayScanResult({ plantKey: result.plantKey, probability: result.probability, ref, image: currentUploadedDataUrl });
+
+      } finally {
+        scanInProgress = false;
+      }
     }
 
-    function displayScanResult(plantData) {
-      currentActiveScanData = plantData;
+    // Tampilkan hasil identifikasi yang diterima
+    function displayScanResult(payload) {
+      const { plantKey, probability, ref, image } = payload;
+      const refNone = "Data referensi belum tersedia";
 
-      document.getElementById("resPlantImg").src = plantData.image;
-      document.getElementById("resPlantName").innerText = plantData.plantName;
-      document.getElementById("resLatinName").innerText = plantData.latinName;
-      document.getElementById("resFamilyName").innerHTML = `Famili: <strong>${plantData.family}</strong>`;
-      document.getElementById("resConfidenceVal").innerText = plantData.confidence + "%";
-      document.getElementById("resConfidenceFill").style.width = plantData.confidence + "%";
+      currentActiveScanData = {
+        plantName:  plantKey,
+        latinName:  ref ? ref.latinName  : refNone,
+        family:     ref ? ref.family     : refNone,
+        confidence: Math.round(probability * 1000) / 10, // 1 desimal
+        image:      image
+      };
 
-      // Sinkronkan 3D Model Viewer dengan tanaman yang dipindai
-      update3dModelSource(plantData.plantName);
+      document.getElementById("resPlantImg").src  = image;
+      document.getElementById("resPlantName").innerText  = plantKey;
+      document.getElementById("resLatinName").innerText  = ref ? ref.latinName  : refNone;
+      document.getElementById("resFamilyName").innerHTML = `Famili: <strong>${ref ? ref.family : refNone}</strong>`;
 
-      // Tampilkan kontainer hasil dan bawa fokus ke layar
+      const scoreStr = (probability * 100).toFixed(1) + "%";
+      document.getElementById("resConfidenceVal").innerText  = scoreStr;
+      document.getElementById("resConfidenceFill").style.width = (probability * 100).toFixed(1) + "%";
+
+      // Fitokimia — hanya 1 bar yang tersisa di HTML (phytoLabel1/phytoVal1/phytoBar1)
+      const label1 = document.getElementById("phytoLabel1");
+      const val1   = document.getElementById("phytoVal1");
+      const bar1   = document.getElementById("phytoBar1");
+      if (label1) label1.innerText = ref && ref.compound         ? ref.compound         : refNone;
+      if (val1)   val1.innerText   = ref && ref.compoundMinKadar ? ref.compoundMinKadar : "—";
+      if (bar1)   bar1.style.width = "0%";
+
+      // Tampilkan / sembunyikan panel ditolak
+      const rejPanel = document.getElementById("rejectedResultPanel");
+      if (rejPanel) rejPanel.style.display = "none";
+
+      // 3D Viewer
+      update3dModelSource(plantKey);
+
+      // Tampilkan hasil
       const resSection = document.getElementById("resultsSection");
       resSection.style.display = "block";
       resSection.scrollIntoView({ behavior: 'smooth' });
 
-      // Simpan ke riwayat localStorage
-      saveScanToHistory(plantData);
-      showToast(`Berhasil mengidentifikasi ${plantData.plantName}. Model 3D siap diinspeksi!`);
+      // Simpan ke riwayat (hanya untuk identifikasi yang diterima)
+      saveScanToHistory(currentActiveScanData);
+      showToast(`Teridentifikasi: ${plantKey}. Skor model: ${scoreStr}`);
     }
 
-    // Demo Instan dari Tanaman Populer
-    function demoScanPlant(name, latin, family, conf, imgUrl, comp, yld, modelPath) {
-      currentUploadedDataUrl = imgUrl;
-      const demoData = {
-        plantName: name,
-        latinName: latin,
-        family: family,
-        confidence: conf,
-        image: imgUrl,
-        compound: comp,
-        yield: yld,
-        modelFile: modelPath
+    // Tampilkan panel penolakan identifikasi
+    function displayRejectedResult(reason) {
+      const messages = {
+        "model_unavailable": "Model klasifikasi belum dimuat. Muat ulang halaman dan pastikan koneksi internet aktif.",
+        "non_herbal":        "Gambar tidak terdeteksi sebagai tanaman herbal. Coba foto bagian daun atau rimpang dengan latar yang jelas.",
+        "low_confidence":    `Skor model terlalu rendah untuk identifikasi (threshold: ${(CONFIDENCE_THRESHOLD * 100).toFixed(0)}%). Coba pencahayaan lebih baik atau sudut foto berbeda.`,
+        "unmapped_label":    "Kelas tanaman ini belum didukung oleh sistem saat ini."
       };
+      const msg = messages[reason] || "Identifikasi tidak dapat dilakukan.";
 
-      const overlay = document.getElementById("scanningOverlay");
-      const fill = document.getElementById("scanProgressFill");
-      const percentText = document.getElementById("scanPercentText");
-      const logText = document.getElementById("scanSubtitleText");
-      overlay.style.display = "flex";
+      // Bersihkan panel hasil positif
+      document.getElementById("resPlantName").innerText  = "Tidak Dapat Diidentifikasi";
+      document.getElementById("resLatinName").innerText  = "—";
+      document.getElementById("resFamilyName").innerHTML = "";
+      document.getElementById("resConfidenceVal").innerText  = "—";
+      document.getElementById("resConfidenceFill").style.width = "0%";
+      const resPlantImg = document.getElementById("resPlantImg");
+      if (resPlantImg) resPlantImg.src = currentUploadedDataUrl || "";
 
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 10;
-        fill.style.width = progress + "%";
-        percentText.innerText = progress + "%";
-        logText.innerText = `Memuat model 3D & data: ${name}...`;
+      // Tampilkan panel penolakan (dibuat di HTML Sub-Task 7)
+      const rejPanel = document.getElementById("rejectedResultPanel");
+      if (rejPanel) {
+        rejPanel.style.display = "block";
+        const rejMsg = document.getElementById("rejectedResultMsg");
+        if (rejMsg) rejMsg.innerText = msg;
+      }
 
-        if (progress >= 100) {
-          clearInterval(interval);
-          setTimeout(() => {
-            overlay.style.display = "none";
-            displayScanResult(demoData);
-            // Langsung buka tab 3D bila user memilih dari koleksi model
-            switchResultTab('model3d');
-          }, 300);
-        }
-      }, 45);
+      const resSection = document.getElementById("resultsSection");
+      resSection.style.display = "block";
+      resSection.scrollIntoView({ behavior: 'smooth' });
+
+      currentActiveScanData = null;
+    }
+
+    // Demo Instan dari Tanaman Populer — BYPASS model, langsung displayScanResult
+    // Hanya untuk 3 tanaman yang ada di model: Kunyit, Temulawak, Jahe
+    function demoScanPlant(plantKey) {
+      const ref = plantData[plantKey];
+      if (!ref) {
+        showToast("Data demo untuk tanaman ini belum tersedia.");
+        return;
+      }
+      displayScanResult({
+        plantKey,
+        probability: 1.0, // demo: skor ditampilkan sebagai 100% (bukan hasil model)
+        ref,
+        image: ref.image
+      });
+      switchResultTab('model3d');
     }
 
     function resetScanSession() {
@@ -2466,9 +2638,10 @@
       let history = JSON.parse(localStorage.getItem("herbinfo_scan_history") || "[]");
       const newEntry = {
         id: "SCAN-" + Date.now(),
+        plantKey:  data.plantName,   // plantName dari currentActiveScanData = plantKey
         plantName: data.plantName,
         latinName: data.latinName,
-        confidence: data.confidence,
+        confidence: data.confidence, // sudah desimal (misal 96.0)
         image: data.image,
         timestamp: new Date().toLocaleDateString('id-ID', {
           day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
@@ -2495,33 +2668,32 @@
         return;
       }
 
-      container.innerHTML = history.map(item => `
-        <div class="history-card" onclick="loadHistoricItem('${item.plantName}', '${item.latinName}', ${item.confidence}, '${item.image}')">
-          <img src="${item.image}" alt="${item.plantName}" class="history-thumb" />
-          <div class="history-body">
-            <div class="history-title">${item.plantName}</div>
-            <div class="history-latin">${item.latinName}</div>
-            <div class="history-meta">
-              <span>${item.timestamp}</span>
-              <strong style="color:var(--primary);">${item.confidence}%</strong>
+      container.innerHTML = history.map(item => {
+        // Gunakan data-key agar tidak ada masalah escaping nama di onclick
+        const safeKey = (item.plantKey || item.plantName || "").replace(/'/g, "\\'");
+        return `
+          <div class="history-card" onclick="loadHistoricItem('${safeKey}')">
+            <img src="${item.image}" alt="${item.plantName}" class="history-thumb" />
+            <div class="history-body">
+              <div class="history-title">${item.plantName}</div>
+              <div class="history-latin">${item.latinName}</div>
+              <div class="history-meta">
+                <span>${item.timestamp}</span>
+                <strong style="color:var(--primary);">${item.confidence}%</strong>
+              </div>
             </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
-    function loadHistoricItem(name, latin, conf, img) {
-      displayScanResult({
-        plantName: name,
-        latinName: latin,
-        family: "Zingiberaceae",
-        confidence: conf,
-        image: img,
-        compound: "Fitokimia Aktif",
-        yield: "Terstandar",
-        modelFile: `models/${name.toLowerCase()}.glb`
-      });
-      switchResultTab('model3d');
+    // Muat ulang hasil dari riwayat menggunakan plantKey → demoScanPlant
+    function loadHistoricItem(plantKey) {
+      if (plantData[plantKey]) {
+        demoScanPlant(plantKey);
+      } else {
+        showToast("Data tanaman ini tidak lagi tersedia di sistem.");
+      }
     }
 
     function clearAllHistory() {
@@ -2535,11 +2707,11 @@
     function saveToReportDraft() {
       if (!currentActiveScanData) return;
       const reportDraft = {
-        sampleName: currentActiveScanData.plantName,
-        latinName: currentActiveScanData.latinName,
-        confidence: currentActiveScanData.confidence,
-        dateAdded: new Date().toISOString(),
-        has3DModel: true,
+        sampleName:  currentActiveScanData.plantName,
+        latinName:   currentActiveScanData.latinName,
+        modelScore:  currentActiveScanData.confidence + "%", // desimal, mis. "96.0%"
+        dateAdded:   new Date().toISOString(),
+        has3DModel:  true,
         notes: "Hasil observasi AR Scan & 3D Model Viewer HerbInfoAI."
       };
       localStorage.setItem("herbinfo_laporan_draft", JSON.stringify(reportDraft));
@@ -2597,38 +2769,37 @@
     }
 
     function generatePharmaReply(question) {
-      const currentPlant = currentActiveScanData ? currentActiveScanData.plantName : "Kunyit";
-      let reply = `Berdasarkan Farmakope Herbal Indonesia, simplisia ${currentPlant} memiliki profil kimia stabil dengan indeks kepatuhan terapi yang baik.`;
+      // Tidak ada fallback ke "Kunyit" — jika tidak ada scan aktif, tampilkan pesan netral
+      if (!currentActiveScanData) {
+        appendChatMessage("assistant", "Silakan lakukan scan tanaman terlebih dahulu, lalu tanyakan pertanyaan seputar tanaman yang teridentifikasi.");
+        return;
+      }
+
+      const currentPlant = currentActiveScanData.plantName;
+      const ref = plantData[currentPlant];
+      const latinName = ref ? ref.latinName : currentPlant;
+
+      let reply = `Tanaman yang teridentifikasi: <strong>${currentPlant}</strong> (${latinName}). Data referensi farmasi belum tersedia — sedang dipersiapkan dari sumber yang telah diverifikasi.`;
       const q = question.toLowerCase();
 
-      if (q.includes("organ") || q.includes("aktif")) {
-        reply = `Pada model 3D di Titik 1 (Rimpang), terdapat vakuola sel yang memadatkan kurkuminoid dan fraksi minyak atsiri hingga 3-5%. Bagian ini paling sering diekstraksi untuk sediaan fitofarmaka.`;
-      } else if (q.includes("mekanisme") || q.includes("kerja")) {
-        reply = `Senyawa aktif menghambat jalur pensinyalan sitokin pro-inflamasi TNF-alfa dan enzim COX-2, meredakan peradangan lambung dan sendi.`;
-      } else if (q.includes("efek samping") || q.includes("kontraindikasi")) {
-        reply = `Penggunaan dosis berlebih (>4 gram murni/hari) dapat memicu iritasi lambung atau interaksi pada pasien yang mengonsumsi antikoagulan (seperti Warfarin).`;
-      } else if (q.includes("pengolahan") || q.includes("simplisia")) {
-        reply = `Rimpang diiris dengan ketebalan 2-3 mm, lalu dikeringkan pada oven bersuhu 40-50°C (hindari sinar UV langsung) agar minyak atsiri tidak menguap.`;
+      if (q.includes("senyawa") || q.includes("fitokimia") || q.includes("kimia")) {
+        reply = ref && ref.compound
+          ? `Senyawa identitas <em>${currentPlant}</em>: <strong>${ref.compound}</strong>${ref.compoundMinKadar ? ', kadar minimum ' + ref.compoundMinKadar : ''}. Sumber: Farmakope Herbal Indonesia Edisi II (2017).`
+          : `Data senyawa identitas <em>${currentPlant}</em> belum tersedia. Silakan rujuk Farmakope Herbal Indonesia Edisi II (2017) untuk informasi lengkap.`;
+      } else if (q.includes("famili") || q.includes("latin") || q.includes("nama")) {
+        reply = `<em>${currentPlant}</em> — nama Latin: <strong>${latinName}</strong>, famili: ${ref ? ref.family : 'belum tersedia'}. Sumber: Farmakope Herbal Indonesia Edisi II (2017).`;
       }
 
       appendChatMessage("assistant", reply);
     }
 
     // 10. Handler Parameter URL (Bila datang dari halaman lain)
+    // demoScanPlant sekarang hanya menerima plantKey — tidak perlu parameter lama
     function checkUrlParameters() {
       const params = new URLSearchParams(window.location.search);
       const plantParam = params.get('plant');
-      if (plantParam && plant3dModels[plantParam]) {
-        demoScanPlant(
-          plantParam,
-          plantParam === 'Kunyit' ? 'Curcuma longa L.' : 'Zingiber officinale',
-          'Zingiberaceae',
-          96,
-          'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=500&q=80',
-          'Senyawa Aktif Terstandar',
-          '3.5%',
-          `models/${plantParam.toLowerCase()}.glb`
-        );
+      if (plantParam && plantData[plantParam]) {
+        demoScanPlant(plantParam);
       }
     }
   </script>
