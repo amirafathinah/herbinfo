@@ -928,57 +928,6 @@
       box-shadow: 0 8px 24px rgba(45, 106, 79, 0.45);
     }
 
-    /* Hotspot Anotasi Model 3D */
-    .hotspot-node {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 3px solid #FFFFFF;
-      background: var(--primary);
-      box-shadow: 0 0 12px rgba(45, 106, 79, 0.7);
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 700;
-      box-sizing: border-box;
-    }
-
-    .hotspot-node:hover {
-      transform: scale(1.2);
-      background: var(--secondary);
-    }
-
-    .hotspot-annotation-card {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(27, 67, 50, 0.92);
-      backdrop-filter: blur(10px);
-      color: #FFFFFF;
-      padding: 8px 14px;
-      border-radius: var(--radius-sm);
-      font-size: 0.75rem;
-      line-height: 1.4;
-      white-space: nowrap;
-      pointer-events: none;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
-      border: 1px solid var(--accent);
-      opacity: 0;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-
-    .hotspot-node:hover .hotspot-annotation-card,
-    .hotspot-node:focus .hotspot-annotation-card {
-      opacity: 1;
-      transform: translateX(-50%) translateY(-4px);
-    }
-
     /* Petunjuk Interaksi 3D */
     .viewer-hint-overlay {
       position: absolute;
@@ -1057,6 +1006,126 @@
       height: 100%;
       background: linear-gradient(90deg, var(--accent), var(--secondary));
       border-radius: var(--radius-full);
+    }
+
+    /* Monografi & Standar Mutu Panel */
+    .mono-banner {
+      background: #fffbeb;
+      border: 1px solid #d97706;
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      font-size: 0.78rem;
+      color: #92400e;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .mono-bahan-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .mono-bahan-btn {
+      padding: 5px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      background: #fff;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--text-dark);
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .mono-bahan-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .mono-section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin: 16px 0 6px;
+    }
+
+    .mono-text-block {
+      font-size: 0.83rem;
+      color: var(--text-dark);
+      line-height: 1.65;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 13px;
+    }
+
+    .mono-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    .mono-table th {
+      text-align: left;
+      padding: 6px 10px;
+      background: var(--bg-surface);
+      border-bottom: 2px solid var(--border-color);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .mono-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: top;
+      color: var(--text-dark);
+      line-height: 1.45;
+    }
+
+    .mono-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .mono-badge-min {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #d1fae5;
+      color: #065f46;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .mono-badge-max {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .mono-source {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .mono-null {
+      color: var(--text-muted);
+      font-style: italic;
     }
 
     .molecule-preview-box {
@@ -1710,7 +1779,7 @@
                 🧊 Model 3D Tanaman
               </button>
               <button class="res-tab-btn" id="btnResPhyto" onclick="switchResultTab('fitokimia')">
-                🧪 Fitokimia &amp; Molekul
+                📋 Monografi &amp; Standar Mutu
               </button>
             </div>
 
@@ -1750,27 +1819,11 @@
                 </div>
               </div>
 
-              <!-- Card Khasiat — teks farmakologi dihapus, menunggu plant-reference.json terkurasi -->
+              <!-- Card Aktivitas Farmakologis — diisi oleh renderPharmacologyCards() -->
               <div class="result-card">
-                <h3 style="font-size: 1.15rem; margin-bottom: 6px;">Aktivitas Farmakologis &amp; Khasiat Medis</h3>
-                <div class="benefits-grid">
-                  <div class="benefit-box">
-                    <div class="benefit-title">🛡️ Anti-inflamasi</div>
-                    <div class="benefit-desc" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</div>
-                  </div>
-                  <div class="benefit-box">
-                    <div class="benefit-title">🧪 Antioksidan</div>
-                    <div class="benefit-desc" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</div>
-                  </div>
-                  <div class="benefit-box">
-                    <div class="benefit-title">🩺 Hepatoprotektor</div>
-                    <div class="benefit-desc" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</div>
-                  </div>
-                  <div class="benefit-box">
-                    <div class="benefit-title">🦠 Antibakteri</div>
-                    <div class="benefit-desc" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</div>
-                  </div>
-                </div>
+                <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Aktivitas Farmakologis &mdash; Referensi Edukasi</h3>
+                <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">Informasi referensi tanaman, bukan hasil pengukuran dari foto.</p>
+                <div class="benefits-grid" id="pharmacologyGrid"></div>
               </div>
 
               <!-- Panel Penolakan Identifikasi (tersembunyi default) -->
@@ -1846,11 +1899,15 @@
                 <div class="viewer-bottom-guide">
                   <div class="guide-item">
                     <span class="guide-dot"></span>
-                    <span><strong>AR Tanaman Herbal:</strong> Kunyit </span>
+                    <span><strong>Status Model 3D:</strong> <span id="guideModelStatus">—</span></span>
+                  </div>
+                  <div class="guide-item">
+                    <span class="guide-dot" style="background:var(--secondary);"></span>
+                    <span><strong>Bagian ditampilkan:</strong> <span id="guidePlantPart">—</span></span>
                   </div>
                   <div class="guide-item">
                     <span class="guide-dot" style="background:var(--primary);"></span>
-                    <span><strong>Kompatibilitas:</strong> WebXR, SceneViewer</span>
+                    <span><strong>Kompatibilitas AR:</strong> WebXR, Scene Viewer</span>
                   </div>
                 </div>
               </div>
@@ -1859,20 +1916,19 @@
             <!-- PANEL 3: FITOKIMIA & MOLEKUL -->
             <div class="res-panel-content" id="panelResPhyto">
               <div class="result-card">
-                <h3 style="font-size: 1.15rem; margin-bottom: 6px;">Kandungan Fitokimia Utama</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Senyawa identitas berdasarkan Farmakope Herbal Indonesia Edisi II (2017)</p>
+                <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Monografi &amp; Standar Mutu</h3>
 
-                <!-- Hanya 1 bar fitokimia — sumber data: plant-reference.json (belum tersedia) -->
-                <div class="phytochem-chart">
-                  <div class="phyto-item">
-                    <div class="phyto-label">
-                      <span id="phytoLabel1" style="color:var(--text-muted); font-style:italic;">Data referensi belum tersedia</span>
-                      <span id="phytoVal1">—</span>
-                    </div>
-                    <div class="phyto-bar-track">
-                      <div class="phyto-bar-val" id="phytoBar1" style="width: 0%;"></div>
-                    </div>
-                  </div>
+                <!-- Banner wajib — diisi JS, tetap visible -->
+                <div class="mono-banner" id="monoBanner">
+                  Angka berikut adalah batas mutu acuan FHI, bukan hasil pengukuran foto.
+                </div>
+
+                <!-- Toggle pilih jenis bahan — diisi oleh renderMonografiPanel() -->
+                <div class="mono-bahan-toggle" id="monoBahanToggle"></div>
+
+                <!-- Konten monografi — diisi oleh renderMonografiPanel() -->
+                <div id="monoContent">
+                  <p class="mono-null">Pilih tanaman untuk melihat data monografi.</p>
                 </div>
               </div>
             </div>
@@ -1913,10 +1969,10 @@
             </div>
 
             <div class="quick-replies">
-              <button class="quick-chip" onclick="sendQuickReply('Bagaimana mekanisme kerja farmakologinya?')">Mekanisme Kerja</button>
-              <button class="quick-chip" onclick="sendQuickReply('Apakah ada kontraindikasi atau efek samping?')">Efek Samping</button>
-              <button class="quick-chip" onclick="sendQuickReply('Bagaimana cara pengolahan simplisia yang tepat?')">Pengolahan</button>
-              <button class="quick-chip" onclick="sendQuickReply('Bagian anatomi mana yang paling aktif secara medis?')">Organ Paling Aktif</button>
+              <button class="quick-chip" onclick="sendTopicReply('mekanisme')">Mekanisme Kerja</button>
+              <button class="quick-chip" onclick="sendTopicReply('efekSamping')">Efek Samping</button>
+              <button class="quick-chip" onclick="sendTopicReply('pengolahan')">Pengolahan Simplisia</button>
+              <button class="quick-chip" onclick="sendTopicReply('bagianDigunakan')">Bagian yang Digunakan</button>
             </div>
 
             <div class="ai-input-wrapper">
@@ -2079,8 +2135,13 @@
     // Kelas yang selalu ditolak, berapapun skornya (array untuk antisipasi model versi berikutnya)
     const REJECT_LABELS = ["BukanTanamanHerbal"];
 
-    let classifierModel = null;
-    let modelLoadError  = false;
+    let classifierModel      = null;
+    let modelLoadError       = false;
+    let educationData        = null; // diisi oleh loadEducationData()
+    let educationLoadErr     = false;
+    let plantReferenceData   = null; // diisi oleh loadPlantReferenceData()
+    let plantRefLoadErr      = false;
+    let activeMonoBahanKey   = null; // jenis bahan yang sedang ditampilkan di tab monografi
 
     // =========================================================================
     // DATA REFERENSI TANAMAN
@@ -2114,24 +2175,23 @@
 
     // Database konfigurasi 3D Viewer — 3 tanaman yang dikenali model
     // fallbackGlb dihapus; file GLB yang tidak tersedia ditangani via onerror → placeholder 2D
+    // hotspotRhizome/hotspotLeaf dihapus: elemen slot="hotspot-*" belum ada di HTML,
+    //   querySelector-nya selalu null. Tambahkan slot di <model-viewer> jika hotspot diinginkan.
     const plant3dModels = {
       "Kunyit": {
-        glb:             "models/kunyit.glb",
-        hotspotRhizome:  "Rimpang: Organ utama penyimpan senyawa aktif",
-        hotspotLeaf:     "Daun: Pertulangan menyirip",
-        title:           "Model 3D Anatomi: Kunyit (Curcuma longa)"
+        glb:   "models/kunyit.glb",
+        part:  "Rimpang",
+        title: "Model 3D Anatomi: Kunyit (Curcuma longa)"
       },
       "Jahe": {
-        glb:             "models/jahe.glb",
-        hotspotRhizome:  "Rimpang: Organ utama penyimpan senyawa aktif",
-        hotspotLeaf:     "Helai Daun: Pertulangan sejajar",
-        title:           "Model 3D Anatomi: Jahe (Zingiber officinale)"
+        glb:   "models/jahe.glb",
+        part:  "Rimpang",
+        title: "Model 3D Anatomi: Jahe (Zingiber officinale)"
       },
       "Temulawak": {
-        glb:             "models/temulawak.glb",
-        hotspotRhizome:  "Rimpang: Organ utama penyimpan senyawa aktif",
-        hotspotLeaf:     "Daun: Garis coklat keunguan di bagian tengah",
-        title:           "Model 3D Anatomi: Temulawak (Curcuma xanthorrhiza)"
+        glb:   "models/temulawak.glb",
+        part:  "Rimpang",
+        title: "Model 3D Anatomi: Temulawak (Curcuma xanthorrhiza)"
       }
     };
 
@@ -2216,7 +2276,9 @@
       initDragAndDrop();
       renderScanHistory();
       checkUrlParameters();
-      loadClassifierModel(); // muat model di background saat halaman dibuka
+      loadClassifierModel();       // muat model klasifikasi di background
+      loadEducationData();         // muat materi edukasi di background
+      loadPlantReferenceData();    // muat data monografi FHI di background
     });
 
     // 1. Toast Notification Helper
@@ -2299,44 +2361,46 @@
     }
 
     function update3dModelSource(plantName) {
-      const viewer    = document.getElementById("plant-3d-viewer");
-      const titleEl   = document.getElementById("viewerPlantTitle");
+      const viewer     = document.getElementById("plant-3d-viewer");
+      const titleEl    = document.getElementById("viewerPlantTitle");
       const fallback2d = document.getElementById("viewer3dFallback");
-      const config    = plant3dModels[plantName];
+      const statusEl   = document.getElementById("guideModelStatus");
+      const partEl     = document.getElementById("guidePlantPart");
+      const config     = plant3dModels[plantName];
 
       if (!config) {
         // Tanaman tidak dikenali — sembunyikan viewer, tampilkan placeholder
         if (viewer)    viewer.style.display = "none";
         if (fallback2d) fallback2d.style.display = "flex";
         if (titleEl)   titleEl.innerText = "Model 3D tidak tersedia";
+        if (statusEl)  statusEl.textContent = "Belum tersedia";
+        if (partEl)    partEl.textContent = "—";
         return;
       }
 
-      // Sembunyikan fallback 2D dulu
+      // Sembunyikan fallback 2D, tampilkan viewer
       if (fallback2d) fallback2d.style.display = "none";
       if (viewer)     viewer.style.display = "";
 
+      // Set judul dan guide segera (sebelum GLB selesai dimuat)
+      titleEl.innerText = config.title;
+      if (statusEl) statusEl.textContent = "Tersedia";
+      if (partEl)   partEl.textContent   = config.part;
+
       viewer.src = config.glb;
 
-      // Jika GLB gagal dimuat → tampilkan placeholder 2D
+      // Jika GLB gagal dimuat → tampilkan placeholder 2D, koreksi status
       viewer.addEventListener("error", () => {
         console.warn(`[HerbInfo] File GLB tidak ditemukan: ${config.glb}`);
         viewer.style.display = "none";
         if (fallback2d) {
-          const fb = plantData[plantName];
+          const fb  = plantData[plantName];
           const img = fallback2d.querySelector("img");
           if (img && fb) img.src = fb.image;
           fallback2d.style.display = "flex";
         }
+        if (statusEl) statusEl.textContent = "Belum tersedia";
       }, { once: true });
-
-      titleEl.innerText = config.title;
-
-      // Update teks hotspot anotasi
-      const hotspot1Text = document.querySelector('[slot="hotspot-rhizome"] .hotspot-annotation-card');
-      const hotspot2Text = document.querySelector('[slot="hotspot-leaf"] .hotspot-annotation-card');
-      if (hotspot1Text) hotspot1Text.innerHTML = `<strong>Bagian Bawah:</strong><br/>${config.hotspotRhizome}`;
-      if (hotspot2Text) hotspot2Text.innerHTML = `<strong>Bagian Atas:</strong><br/>${config.hotspotLeaf}`;
     }
 
     // 6. File API & Webcam Capture
@@ -2533,30 +2597,32 @@
       const { plantKey, probability, ref, image } = payload;
       const refNone = "Data referensi belum tersedia";
 
+      // Utamakan latinName & family dari plant-reference.json bila ada
+      const pRef     = plantReferenceData && plantReferenceData[plantKey];
+      const latinName = pRef ? pRef.namaIlmiah : (ref ? ref.latinName : refNone);
+      const family    = pRef ? pRef.famili     : (ref ? ref.family    : refNone);
+
       currentActiveScanData = {
         plantName:  plantKey,
-        latinName:  ref ? ref.latinName  : refNone,
-        family:     ref ? ref.family     : refNone,
+        latinName:  latinName,
+        family:     family,
         confidence: Math.round(probability * 1000) / 10, // 1 desimal
         image:      image
       };
 
       document.getElementById("resPlantImg").src  = image;
       document.getElementById("resPlantName").innerText  = plantKey;
-      document.getElementById("resLatinName").innerText  = ref ? ref.latinName  : refNone;
-      document.getElementById("resFamilyName").innerHTML = `Famili: <strong>${ref ? ref.family : refNone}</strong>`;
+      document.getElementById("resLatinName").innerText  = latinName;
+
+      const famEl = document.getElementById("resFamilyName");
+      famEl.textContent = "";
+      const famStrong = document.createElement("strong");
+      famStrong.textContent = family;
+      famEl.append("Famili: ", famStrong);
 
       const scoreStr = (probability * 100).toFixed(1) + "%";
       document.getElementById("resConfidenceVal").innerText  = scoreStr;
       document.getElementById("resConfidenceFill").style.width = (probability * 100).toFixed(1) + "%";
-
-      // Fitokimia — hanya 1 bar yang tersisa di HTML (phytoLabel1/phytoVal1/phytoBar1)
-      const label1 = document.getElementById("phytoLabel1");
-      const val1   = document.getElementById("phytoVal1");
-      const bar1   = document.getElementById("phytoBar1");
-      if (label1) label1.innerText = ref && ref.compound         ? ref.compound         : refNone;
-      if (val1)   val1.innerText   = ref && ref.compoundMinKadar ? ref.compoundMinKadar : "—";
-      if (bar1)   bar1.style.width = "0%";
 
       // Tampilkan / sembunyikan panel ditolak
       const rejPanel = document.getElementById("rejectedResultPanel");
@@ -2564,6 +2630,12 @@
 
       // 3D Viewer
       update3dModelSource(plantKey);
+
+      // Kartu aktivitas farmakologis
+      renderPharmacologyCards(plantKey);
+
+      // Tab monografi — tampilkan data dari plant-reference.json
+      renderMonografiPanel(plantKey);
 
       // Tampilkan hasil
       const resSection = document.getElementById("resultsSection");
@@ -2606,6 +2678,10 @@
       resSection.style.display = "block";
       resSection.scrollIntoView({ behavior: 'smooth' });
 
+      // Kosongkan kartu farmakologi dan monografi — tidak ada tanaman aktif setelah ditolak
+      renderPharmacologyCards(null);
+      renderMonografiPanel(null);
+
       currentActiveScanData = null;
     }
 
@@ -2629,6 +2705,8 @@
     function resetScanSession() {
       resetUpload();
       stopWebcam();
+      renderPharmacologyCards(null); // bersihkan kartu agar tidak tertinggal
+      renderMonografiPanel(null);    // bersihkan monografi
       document.getElementById("resultsSection").style.display = "none";
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -2754,6 +2832,141 @@
       setTimeout(() => generatePharmaReply(msg), 700);
     }
 
+    // =========================================================================
+    // MATERI EDUKASI — plant-education.json
+    // =========================================================================
+
+    async function loadEducationData() {
+      try {
+        const res = await fetch("data/plant-education.json");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        educationData = await res.json();
+      } catch (err) {
+        educationLoadErr = true;
+        console.warn("[HerbInfo] Gagal memuat plant-education.json:", err);
+        // Kegagalan ini tidak mengganggu fitur scan — educationData tetap null
+      }
+    }
+
+    // =========================================================================
+    // KARTU AKTIVITAS FARMAKOLOGIS
+    // =========================================================================
+
+    // Buat satu elemen benefit-box dari data slot.
+    // Dipanggil hanya dari renderPharmacologyCards — tidak ada akses DOM langsung.
+    function buildPharmacologyCard(slot, index) {
+      const box = document.createElement("div");
+      box.className = "benefit-box";
+
+      const isReady = slot.status === "siap_tayang"
+        && slot.judul && slot.isi && slot.jenisBukti && slot.sumber;
+
+      const titleEl = document.createElement("div");
+      titleEl.className = "benefit-title";
+
+      const descEl = document.createElement("div");
+      descEl.className = "benefit-desc";
+
+      if (isReady) {
+        titleEl.textContent = slot.judul;
+
+        // Isi ringkasan
+        const isiNode = document.createElement("p");
+        isiNode.textContent = slot.isi;
+        descEl.appendChild(isiNode);
+
+        // Jenis bukti
+        const buktiNode = document.createElement("p");
+        buktiNode.style.cssText = "font-size:0.74rem; color:var(--text-muted); margin-top:4px;";
+        buktiNode.textContent = "Jenis bukti: " + slot.jenisBukti;
+        descEl.appendChild(buktiNode);
+
+        // Bagian dan sediaan (opsional)
+        if (slot.bagianDanSediaan) {
+          const bagianNode = document.createElement("p");
+          bagianNode.style.cssText = "font-size:0.74rem; color:var(--text-muted);";
+          bagianNode.textContent = "Bagian/sediaan: " + slot.bagianDanSediaan;
+          descEl.appendChild(bagianNode);
+        }
+
+        // Sumber
+        const sumberNode = document.createElement("p");
+        sumberNode.style.cssText = "font-size:0.74rem; color:var(--text-muted); margin-top:4px;";
+        const halamanStr = slot.halaman ? ", h. " + slot.halaman : "";
+        sumberNode.textContent = "Sumber: " + slot.sumber + halamanStr;
+        descEl.appendChild(sumberNode);
+      } else {
+        // Belum siap_tayang — judul generik, isi placeholder
+        titleEl.textContent = "Aktivitas " + (index + 1);
+        titleEl.style.color = "var(--text-muted)";
+        descEl.style.cssText = "color:var(--text-muted); font-style:italic;";
+        descEl.textContent = "Data referensi belum tersedia";
+      }
+
+      box.appendChild(titleEl);
+      box.appendChild(descEl);
+      return box;
+    }
+
+    // Render empat kartu ke #pharmacologyGrid.
+    // plantKey = null → kosongkan grid (saat ditolak atau reset sesi).
+    function renderPharmacologyCards(plantKey) {
+      const grid = document.getElementById("pharmacologyGrid");
+      if (!grid) return;
+
+      // Kosongkan terlebih dahulu
+      grid.innerHTML = "";
+
+      if (!plantKey) return; // ditolak / reset — grid tetap kosong
+
+      // Tentukan slot yang akan dirender
+      const slots = educationData
+        && educationData[plantKey]
+        && Array.isArray(educationData[plantKey].aktivitasFarmakologis)
+        ? educationData[plantKey].aktivitasFarmakologis
+        : null;
+
+      // Selalu render 4 kartu; jika data belum ada tampilkan placeholder
+      for (let i = 0; i < 4; i++) {
+        const slot = slots ? (slots[i] || null) : null;
+        const fallbackSlot = { status: "belum_diisi" };
+        grid.appendChild(buildPharmacologyCard(slot || fallbackSlot, i));
+      }
+    }
+
+    // Label tampilan per topik (dipakai di pesan default dan header jawaban)
+    const TOPIC_LABELS = {
+      mekanisme:      "mekanisme kerja",
+      efekSamping:    "efek samping",
+      pengolahan:     "pengolahan simplisia",
+      bagianDigunakan:"bagian yang digunakan"
+    };
+
+    // Pesan default per topik — ditampilkan saat materi belum siap_tayang
+    // Tidak boleh berisi klaim farmasi. Template: {plant} diganti runtime.
+    const DEFAULT_REPLIES = {
+      mekanisme:      "Informasi {topik} {plant} belum tersedia pada aplikasi ini.",
+      efekSamping:    "Informasi {topik} {plant} belum tersedia pada aplikasi ini.",
+      pengolahan:     "Informasi {topik} {plant} belum tersedia pada aplikasi ini.",
+      bagianDigunakan:"Informasi {topik} {plant} belum tersedia pada aplikasi ini."
+    };
+
+    // Pemetaan kata kunci teks bebas → topicKey (untuk input manual, bukan tombol)
+    const KEYWORD_MAP = [
+      { keys: ["mekanisme", "farmakologi", "kerja", "aktivitas"],        topic: "mekanisme"       },
+      { keys: ["efek samping", "kontraindikasi", "toksik", "bahaya"],    topic: "efekSamping"     },
+      { keys: ["olah", "simplisia", "ekstrak", "pengolahan", "proses"],  topic: "pengolahan"      },
+      { keys: ["bagian", "organ", "digunakan", "rimpang", "daun"],       topic: "bagianDigunakan" }
+    ];
+
+    // Tombol sidebar — langsung kirim dengan topicKey eksplisit
+    function sendTopicReply(topicKey) {
+      const label = TOPIC_LABELS[topicKey] || topicKey;
+      appendChatMessage("user", "Informasi " + label);
+      setTimeout(() => replyWithTopic(topicKey), 600);
+    }
+
+    // Input teks manual — coba cocokkan kata kunci, jika tidak tawarkan empat topik
     function sendQuickReply(text) {
       appendChatMessage("user", text);
       setTimeout(() => generatePharmaReply(text), 600);
@@ -2763,34 +2976,406 @@
       const thread = document.getElementById("chatThread");
       const bubble = document.createElement("div");
       bubble.className = `chat-bubble ${sender}`;
-      bubble.innerHTML = text;
+      // Gunakan textContent untuk teks biasa, innerHTML hanya jika ada tag yang disengaja
+      bubble.textContent = text;
       thread.appendChild(bubble);
       thread.scrollTop = thread.scrollHeight;
     }
 
-    function generatePharmaReply(question) {
-      // Tidak ada fallback ke "Kunyit" — jika tidak ada scan aktif, tampilkan pesan netral
+    // Tampilkan jawaban berdasarkan topicKey dan tanaman aktif
+    function replyWithTopic(topicKey) {
       if (!currentActiveScanData) {
-        appendChatMessage("assistant", "Silakan lakukan scan tanaman terlebih dahulu, lalu tanyakan pertanyaan seputar tanaman yang teridentifikasi.");
+        appendChatMessage("assistant", "Silakan lakukan scan atau pilih tanaman terlebih dahulu.");
         return;
       }
 
-      const currentPlant = currentActiveScanData.plantName;
-      const ref = plantData[currentPlant];
-      const latinName = ref ? ref.latinName : currentPlant;
+      const plantKey = currentActiveScanData.plantName;
+      const label    = TOPIC_LABELS[topicKey] || topicKey;
 
-      let reply = `Tanaman yang teridentifikasi: <strong>${currentPlant}</strong> (${latinName}). Data referensi farmasi belum tersedia — sedang dipersiapkan dari sumber yang telah diverifikasi.`;
-      const q = question.toLowerCase();
-
-      if (q.includes("senyawa") || q.includes("fitokimia") || q.includes("kimia")) {
-        reply = ref && ref.compound
-          ? `Senyawa identitas <em>${currentPlant}</em>: <strong>${ref.compound}</strong>${ref.compoundMinKadar ? ', kadar minimum ' + ref.compoundMinKadar : ''}. Sumber: Farmakope Herbal Indonesia Edisi II (2017).`
-          : `Data senyawa identitas <em>${currentPlant}</em> belum tersedia. Silakan rujuk Farmakope Herbal Indonesia Edisi II (2017) untuk informasi lengkap.`;
-      } else if (q.includes("famili") || q.includes("latin") || q.includes("nama")) {
-        reply = `<em>${currentPlant}</em> — nama Latin: <strong>${latinName}</strong>, famili: ${ref ? ref.family : 'belum tersedia'}. Sumber: Farmakope Herbal Indonesia Edisi II (2017).`;
+      if (educationLoadErr) {
+        appendChatMessage("assistant", "Materi edukasi belum dapat dimuat. Periksa koneksi dan muat ulang halaman.");
+        return;
       }
 
-      appendChatMessage("assistant", reply);
+      const entry = educationData
+        && educationData[plantKey]
+        && educationData[plantKey][topicKey];
+
+      if (entry && entry.status === "siap_tayang" && entry.isi && entry.sumber) {
+        const halamanStr = entry.halaman ? `, h. ${entry.halaman}` : "";
+        const lines = [
+          entry.isi,
+          `Sumber: ${entry.sumber}${halamanStr}`,
+          "— Materi edukasi, bukan rekomendasi pengobatan atau dosis."
+        ];
+        lines.forEach(line => appendChatMessage("assistant", line));
+      } else {
+        const template = DEFAULT_REPLIES[topicKey] || "Informasi {topik} {plant} belum tersedia.";
+        const msg = template
+          .replace("{topik}", label)
+          .replace("{plant}", plantKey);
+        appendChatMessage("assistant", msg);
+      }
+    }
+
+    function generatePharmaReply(question) {
+      if (!currentActiveScanData) {
+        appendChatMessage("assistant", "Silakan lakukan scan atau pilih tanaman terlebih dahulu.");
+        return;
+      }
+
+      const plantKey  = currentActiveScanData.plantName;
+      const pRef      = plantReferenceData && plantReferenceData[plantKey];
+      const ref       = plantData[plantKey];
+      const latinName = pRef ? pRef.namaIlmiah : (ref ? ref.latinName : plantKey);
+      const q         = question.toLowerCase();
+
+      // Pertanyaan tentang identitas / pemerian / monografi → jawab dari plant-reference.json
+      const MONO_KEYS = {
+        identitas:  ["nama ilmiah", "nama latin", "famili", "latin", "identitas"],
+        pemerian:   ["pemerian", "penampakan", "warna", "bau", "rasa", "bentuk"],
+        senyawa:    ["senyawa", "identitas kimia", "klt", "kromatografi"],
+        kadar:      ["kadar", "kandungan", "minyak atsiri", "kurkumin", "gingerol", "xantorrhizol",
+                     "batas mutu", "parameter mutu", "susut", "abu"],
+        definisi:   ["definisi", "apa itu", "pengertian", "simplisia", "ekstrak"]
+      };
+
+      if (pRef) {
+        const bahanKey = activeMonoBahanKey || pRef.bahanDefault;
+        const bahan    = pRef.bahan && pRef.bahan[bahanKey];
+
+        if (MONO_KEYS.identitas.some(k => q.includes(k))) {
+          appendChatMessage("assistant",
+            `${plantKey}: nama ilmiah ${pRef.namaIlmiah}, famili ${pRef.famili}.`
+          );
+          appendChatMessage("assistant",
+            `Sumber: Farmakope Herbal Indonesia Edisi II (2017).`
+          );
+          return;
+        }
+
+        if (MONO_KEYS.pemerian.some(k => q.includes(k)) && bahan) {
+          appendChatMessage("assistant", bahan.pemerian || "Data pemerian belum tersedia.");
+          appendChatMessage("assistant", `Sumber: ${_monoSumber(bahan)}`);
+          return;
+        }
+
+        if (MONO_KEYS.senyawa.some(k => q.includes(k)) && bahan) {
+          const ids = bahan.senyawaIdentitas;
+          if (ids && ids.length) {
+            appendChatMessage("assistant",
+              `Senyawa identitas ${plantKey} (${bahan.jenisBahan}): ` +
+              ids.map(s => s.nama + (s.metodeIdentifikasi ? " (" + s.metodeIdentifikasi + ")" : "")).join(", ") + "."
+            );
+          } else {
+            appendChatMessage("assistant", "Data senyawa identitas belum tersedia.");
+          }
+          appendChatMessage("assistant", `Sumber: ${_monoSumber(bahan)}`);
+          return;
+        }
+
+        if (MONO_KEYS.kadar.some(k => q.includes(k))) {
+          // Tampilkan kadar untuk SEMUA jenis bahan agar tidak mencampur
+          const bahanKeys = Object.keys(pRef.bahan || {});
+          if (bahanKeys.length === 0) {
+            appendChatMessage("assistant", "Data kadar belum tersedia.");
+            return;
+          }
+          appendChatMessage("assistant", `Kandungan kimia ${plantKey} per jenis bahan:`);
+          bahanKeys.forEach(bk => {
+            const b = pRef.bahan[bk];
+            if (!b || !b.kandunganKimia || b.kandunganKimia.length === 0) return;
+            appendChatMessage("assistant", `\u25b6 ${b.namaLatinBahan || bk}:`);
+            b.kandunganKimia.forEach(k => {
+              const batas = k.jenisBatas === "minimum" ? "tidak kurang dari" : "tidak lebih dari";
+              appendChatMessage("assistant",
+                `  ${k.nama}: ${batas} ${k.nilai} ${k.satuan}${k.hubungan ? " (" + k.hubungan + ")" : ""}.`
+              );
+            });
+            appendChatMessage("assistant", `  Sumber: ${_monoSumber(b)}`);
+          });
+          return;
+        }
+
+        if (MONO_KEYS.definisi.some(k => q.includes(k)) && bahan) {
+          appendChatMessage("assistant", bahan.definisi || "Data definisi belum tersedia.");
+          appendChatMessage("assistant", `Sumber: ${_monoSumber(bahan)}`);
+          return;
+        }
+      }
+
+      // Coba cocokkan kata kunci ke topik plant-education (mekanisme, efekSamping, dst.)
+      for (const { keys, topic } of KEYWORD_MAP) {
+        if (keys.some(k => q.includes(k))) {
+          replyWithTopic(topic);
+          return;
+        }
+      }
+
+      // Tidak cocok — info tanaman + tawarkan topik
+      const topikList = Object.values(TOPIC_LABELS).join(", ");
+      appendChatMessage("assistant",
+        `Tanaman aktif: ${plantKey} (${latinName}). ` +
+        `Topik yang tersedia: ${topikList}. Atau tanya tentang pemerian, kadar, senyawa identitas.`
+      );
+    }
+
+    // Helper: format string sumber dari objek bahan
+    function _monoSumber(bahan) {
+      const s = bahan && bahan.sumber;
+      if (!s) return "Sumber tidak tersedia.";
+      let str = `${s.judul} Edisi ${s.edisi} (${s.tahun})`;
+      if (s.halamanAwal) str += `, h. ${s.halamanAwal}`;
+      if (s.halamanAkhir && s.halamanAkhir !== s.halamanAwal) str += `–${s.halamanAkhir}`;
+      return str + ".";
+    }
+
+    // =========================================================================
+    // LOAD & RENDER MONOGRAFI (plant-reference.json)
+    // =========================================================================
+
+    async function loadPlantReferenceData() {
+      try {
+        const res = await fetch("data/plant-reference.json");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        plantReferenceData = await res.json();
+      } catch (err) {
+        plantRefLoadErr = true;
+        console.warn("[HerbInfo] Gagal memuat plant-reference.json:", err);
+        // Kegagalan ini tidak mengganggu fitur scan
+      }
+    }
+
+    // Render panel monografi untuk plantKey yang diberikan.
+    // plantKey = null → tampilkan placeholder.
+    function renderMonografiPanel(plantKey) {
+      const toggleEl  = document.getElementById("monoBahanToggle");
+      const contentEl = document.getElementById("monoContent");
+      if (!toggleEl || !contentEl) return;
+
+      // Bersihkan
+      toggleEl.innerHTML = "";
+      contentEl.innerHTML = "";
+
+      if (!plantKey) {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = "Pilih tanaman untuk melihat data monografi.";
+        contentEl.appendChild(p);
+        activeMonoBahanKey = null;
+        return;
+      }
+
+      if (plantRefLoadErr) {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = "Data monografi belum dapat dimuat. Periksa koneksi dan muat ulang halaman.";
+        contentEl.appendChild(p);
+        return;
+      }
+
+      const pRef = plantReferenceData && plantReferenceData[plantKey];
+      if (!pRef || !pRef.bahan) {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = `Data referensi monografi ${plantKey} belum tersedia.`;
+        contentEl.appendChild(p);
+        activeMonoBahanKey = null;
+        return;
+      }
+
+      const bahanKeys = Object.keys(pRef.bahan);
+      const defaultKey = pRef.bahanDefault || bahanKeys[0];
+      activeMonoBahanKey = defaultKey;
+
+      // Bangun tombol toggle per jenis bahan
+      bahanKeys.forEach(bk => {
+        const b   = pRef.bahan[bk];
+        const btn = document.createElement("button");
+        btn.className = "mono-bahan-btn" + (bk === defaultKey ? " active" : "");
+        btn.textContent = b.namaLatinBahan || bk;
+        btn.addEventListener("click", () => {
+          activeMonoBahanKey = bk;
+          document.querySelectorAll(".mono-bahan-btn").forEach(el => el.classList.remove("active"));
+          btn.classList.add("active");
+          buildMonografiContent(pRef.bahan[bk], contentEl);
+        });
+        toggleEl.appendChild(btn);
+      });
+
+      // Render konten bahan default
+      buildMonografiContent(pRef.bahan[defaultKey], contentEl);
+    }
+
+    // Bangun DOM konten monografi satu jenis bahan ke dalam targetEl.
+    function buildMonografiContent(bahan, targetEl) {
+      const NULL_STR = "Data belum tersedia";
+      targetEl.innerHTML = "";
+
+      function section(label) {
+        const h = document.createElement("div");
+        h.className = "mono-section-title";
+        h.textContent = label;
+        targetEl.appendChild(h);
+      }
+
+      function textBlock(text) {
+        const d = document.createElement("div");
+        d.className = "mono-text-block";
+        d.textContent = text || NULL_STR;
+        if (!text) d.classList.add("mono-null");
+        targetEl.appendChild(d);
+      }
+
+      function table(rows, headers) {
+        const tbl = document.createElement("table");
+        tbl.className = "mono-table";
+        const thead = document.createElement("thead");
+        const tr    = document.createElement("tr");
+        headers.forEach(h => {
+          const th = document.createElement("th");
+          th.textContent = h;
+          tr.appendChild(th);
+        });
+        thead.appendChild(tr);
+        tbl.appendChild(thead);
+        const tbody = document.createElement("tbody");
+        rows.forEach(row => {
+          const tr2 = document.createElement("tr");
+          row.forEach(cell => {
+            const td = document.createElement("td");
+            if (cell && cell._badge) {
+              const span = document.createElement("span");
+              span.className = cell._class;
+              span.textContent = cell._text;
+              td.appendChild(span);
+            } else {
+              td.textContent = cell !== null && cell !== undefined ? String(cell) : NULL_STR;
+              if (cell === null || cell === undefined) td.classList.add("mono-null");
+            }
+            tr2.appendChild(td);
+          });
+          tbody.appendChild(tr2);
+        });
+        tbl.appendChild(tbody);
+        targetEl.appendChild(tbl);
+      }
+
+      // — Definisi —
+      if (bahan.definisi) {
+        section("Definisi");
+        textBlock(bahan.definisi);
+      }
+
+      // — Pemerian —
+      section("Pemerian");
+      textBlock(bahan.pemerian);
+
+      // — Mikroskopis —
+      if (bahan.mikroskopis) {
+        section("Mikroskopis");
+        textBlock(bahan.mikroskopis);
+      }
+
+      // — Senyawa Identitas —
+      section("Senyawa Identitas");
+      if (bahan.senyawaIdentitas && bahan.senyawaIdentitas.length) {
+        table(
+          bahan.senyawaIdentitas.map(s => [
+            s.nama,
+            s.metodeIdentifikasi,
+            s.halaman
+          ]),
+          ["Senyawa", "Metode", "Halaman"]
+        );
+      } else {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = NULL_STR;
+        targetEl.appendChild(p);
+      }
+
+      // — KLT —
+      if (bahan.klt) {
+        section("Profil KLT");
+        const klt = bahan.klt;
+        table(
+          [
+            ["Fase gerak",  klt.faseGerak],
+            ["Fase diam",   klt.faseDiam],
+            ["Larutan uji", klt.larutanUji],
+            ["Pembanding",  klt.larutanPembanding],
+            ["Volume",      klt.volumePenotolan],
+            ["Deteksi",     klt.deteksi]
+          ],
+          ["Parameter", "Keterangan"]
+        );
+      }
+
+      // — Parameter Mutu —
+      section("Parameter Mutu");
+      if (bahan.parameterMutu && bahan.parameterMutu.length) {
+        table(
+          bahan.parameterMutu.map(p => [
+            p.nama,
+            { _badge: true,
+              _class: p.jenisBatas === "minimum" ? "mono-badge-min" : "mono-badge-max",
+              _text:  p.jenisBatas === "minimum" ? "Min" : "Maks" },
+            p.nilai + " " + p.satuan,
+            p.keterangan
+          ]),
+          ["Parameter", "Batas", "Nilai", "Keterangan"]
+        );
+      } else {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = NULL_STR;
+        targetEl.appendChild(p);
+      }
+
+      // — Kandungan Kimia —
+      section("Kandungan Kimia");
+      if (bahan.kandunganKimia && bahan.kandunganKimia.length) {
+        table(
+          bahan.kandunganKimia.map(k => [
+            k.nama,
+            { _badge: true,
+              _class: k.jenisBatas === "minimum" ? "mono-badge-min" : "mono-badge-max",
+              _text:  k.jenisBatas === "minimum" ? "Min" : "Maks" },
+            k.nilai + " " + k.satuan,
+            k.keterangan,
+            k.hubungan || "—"
+          ]),
+          ["Senyawa", "Batas", "Nilai", "Keterangan", "Hubungan"]
+        );
+      } else {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = NULL_STR;
+        targetEl.appendChild(p);
+      }
+
+      // — Metode Penetapan Kadar (ringkas) —
+      if (bahan.metodePenetapanKadarRingkas) {
+        section("Metode Penetapan Kadar (Ringkasan)");
+        const mpk = bahan.metodePenetapanKadarRingkas;
+        Object.entries(mpk).forEach(([k, v]) => {
+          if (k === "catatan") return; // catatan internal, tidak ditampilkan
+          textBlock(v);
+        });
+      }
+
+      // — Sumber —
+      if (bahan.sumber) {
+        const s    = bahan.sumber;
+        const div  = document.createElement("div");
+        div.className = "mono-source";
+        const halStr = s.halamanAwal
+          ? `, h. ${s.halamanAwal}${s.halamanAkhir && s.halamanAkhir !== s.halamanAwal ? "–" + s.halamanAkhir : ""}`
+          : "";
+        div.textContent = `Sumber: ${s.judul} Edisi ${s.edisi} (${s.tahun})${halStr}.`;
+        targetEl.appendChild(div);
+      }
     }
 
     // 10. Handler Parameter URL (Bila datang dari halaman lain)
