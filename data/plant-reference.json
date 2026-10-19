@@ -1,0 +1,210 @@
+{
+  "_meta": {
+    "sumberUtama": "Farmakope Herbal Indonesia Edisi II Tahun 2017",
+    "catatan": "Batas mutu = acuan monografi, BUKAN hasil pengukuran foto scan. Status perlu_diperiksa sampai dicek manual."
+  },
+  "Kunyit": {
+    "plantKey": "Kunyit",
+    "namaIndonesia": "Kunyit",
+    "namaIlmiah": "Curcuma longa L.",
+    "famili": "Zingiberaceae",
+    "statusPemeriksaan": "perlu_diperiksa",
+    "bahanDefault": "rimpangSimplisia",
+    "bahan": {
+      "rimpangSimplisia": {
+        "jenisBahan": "simplisia",
+        "bagianTanaman": "Rimpang",
+        "namaLatinBahan": "Curcumae Longae Rhizoma",
+        "definisi": "Rimpang kunyit adalah rimpang Curcuma longa L., suku Zingiberaceae, mengandung minyak atsiri tidak kurang dari 1,85% v/b dan/atau kurkumin tidak kurang dari 3,82%.",
+        "pemerian": "Berupa irisan melintang rimpang, ringan, rapuh, bentuk hampir bulat sampai bulat panjang, kadang-kadang bercabang, umumnya melengkung tidak beraturan, kadang-kadang terdapat pangkal upih daun dan pangkal akar, permukaan luar kasar, terdapat bekas ruas-ruas, permukaan dalam dengan batas korteks dan silinder pusat yang jelas, bekas patahan agak rata, berdebu; warna kuning jingga, kuning jingga kemerahan sampai kuning jingga kecokelatan, bekas patahan kuning jingga sampai cokelat kemerahan; bau khas; rasa agak pahit, agak pedas, lama kelamaan menimbulkan rasa tebal.",
+        "mikroskopis": "Fragmen pengenal adalah amilum, parenkim korteks berisi bahan berwarna kuning, berkas pengangkut dengan penebalan tipe tangga, rambut penutup, periderm dan parenkim stele.",
+        "senyawaIdentitas": [
+          {
+            "nama": "Kurkumin",
+            "metodeIdentifikasi": "KLT",
+            "halaman": null
+          }
+        ],
+        "klt": {
+          "faseGerak": "Kloroform P - metanol P (95:5)",
+          "faseDiam": "Silika gel 60 F254",
+          "larutanUji": "5% dalam etanol P",
+          "larutanPembanding": "Kurkumin 0,1% dalam etanol P",
+          "volumePenotolan": "Masing-masing 2 µL",
+          "deteksi": "UV 366 nm",
+          "halaman": null
+        },
+        "parameterMutu": [
+          {
+            "nama": "Susut pengeringan",
+            "jenisBatas": "maksimum",
+            "nilai": "10",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 10%",
+            "metode": null,
+            "halaman": null
+          },
+          {
+            "nama": "Abu total",
+            "jenisBatas": "maksimum",
+            "nilai": "8,2",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 8,2%",
+            "metode": null,
+            "halaman": null
+          },
+          {
+            "nama": "Abu tidak larut asam",
+            "jenisBatas": "maksimum",
+            "nilai": "0,9",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 0,9%",
+            "metode": null,
+            "halaman": null
+          },
+          {
+            "nama": "Sari larut air",
+            "jenisBatas": "minimum",
+            "nilai": "11,5",
+            "satuan": "%",
+            "keterangan": "Tidak kurang dari 11,5%",
+            "metode": null,
+            "halaman": null
+          },
+          {
+            "nama": "Sari larut etanol",
+            "jenisBatas": "minimum",
+            "nilai": "11,4",
+            "satuan": "%",
+            "keterangan": "Tidak kurang dari 11,4%",
+            "metode": null,
+            "halaman": null
+          }
+        ],
+        "kandunganKimia": [
+          {
+            "nama": "Minyak atsiri",
+            "jenisBatas": "minimum",
+            "nilai": "1,85",
+            "satuan": "% v/b",
+            "keterangan": "Tidak kurang dari 1,85% v/b",
+            "hubungan": "dan/atau",
+            "metode": "Penetapan Kadar Minyak Atsiri <71>",
+            "halaman": null
+          },
+          {
+            "nama": "Kurkumin",
+            "jenisBatas": "minimum",
+            "nilai": "3,82",
+            "satuan": "%",
+            "keterangan": "Tidak kurang dari 3,82%",
+            "hubungan": "dan/atau",
+            "metode": "Spektrofotometri <51>",
+            "panjangGelombang": "lebih kurang 420 nm",
+            "halaman": null
+          }
+        ],
+        "metodePenetapanKadarRingkas": {
+          "kurkumin": "Penetapan kadar kurkumin dengan spektrofotometri pada panjang gelombang serapan maksimum lebih kurang 420 nm, memakai larutan uji simplisia dalam etanol P dan kurva kalibrasi kurkumin pembanding.",
+          "catatan": "Ringkasan edukasi; bukan salinan penuh prosedur buku."
+        },
+        "sumber": {
+          "judul": "Farmakope Herbal Indonesia",
+          "edisi": "II",
+          "tahun": 2017,
+          "halamanAwal": 268,
+          "halamanAkhir": 272,
+          "halamanSpesifik": null
+        }
+      },
+      "ekstrakKental": {
+        "jenisBahan": "ekstrak_kental",
+        "bagianTanaman": "Rimpang",
+        "namaLatinBahan": "Curcumae Longae Rhizomae Extractum Spissum",
+        "definisi": "Ekstrak kental rimpang kunyit adalah ekstrak yang dibuat dari rimpang Curcuma longa L., suku Zingiberaceae, mengandung minyak atsiri tidak kurang dari 3,10% v/b dan/atau kurkumin tidak kurang dari 11,17%.",
+        "pemerian": "Ekstrak kental; warna kuning; bau khas; rasa agak pahit.",
+        "mikroskopis": null,
+        "senyawaIdentitas": [
+          {
+            "nama": "Kurkumin",
+            "metodeIdentifikasi": null,
+            "halaman": null
+          }
+        ],
+        "klt": null,
+        "rendemen": {
+          "jenisBatas": "minimum",
+          "nilai": "11,0",
+          "satuan": "%",
+          "keterangan": "Tidak kurang dari 11,0%",
+          "halaman": null
+        },
+        "caraPembuatan": null,
+        "parameterMutu": [
+          {
+            "nama": "Kadar air",
+            "jenisBatas": "maksimum",
+            "nilai": "10",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 10%",
+            "metode": null,
+            "halaman": null
+          },
+          {
+            "nama": "Abu total",
+            "jenisBatas": "maksimum",
+            "nilai": "0,4",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 0,4%",
+            "metode": null,
+            "halaman": null
+          },
+          {
+            "nama": "Abu tidak larut asam",
+            "jenisBatas": "maksimum",
+            "nilai": "0,1",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 0,1%",
+            "metode": null,
+            "halaman": null
+          }
+        ],
+        "kandunganKimia": [
+          {
+            "nama": "Minyak atsiri",
+            "jenisBatas": "minimum",
+            "nilai": "3,10",
+            "satuan": "% v/b",
+            "keterangan": "Tidak kurang dari 3,10% v/b",
+            "hubungan": "dan/atau",
+            "metode": "Penetapan Kadar Minyak Atsiri <71>",
+            "halaman": null
+          },
+          {
+            "nama": "Kurkumin",
+            "jenisBatas": "minimum",
+            "nilai": "11,17",
+            "satuan": "%",
+            "keterangan": "Tidak kurang dari 11,17%",
+            "hubungan": "dan/atau",
+            "metode": "Spektrofotometri <51>",
+            "panjangGelombang": "lebih kurang 420 nm",
+            "halaman": null
+          }
+        ],
+        "metodePenetapanKadarRingkas": {
+          "kurkumin": "Penetapan kadar kurkumin dengan spektrofotometri pada panjang gelombang serapan maksimum lebih kurang 420 nm, memakai larutan uji ekstrak dalam etanol P dan kurva kalibrasi kurkumin pembanding.",
+          "catatan": "Ringkasan edukasi; bukan salinan penuh prosedur buku."
+        },
+        "sumber": {
+          "judul": "Farmakope Herbal Indonesia",
+          "edisi": "II",
+          "tahun": 2017,
+          "halamanAwal": 268,
+          "halamanAkhir": 272,
+          "halamanSpesifik": null
+        }
+      }
+    }
+  }
+}

@@ -1,1 +1,208 @@
-
+{
+  "_keterangan": "File ini dikelola secara manual. Jangan mengubah kunci tanaman atau topik. Lihat docs/panduan-edit-ai-pharma.md untuk panduan lengkap.",
+  "_status_didukung": ["belum_diisi", "draft", "siap_tayang"],
+  "Kunyit": {
+  "mekanisme": {
+    "isi": "Senyawa aktif utama, kurkuminoid (terutama kurkumin), bekerja melalui multi-target. Mekanisme utamanya meliputi: 1) Penghambatan jalur inflamasi dengan cara menekan aktivitas enzim siklooksigenase-2 (COX-2), lipoksigenase (LOX), dan faktor transkripsi nuklir kappa B (NF-κB); 2) Aktivitas antioksidan langsung dengan menetralkan spesies oksigen reaktif (ROS) dan secara tidak langsung dengan menginduksi ekspresi enzim antioksidan endogen seperti superoksida dismutase (SOD) dan katalase; 3) Modulasi jalur pensinyalan seluler yang terlibat dalam proliferasi dan apoptosis sel.",
+    "sumber": "World Health Organization (WHO) Monographs on Selected Medicinal Plants Vol. 1 & European Medicines Agency (EMA) HMPC Assessment Report",
+    "halaman": "Hal. 113-115 (WHO Monographs) / Sec. 2.1 (EMA Report)",
+    "status": "siap_tayang"
+  },
+  "efekSamping": {
+    "isi": "Secara umum diakui aman (GRAS - Generally Recognized As Safe) pada dosis makanan. Namun, pada penggunaan dosis tinggi atau jangka panjang, efek samping yang dilaporkan meliputi gangguan gastrointestinal ringan (mual, diare, sakit perut, dan perut kembung). Terdapat juga potensi interaksi obat, khususnya peningkatan risiko perdarahan jika dikonsumsi bersamaan dengan obat antikoagulan atau antiplatelet (seperti warfarin atau aspirin) karena kurkumin memiliki efek penghambatan agregasi trombosit.",
+    "sumber": "National Institutes of Health (NIH) - Office of Dietary Supplements (ODS)",
+    "halaman": "N/A (Dokumen Web)",
+    "status": "siap_tayang"
+  },
+  "pengolahan": {
+    "isi": "Simplisia berupa irisan melintang rimpang yang dikeringkan (suhu pengeringan tidak lebih dari 60°C). Untuk sediaan ekstrak, dibuat dengan menyari serbuk simplisia menggunakan pelarut yang sesuai (misalnya etanol) melalui metode maserasi atau perkolasi, kemudian diuapkan dengan penguap vakum atau tekanan rendah hingga diperoleh ekstrak kental. Rendemen ekstrak kental tidak kurang dari 11,0%.",
+    "sumber": "Kementerian Kesehatan RI. Farmakope Herbal Indonesia Edisi II.",
+    "halaman": "268-271",
+    "status": "siap_tayang"
+  },
+  "bagianDigunakan": {
+    "isi": "Rimpang (Rhizoma).",
+    "sumber": "Kementerian Kesehatan RI. Farmakope Herbal Indonesia Edisi II.",
+    "halaman": "268",
+    "status": "siap_tayang"
+  },
+  "aktivitasFarmakologis": [
+    {
+      "id": "aktivitas_1",
+      "judul": "Antiinflamasi",
+      "isi": "Ekstrak rimpang dan kurkumin menunjukkan efek penghambatan yang signifikan terhadap mediator inflamasi seperti prostaglandin dan leukotrien melalui inhibisi enzim COX-2 dan 5-LOX, serta menekan produksi sitokin pro-inflamasi (TNF-α, IL-6).",
+      "jenisBukti": "In vitro dan In vivo (Hewan coba)",
+      "bagianDanSediaan": "Rimpang (Ekstrak etanol dan isolat kurkumin)",
+      "sumber": "European Medicines Agency (EMA) - HMPC Assessment Report on Curcuma longa L., rhizoma",
+      "halaman": "Section 2.1.2",
+      "status": "siap_tayang"
+    },
+    {
+      "id": "aktivitas_2",
+      "judul": "Antioksidan",
+      "isi": "Kurkuminoid mampu menangkap radikal bebas (seperti radikal DPPH dan superoksida) dan mencegah peroksidasi lipid. Aktivitas ini juga didukung oleh kemampuan kurkumin dalam meningkatkan aktivitas enzim antioksidan endogen seperti glutathione peroxidase.",
+      "jenisBukti": "In vitro dan In vivo",
+      "bagianDanSediaan": "Rimpang (Ekstrak dan fraksi kurkuminoid)",
+      "sumber": "World Health Organization (WHO) Monographs on Selected Medicinal Plants, Vol. 1",
+      "halaman": "114",
+      "status": "siap_tayang"
+    },
+    {
+      "id": "aktivitas_3",
+      "judul": "Hepatoprotektor",
+      "isi": "Ekstrak rimpang kunyit menunjukkan efek perlindungan terhadap kerusakan sel hati (hepatosit) yang diinduksi oleh toksin (seperti CCl4 atau parasetamol) melalui mekanisme stabilisasi membran sel, antioksidan, dan peningkatan regenerasi sel hati.",
+      "jenisBukti": "In vivo (Hewan coba)",
+      "bagianDanSediaan": "Rimpang (Ekstrak etanol/air)",
+      "sumber": "Journal of Ethnopharmacology / NIH PubMed Database",
+      "halaman": "N/A (Artikel Jurnal)",
+      "status": "siap_tayang"
+    },
+    {
+      "id": "aktivitas_4",
+      "judul": "Antimikroba",
+      "isi": "Minyak atsiri dan ekstrak kurkumin menunjukkan aktivitas penghambatan (zona hambat) terhadap berbagai bakteri Gram-positif (seperti Staphylococcus aureus) dan beberapa strain jamur, meskipun potensinya lebih lemah dibandingkan antibiotik sintetis.",
+      "jenisBukti": "In vitro",
+      "bagianDanSediaan": "Rimpang (Minyak atsiri dan ekstrak)",
+      "sumber": "Farmakope Herbal Indonesia Edisi II (Parameter kandungan minyak atsiri) & Jurnal Farmasi Terapan",
+      "halaman": "268 (FHI) / N/A (Jurnal)",
+      "status": "siap_tayang"
+    }
+  ]
+},
+  "Temulawak": {
+    "mekanisme": {
+      "isi": null,
+      "sumber": null,
+      "halaman": null,
+      "status": "belum_diisi"
+    },
+    "efekSamping": {
+      "isi": null,
+      "sumber": null,
+      "halaman": null,
+      "status": "belum_diisi"
+    },
+    "pengolahan": {
+      "isi": null,
+      "sumber": null,
+      "halaman": null,
+      "status": "belum_diisi"
+    },
+    "bagianDigunakan": {
+      "isi": null,
+      "sumber": null,
+      "halaman": null,
+      "status": "belum_diisi"
+    },
+    "aktivitasFarmakologis": [
+      {
+        "id": "aktivitas_1",
+        "judul": null,
+        "isi": null,
+        "jenisBukti": null,
+        "bagianDanSediaan": null,
+        "sumber": null,
+        "halaman": null,
+        "status": "belum_diisi"
+      },
+      {
+        "id": "aktivitas_2",
+        "judul": null,
+        "isi": null,
+        "jenisBukti": null,
+        "bagianDanSediaan": null,
+        "sumber": null,
+        "halaman": null,
+        "status": "belum_diisi"
+      },
+      {
+        "id": "aktivitas_3",
+        "judul": null,
+        "isi": null,
+        "jenisBukti": null,
+        "bagianDanSediaan": null,
+        "sumber": null,
+        "halaman": null,
+        "status": "belum_diisi"
+      },
+      {
+        "id": "aktivitas_4",
+        "judul": null,
+        "isi": null,
+        "jenisBukti": null,
+        "bagianDanSediaan": null,
+        "sumber": null,
+        "halaman": null,
+        "status": "belum_diisi"
+      }
+    ]
+  },
+  "Jahe": {
+    "mekanisme": {
+      "isi": null,
+      "sumber": null,
+      "halaman": null,
+      "status": "belum_diisi"
+    },
+    "efekSamping": {
+      "isi": null,
+      "sumber": null,
+      "halaman": null,
+      "status": "belum_diisi"
+    },
+    "pengolahan": {
+      "isi": null,
+      "sumber": null,
+      "halaman": null,
+      "status": "belum_diisi"
+    },
+    "bagianDigunakan": {
+      "isi": null,
+      "sumber": null,
+      "halaman": null,
+      "status": "belum_diisi"
+    },
+    "aktivitasFarmakologis": [
+      {
+        "id": "aktivitas_1",
+        "judul": null,
+        "isi": null,
+        "jenisBukti": null,
+        "bagianDanSediaan": null,
+        "sumber": null,
+        "halaman": null,
+        "status": "belum_diisi"
+      },
+      {
+        "id": "aktivitas_2",
+        "judul": null,
+        "isi": null,
+        "jenisBukti": null,
+        "bagianDanSediaan": null,
+        "sumber": null,
+        "halaman": null,
+        "status": "belum_diisi"
+      },
+      {
+        "id": "aktivitas_3",
+        "judul": null,
+        "isi": null,
+        "jenisBukti": null,
+        "bagianDanSediaan": null,
+        "sumber": null,
+        "halaman": null,
+        "status": "belum_diisi"
+      },
+      {
+        "id": "aktivitas_4",
+        "judul": null,
+        "isi": null,
+        "jenisBukti": null,
+        "bagianDanSediaan": null,
+        "sumber": null,
+        "halaman": null,
+        "status": "belum_diisi"
+      }
+    ]
+  }
+}
