@@ -1228,99 +1228,6 @@
         display: none; /* Hide side-panel in mini mockups on tiny screens */
       }
     }
-
-    .section-herbs { padding: 100px 0; }
-    .herbs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 40px; }
-    
-    .herb-card {
-      background: #FFFFFF; border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow: hidden; box-shadow: var(--shadow-subtle); transition: var(--transition); display: flex; flex-direction: column;
-    }
-    .herb-card:hover { transform: translateY(-6px) scale(1.01); box-shadow: var(--shadow-hover); border-color: var(--secondary); }
-    .herb-img-wrapper { position: relative; height: 200px; overflow: hidden; background: #E2E8F0; }
-    .herb-img-wrapper img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
-    .herb-card:hover .herb-img-wrapper img { transform: scale(1.08); }
-    .herb-badge { position: absolute; top: 14px; right: 14px; background: rgba(255, 255, 255, 0.9); color: var(--primary); font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: var(--radius-full); }
-    .herb-body { padding: 22px; display: flex; flex-direction: column; flex: 1; }
-    .herb-common-name { font-size: 1.25rem; color: var(--text-dark); margin-bottom: 2px; }
-    .herb-latin-name { font-style: italic; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; display: block; }
-    .herb-snippet { font-size: 0.88rem; color: #4A5568; line-height: 1.5; margin-bottom: 20px; }
-    .herb-footer { margin-top: auto; border-top: 1px solid #EDF2F7; padding-top: 14px; display: flex; align-items: center; justify-content: space-between; }
-    
-    .btn-detail {
-      background: none; border: none; font-size: 0.88rem; font-weight: 600; color: var(--primary); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: var(--transition); font-family: inherit;
-    }
-    .btn-detail:hover { color: var(--secondary); gap: 9px; }
-
-    /* ==========================================================================
-       7. POP-UP MODAL DETAIL HERBAL STYLING
-       ========================================================================== */
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(12, 30, 22, 0.75); backdrop-filter: blur(8px);
-      z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px;
-    }
-    .modal-overlay.active { display: flex; animation: fadeInModal 0.3s ease; }
-
-    @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
-
-    .modal-container {
-      background: #FFFFFF; border-radius: var(--radius-lg); max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.25); border: 1px solid var(--secondary); animation: slideUpModal 0.3s ease;
-    }
-
-    @keyframes slideUpModal { from { transform: translateY(30px); } to { transform: translateY(0); } }
-
-    .modal-close-btn {
-      position: absolute; top: 16px; right: 20px; background: rgba(0,0,0,0.06); border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text-dark); transition: var(--transition); z-index: 10;
-    }
-    .modal-close-btn:hover { background: var(--primary); color: #fff; }
-
-    .modal-grid { display: grid; grid-template-columns: 300px 1fr; gap: 24px; padding: 28px; }
-    .modal-img-box { width: 100%; height: 300px; border-radius: 14px; overflow: hidden; background: #E2E8F0; }
-    .modal-img-box img { width: 100%; height: 100%; object-fit: cover; }
-
-    .modal-info h2 { font-size: 1.8rem; color: var(--primary); margin-bottom: 2px; }
-    .modal-latin { font-style: italic; color: var(--text-muted); font-size: 0.95rem; display: block; margin-bottom: 14px; }
-    .modal-badge { display: inline-block; padding: 4px 12px; background: rgba(82, 183, 136, 0.15); color: var(--primary); border-radius: var(--radius-full); font-size: 0.8rem; font-weight: 600; margin-bottom: 12px; }
-
-    .modal-section { margin-bottom: 16px; }
-    .modal-section h4 { font-size: 0.95rem; color: var(--primary); margin-bottom: 4px; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 2px; }
-    .modal-section p { font-size: 0.9rem; color: #334155; line-height: 1.6; }
-
-    .modal-compounds { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; list-style: none; }
-    .modal-compound-tag { background: #F0FDF4; border: 1px solid var(--secondary); color: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
-
-    /* ==========================================================================
-       8. CTA BANNER & FOOTER
-       ========================================================================== */
-    .section-cta-banner { padding: 0 0 100px; }
-    .cta-banner-box { background: linear-gradient(135deg, var(--primary) 0%, #1a4f38 100%); border-radius: var(--radius-lg); padding: 60px 48px; color: #fff; text-align: center; }
-    .cta-banner-box h2 { color: #fff; font-size: 2.3rem; margin-bottom: 12px; }
-    .cta-banner-box p { font-size: 1.05rem; color: rgba(255, 255, 255, 0.85); max-width: 600px; margin: 0 auto 32px; }
-    .cta-button-row { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
-    .btn-cta-white { background: #FFFFFF; color: var(--primary); padding: 13px 28px; border-radius: var(--radius-full); font-weight: 600; }
-    .btn-cta-outline { background: transparent; color: #FFFFFF; border: 2px solid rgba(255, 255, 255, 0.7); padding: 12px 28px; border-radius: var(--radius-full); font-weight: 600; }
-
-    .site-footer { background: #12281E; color: #E2E8F0; padding: 70px 0 24px; border-top: 1px solid rgba(82, 183, 136, 0.2); }
-    .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1.3fr; gap: 40px; margin-bottom: 50px; }
-    .footer-col h4 { color: #FFFFFF; font-size: 1.05rem; margin-bottom: 18px; }
-    .footer-desc { font-size: 0.88rem; color: #A0AEC0; margin-top: 14px; }
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .footer-links a { font-size: 0.88rem; color: #CBD5E0; }
-    .footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 24px; display: flex; justify-content: space-between; font-size: 0.8rem; color: #A0AEC0; }
-
-    .fade-in-scroll { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-    .fade-in-scroll.visible { opacity: 1; transform: translateY(0); }
-
-    @media (max-width: 1024px) {
-      .hero-grid, .features-grid, .herbs-grid, .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .modal-grid { grid-template-columns: 1fr; }
-      .modal-img-box { height: 220px; }
-    }
-    @media (max-width: 768px) {
-      .nav-links, .nav-actions { display: none; }
-      .hamburger-btn { display: block; }
-      .features-grid, .herbs-grid, .stats-grid, .footer-grid { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
@@ -1593,130 +1500,170 @@
     <!-- ==========================================================================
          SECTION: STATISTIK / TRUST INDICATOR
          ========================================================================== -->
-  <!-- STATS SECTION -->
-  <section class="section-stats">
-    <div class="container stats-grid">
-      <div class="stat-item"><div class="stat-number">50+</div><div class="stat-label">Spesies Herbal Terverifikasi</div></div>
-      <div class="stat-item"><div class="stat-number">100%</div><div class="stat-label">Berbasis Web-AR Tanpa App</div></div>
-      <div class="stat-item"><div class="stat-number">24/7</div><div class="stat-label">Asisten AI Farmasi Aktif</div></div>
-      <div class="stat-item"><div class="stat-number">98%</div><div class="stat-label">Akurasi Data Fitokimia</div></div>
-    </div>
-  </section>
-
-  <!-- TANAMAN HERBAL UNGGULAN SECTION -->
-  <section class="section-herbs">
-    <div class="container">
-      <div class="section-header fade-in-scroll">
-        <div class="badge">Koleksi Terpopuler</div>
-        <h2>Tanaman Herbal Unggulan</h2>
-        <p>Mulai eksplorasi dari tanaman obat paling populer di Indonesia dengan data fitokimia lengkap.</p>
-      </div>
-
-      <div class="herbs-grid">
-        <!-- Card 1: Jahe -->
-        <div class="herb-card fade-in-scroll">
-          <div class="herb-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=600&q=80" alt="Jahe (Zingiber officinale)" />
-            <span class="herb-badge">Imunomodulator</span>
-          </div>
-          <div class="herb-body">
-            <h3 class="herb-common-name">Jahe</h3>
-            <span class="herb-latin-name">Zingiber officinale</span>
-            <p class="herb-snippet">Kaya kandungan gingerol dan shogaol yang efektif meredakan inflamasi dan menghangatkan sistem pencernaan.</p>
-            <div class="herb-footer">
-              <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
-              <button onclick="openModal('jahe')" class="btn-detail">Lihat Detail &rarr;</button>
+    <section class="section-stats">
+      <div class="container">
+        <div class="stats-grid">
+          <!-- Stat 1 -->
+          <div class="stat-item fade-in-scroll">
+            <div class="stat-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
             </div>
+            <div class="stat-number" data-target="500">500+</div>
+            <div class="stat-label">Tanaman Herbal</div>
           </div>
-        </div>
 
-        <!-- Card 2: Kunyit -->
-        <div class="herb-card fade-in-scroll">
-          <div class="herb-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80" alt="Kunyit (Curcuma longa)" />
-            <span class="herb-badge">Hepatoprotektor</span>
-          </div>
-          <div class="herb-body">
-            <h3 class="herb-common-name">Kunyit</h3>
-            <span class="herb-latin-name">Curcuma longa L.</span>
-            <p class="herb-snippet">Memiliki kandungan kurkuminoid tinggi yang berperan sebagai antioksidan kuat dan pelindung fungsi organ hati.</p>
-            <div class="herb-footer">
-              <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
-              <button onclick="openModal('kunyit')" class="btn-detail">Lihat Detail &rarr;</button>
+          <!-- Stat 2 -->
+          <div class="stat-item fade-in-scroll">
+            <div class="stat-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="m10.5 10.5-4 7"/><path d="m13.5 13.5 4-7"/></svg>
             </div>
+            <div class="stat-number" data-target="50">50+</div>
+            <div class="stat-label">Senyawa Fitokimia 3D</div>
           </div>
-        </div>
 
-        <!-- Card 3: Temulawak -->
-        <div class="herb-card fade-in-scroll">
-          <div class="herb-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80" alt="Temulawak (Curcuma xanthorrhiza)" />
-            <span class="herb-badge">Digestif</span>
-          </div>
-          <div class="herb-body">
-            <h3 class="herb-common-name">Temulawak</h3>
-            <span class="herb-latin-name">Curcuma xanthorrhiza</span>
-            <p class="herb-snippet">Kandungan xanthorrhizol terbukti klinis meningkatkan nafsu makan dan menjaga kestabilan saluran cerna.</p>
-            <div class="herb-footer">
-              <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
-              <button onclick="openModal('temulawak')" class="btn-detail">Lihat Detail &rarr;</button>
+          <!-- Stat 3 -->
+          <div class="stat-item fade-in-scroll">
+            <div class="stat-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
+            <div class="stat-number" data-target="10000">10.000+</div>
+            <div class="stat-label">Mahasiswa & Peneliti</div>
           </div>
-        </div>
 
-        <!-- Card 4: Lidah Buaya -->
-        <div class="herb-card fade-in-scroll">
-          <div class="herb-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80" alt="Lidah Buaya (Aloe vera)" />
-            <span class="herb-badge">Dermatologis</span>
-          </div>
-          <div class="herb-body">
-            <h3 class="herb-common-name">Lidah Buaya</h3>
-            <span class="herb-latin-name">Aloe vera</span>
-            <p class="herb-snippet">Mengandung polisakarida asemannan yang mempercepat regenerasi sel kulit dan penyembuhan luka bakar.</p>
-            <div class="herb-footer">
-              <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
-              <button onclick="openModal('aloevera')" class="btn-detail">Lihat Detail &rarr;</button>
+          <!-- Stat 4 -->
+          <div class="stat-item fade-in-scroll">
+            <div class="stat-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             </div>
-          </div>
-        </div>
-
-        <!-- Card 5: Sirih Hijau -->
-        <div class="herb-card fade-in-scroll">
-          <div class="herb-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80" alt="Sirih (Piper betle)" />
-            <span class="herb-badge">Antiseptik</span>
-          </div>
-          <div class="herb-body">
-            <h3 class="herb-common-name">Sirih Hijau</h3>
-            <span class="herb-latin-name">Piper betle</span>
-            <p class="herb-snippet">Mengandung kavikol dan eugenol dengan aktivitas bakterisidal kuat alami untuk higienitas dan kesehatan mukosa.</p>
-            <div class="herb-footer">
-              <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
-              <button onclick="openModal('sirih')" class="btn-detail">Lihat Detail &rarr;</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Card 6: Jahe Merah -->
-        <div class="herb-card fade-in-scroll">
-          <div class="herb-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80" alt="Jahe Merah (Zingiber officinale var. rubrum)" />
-            <span class="herb-badge">Analgesik Alami</span>
-          </div>
-          <div class="herb-body">
-            <h3 class="herb-common-name">Jahe Merah</h3>
-            <span class="herb-latin-name">Zingiber officinale var. rubrum</span>
-            <p class="herb-snippet">Konsentrasi minyak atsiri dan oleoresin yang lebih pekat, umum diformulasikan untuk stamina dan pereda nyeri sendi.</p>
-            <div class="herb-footer">
-              <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
-              <button onclick="openModal('jahemerah')" class="btn-detail">Lihat Detail &rarr;</button>
-            </div>
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Kepuasan Pengguna</div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: FEATURED HERBS PREVIEW
+         ========================================================================== -->
+    <section class="section-herbs">
+      <div class="container">
+        <div class="section-header fade-in-scroll">
+          <div class="badge">Koleksi Terpopuler</div>
+          <h2>Tanaman Herbal Unggulan</h2>
+          <p>Mulai eksplorasi dari tanaman obat paling populer di Indonesia dengan data fitokimia lengkap.</p>
+        </div>
+
+        <div class="herbs-grid">
+          <!-- Card 1: Jahe -->
+          <!-- PLACEHOLDER FOTO: herb-jahe.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=600&q=80" alt="Jahe (Zingiber officinale)" />
+              <span class="herb-badge">Imunomodulator</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Jahe</h3>
+              <span class="herb-latin-name">Zingiber officinale</span>
+              <p class="herb-snippet">Kaya kandungan gingerol dan shogaol yang efektif meredakan inflamasi dan menghangatkan sistem pencernaan.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
+                <a href="katalog.html?id=jahe" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Kunyit -->
+          <!-- PLACEHOLDER FOTO: herb-kunyit.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80" alt="Kunyit (Curcuma longa)" />
+              <span class="herb-badge">Hepatoprotektor</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Kunyit</h3>
+              <span class="herb-latin-name">Curcuma longa L.</span>
+              <p class="herb-snippet">Memiliki kandungan kurkuminoid tinggi yang berperan sebagai antioksidan kuat dan pelindung fungsi organ hati.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
+                <a href="katalog.html?id=kunyit" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Temulawak -->
+          <!-- PLACEHOLDER FOTO: herb-temulawak.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80" alt="Temulawak (Curcuma xanthorrhiza)" />
+              <span class="herb-badge">Digestif</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Temulawak</h3>
+              <span class="herb-latin-name">Curcuma xanthorrhiza</span>
+              <p class="herb-snippet">Kandungan xanthorrhizol terbukti klinis meningkatkan nafsu makan dan menjaga kestabilan saluran cerna.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
+                <a href="katalog.html?id=temulawak" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Lidah Buaya -->
+          <!-- PLACEHOLDER FOTO: herb-lidah-buaya.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80" alt="Lidah Buaya (Aloe vera)" />
+              <span class="herb-badge">Dermatologis</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Lidah Buaya</h3>
+              <span class="herb-latin-name">Aloe vera</span>
+              <p class="herb-snippet">Mengandung polisakarida asemannan yang mempercepat regenerasi sel kulit dan penyembuhan luka bakar.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
+                <a href="katalog.html?id=aloevera" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5: Sirih -->
+          <!-- PLACEHOLDER FOTO: herb-sirih.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80" alt="Sirih (Piper betle)" />
+              <span class="herb-badge">Antiseptik</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Sirih Hijau</h3>
+              <span class="herb-latin-name">Piper betle</span>
+              <p class="herb-snippet">Mengandung kavikol dan eugenol dengan aktivitas bakterisidal kuat alami untuk higienitas dan kesehatan mukosa.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
+                <a href="katalog.html?id=sirih" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 6: Jahe Merah -->
+          <!-- PLACEHOLDER FOTO: herb-jahe-merah.jpg -->
+          <div class="herb-card fade-in-scroll">
+            <div class="herb-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80" alt="Jahe Merah (Zingiber officinale var. rubrum)" />
+              <span class="herb-badge">Analgesik Alami</span>
+            </div>
+            <div class="herb-body">
+              <h3 class="herb-common-name">Jahe Merah</h3>
+              <span class="herb-latin-name">Zingiber officinale var. rubrum</span>
+              <p class="herb-snippet">Konsentrasi minyak atsiri dan oleoresin yang lebih pekat, umum diformulasikan untuk stamina dan pereda nyeri sendi.</p>
+              <div class="herb-footer">
+                <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
+                <a href="katalog.html?id=jahemerah" class="btn-detail">Lihat Detail &rarr;</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- ==========================================================================
          SECTION: CTA BANNER
@@ -1889,152 +1836,6 @@
 
       reveals.forEach((el) => observer.observe(el));
     }
-
-    <!-- POP-UP MODAL CONTAINER -->
-  <div class="modal-overlay" id="herbModal">
-    <div class="modal-container">
-      <button class="modal-close-btn" onclick="closeModal()">&times;</button>
-      <div class="modal-grid">
-        <div class="modal-img-box">
-          <img id="m-image" src="" alt="Detail Tanaman">
-        </div>
-        <div class="modal-info">
-          <span class="modal-badge" id="m-category">Kategori</span>
-          <h2 id="m-name">Nama Tanaman</h2>
-          <span class="modal-latin" id="m-latin">Nama Latin</span>
-
-          <div class="modal-section">
-            <h4>Deskripsi Tanaman</h4>
-            <p id="m-desc">Deskripsi...</p>
-          </div>
-
-          <div class="modal-section">
-            <h4>Khasiat & Manfaat Utama</h4>
-            <p id="m-benefits">Manfaat...</p>
-          </div>
-
-          <div class="modal-section">
-            <h4>Senyawa Aktif Farmakologi</h4>
-            <ul class="modal-compounds" id="m-compounds">
-              <!-- Render otomatis -->
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCRIPT LOGIKA JAVASCRIPT MODAL & SCROLL REVEAL -->
-  <script>
-    const dataHerbal = {
-      "jahe": {
-        nama: "Jahe",
-        latin: "Zingiber officinale",
-        kategori: "Imunomodulator",
-        gambar: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=600&q=80",
-        deskripsi: "Jahe adalah tumbuhan rimpang yang sangat populer sebagai rempah-rempah dan bahan obat tradisional. Rasa pedas khasnya berasal dari senyawa keton bernama gingerol.",
-        khasiat: "Membantu meredakan mual, menghangatkan tubuh, melancarkan sirkulasi darah, meredakan nyeri otot/sendi, serta meningkatkan sistem kekebalan tubuh.",
-        senyawa: ["Gingerol", "Shogaol", "Zingeron", "Zingiberena"]
-      },
-      "kunyit": {
-        nama: "Kunyit",
-        latin: "Curcuma longa L.",
-        kategori: "Hepatoprotektor",
-        gambar: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80",
-        deskripsi: "Kunyit tergolong dalam kelompok jahe-jahean (Zingiberaceae). Khas dengan warna kuning jingga alami yang sering digunakan dalam pengobatan tradisional ramuan jamu.",
-        khasiat: "Berfungsi sebagai antiinflamasi alami, mengatasi gangguan pencernaan (lambung/maag), menjaga fungsi hati, serta kaya antioksidan pencegah radikal bebas.",
-        senyawa: ["Kurkumin", "Desmetoksikurkumin", "Bisdesmetoksikurkumin", "Tumeron"]
-      },
-      "temulawak": {
-        nama: "Temulawak",
-        latin: "Curcuma xanthorrhiza",
-        kategori: "Digestif",
-        gambar: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80",
-        deskripsi: "Temulawak merupakan tanaman obat asli Indonesia yang rimpangnya berukuran cukup besar. Sangat terkenal sebagai peningkat nafsu makan herbal.",
-        khasiat: "Merangsang nafsu makan, melindungi fungsi organ hati (hepatoprotektor), meredakan radang sendi, serta membantu memelihara kestabilan pencernaan.",
-        senyawa: ["Xanthorrhizol", "Kurkuminoid", "Germakren", "Alfa-kurkumen"]
-      },
-      "aloevera": {
-        nama: "Lidah Buaya",
-        latin: "Aloe vera",
-        kategori: "Dermatologis",
-        gambar: "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80",
-        deskripsi: "Lidah Buaya merupakan tanaman sukulen kaya gel bening yang mengandung berbagai vitamin, mineral, asam amino, dan antioksidan alami.",
-        khasiat: "Mengandung polisakarida asemannan yang mempercepat regenerasi sel kulit, meredakan peradangan, menyembuhkan luka bakar, serta melembapkan kulit secara alami.",
-        senyawa: ["Asemannan", "Aloesin", "Alloin", "Polisakarida"]
-      },
-      "sirih": {
-        nama: "Sirih Hijau",
-        latin: "Piper betle",
-        kategori: "Antiseptik",
-        gambar: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80",
-        deskripsi: "Sirih hijau merupakan tanaman merambat yang kaya akan kandungan minyak atsiri. Dikenal sejak lama oleh masyarakat nusantara sebagai antiseptik alami pembersih luka.",
-        khasiat: "Aktivitas bakterisidal kuat alami untuk membunuh kuman/bakteri, menghentikan pendarahan luar, menjaga higienitas organ, serta mempercepat pemulihan jaringan mukosa.",
-        senyawa: ["Kavikol", "Eugenol", "Chavibetol", "Minyak Atsiri"]
-      },
-      "jahemerah": {
-        nama: "Jahe Merah",
-        latin: "Zingiber officinale var. rubrum",
-        kategori: "Analgesik Alami",
-        gambar: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80",
-        deskripsi: "Jahe merah memiliki rimpang berwarna kemerahan dengan ukuran lebih kecil namun rasa pedas dan aroma yang jauh lebih tajam dibanding jahe biasa.",
-        khasiat: "Konsentrasi minyak atsiri dan oleoresin yang pekat sangat efektif meningkatkan stamina tubuh, meredakan pegal linu, serta bertindak sebagai analgesik alami pereda nyeri sendi.",
-        senyawa: ["Oleoresin", "Gingerol Tinggi", "Minyak Atsiri", "Limonen"]
-      }
-    };
-
-    function openModal(id) {
-      const item = dataHerbal[id];
-      if (!item) return;
-
-      document.getElementById('m-name').innerText = item.nama;
-      document.getElementById('m-latin').innerText = item.latin;
-      document.getElementById('m-category').innerText = item.kategori;
-      document.getElementById('m-image').src = item.gambar;
-      document.getElementById('m-desc').innerText = item.deskripsi;
-      document.getElementById('m-benefits').innerText = item.khasiat;
-
-      const compBox = document.getElementById('m-compounds');
-      compBox.innerHTML = '';
-      item.senyawa.forEach(s => {
-        const li = document.createElement('li');
-        li.className = 'modal-compound-tag';
-        li.innerText = s;
-        compBox.appendChild(li);
-      });
-
-      document.getElementById('herbModal').classList.add('active');
-    }
-
-    function closeModal() {
-      document.getElementById('herbModal').classList.remove('active');
-    }
-
-    window.onclick = function(event) {
-      const modal = document.getElementById('herbModal');
-      if (event.target === modal) {
-        closeModal();
-      }
-    };
-
-    // Scroll Reveal Effect Animation
-    function initScrollReveal() {
-      const reveals = document.querySelectorAll(".fade-in-scroll");
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("visible");
-            }
-          });
-        },
-        { threshold: 0.12 }
-      );
-
-      reveals.forEach((el) => observer.observe(el));
-    }
-
-    document.addEventListener("DOMContentLoaded", initScrollReveal);
   </script>
 </body>
 </html>
