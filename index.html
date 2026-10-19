@@ -829,11 +829,59 @@
       background: #E2E8F0;
     }
 
+    .herb-photo-credit {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      max-width: calc(100% - 20px);
+      padding: 4px 8px;
+      border-radius: var(--radius-full);
+      background: rgba(27, 67, 50, 0.78);
+      color: #fff;
+      font-size: 0.68rem;
+      line-height: 1.3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .herb-photo-credit:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
     .herb-img-wrapper img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.6s ease;
+    }
+
+    .herb-img-wrapper.herb-photo-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+
+    .herb-photo-pair img {
+      min-width: 0;
+    }
+
+    .herb-photo-pair .herb-photo-label {
+      position: absolute;
+      z-index: 1;
+      top: 12px;
+      left: 12px;
+      padding: 4px 8px;
+      border-radius: var(--radius-full);
+      background: rgba(27, 67, 50, 0.78);
+      color: #fff;
+      font-size: 0.68rem;
+      line-height: 1.3;
+    }
+
+    .herb-photo-pair .herb-photo-label-root {
+      left: calc(50% + 8px);
     }
 
     .herb-card:hover .herb-img-wrapper img {
@@ -897,11 +945,138 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
     }
 
     .btn-detail:hover {
       color: var(--secondary);
       gap: 9px;
+    }
+
+    .herb-dialog {
+      width: min(620px, calc(100% - 32px));
+      max-height: min(85vh, 760px);
+      margin: auto;
+      padding: 0;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      color: var(--text-dark);
+      background: var(--bg-card);
+      box-shadow: 0 24px 70px rgba(27, 67, 50, 0.28);
+      overflow: auto;
+    }
+
+    .herb-dialog::backdrop {
+      background: rgba(12, 31, 22, 0.62);
+      backdrop-filter: blur(4px);
+    }
+
+    .herb-dialog-photo-pair {
+      width: 100%;
+      height: 220px;
+    }
+
+    .herb-dialog-photo-pair.has-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3px;
+    }
+
+    .herb-dialog-image {
+      width: 100%;
+      height: 220px;
+      display: block;
+      object-fit: cover;
+      background: var(--bg-main);
+    }
+
+    .herb-dialog-image[hidden] {
+      display: none;
+    }
+
+    .herb-dialog-credit {
+      display: block;
+      padding: 7px 16px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-align: right;
+    }
+
+    .herb-dialog-content {
+      padding: 26px;
+    }
+
+    .herb-dialog-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .herb-dialog-header .herb-badge {
+      position: static;
+      display: inline-block;
+      backdrop-filter: none;
+    }
+
+    .herb-dialog-title {
+      font-size: 1.65rem;
+      margin: 8px 0 2px;
+    }
+
+    .herb-dialog-latin {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .herb-dialog-close {
+      flex: 0 0 auto;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      background: var(--bg-main);
+      color: var(--text-dark);
+      font-size: 1.5rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .herb-dialog-close:hover {
+      background: rgba(82, 183, 136, 0.15);
+    }
+
+    .herb-dialog-description {
+      color: #4A5568;
+      margin-bottom: 20px;
+    }
+
+    .herb-dialog-content h4 {
+      font-size: 1rem;
+      margin: 18px 0 7px;
+    }
+
+    .herb-dialog-content ul {
+      padding-left: 21px;
+      color: #4A5568;
+    }
+
+    .herb-dialog-content li + li {
+      margin-top: 5px;
+    }
+
+    .herb-dialog-note {
+      margin-top: 20px;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(82, 183, 136, 0.12);
+      color: var(--text-muted);
+      font-size: 0.84rem;
     }
 
     /* ==========================================================================
@@ -1558,7 +1733,8 @@
           <!-- PLACEHOLDER FOTO: herb-jahe.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=600&q=80" alt="Jahe (Zingiber officinale)" />
+              <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Ginger_Plant_vs.jpg" alt="Tanaman jahe dan bunganya (Zingiber officinale)" loading="lazy" />
+              <a class="herb-photo-credit" href="https://commons.wikimedia.org/wiki/File:Ginger_Plant_vs.jpg" target="_blank" rel="noopener noreferrer">Foto: Venkatx5 / Wikimedia Commons</a>
               <span class="herb-badge">Imunomodulator</span>
             </div>
             <div class="herb-body">
@@ -1567,7 +1743,7 @@
               <p class="herb-snippet">Kaya kandungan gingerol dan shogaol yang efektif meredakan inflamasi dan menghangatkan sistem pencernaan.</p>
               <div class="herb-footer">
                 <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
-                <a href="katalog.html?id=jahe" class="btn-detail">Lihat Detail &rarr;</a>
+                <button type="button" class="btn-detail" data-herb="jahe" aria-haspopup="dialog">Lihat Detail &rarr;</button>
               </div>
             </div>
           </div>
@@ -1576,7 +1752,8 @@
           <!-- PLACEHOLDER FOTO: herb-kunyit.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80" alt="Kunyit (Curcuma longa)" />
+              <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Curcuma_longa_roots.jpg/960px-Curcuma_longa_roots.jpg" alt="Rimpang dan bubuk kunyit (Curcuma longa)" loading="lazy" />
+              <a class="herb-photo-credit" href="https://commons.wikimedia.org/wiki/File:Curcuma_longa_roots.jpg" target="_blank" rel="noopener noreferrer">Foto: Simon A. Eugster / Wikimedia Commons</a>
               <span class="herb-badge">Hepatoprotektor</span>
             </div>
             <div class="herb-body">
@@ -1585,7 +1762,7 @@
               <p class="herb-snippet">Memiliki kandungan kurkuminoid tinggi yang berperan sebagai antioksidan kuat dan pelindung fungsi organ hati.</p>
               <div class="herb-footer">
                 <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
-                <a href="katalog.html?id=kunyit" class="btn-detail">Lihat Detail &rarr;</a>
+                <button type="button" class="btn-detail" data-herb="kunyit" aria-haspopup="dialog">Lihat Detail &rarr;</button>
               </div>
             </div>
           </div>
@@ -1593,8 +1770,12 @@
           <!-- Card 3: Temulawak -->
           <!-- PLACEHOLDER FOTO: herb-temulawak.jpg -->
           <div class="herb-card fade-in-scroll">
-            <div class="herb-img-wrapper">
-              <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80" alt="Temulawak (Curcuma xanthorrhiza)" />
+            <div class="herb-img-wrapper herb-photo-pair">
+              <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Tomulawa_%28Curcuma_zanthorrhiza%29_01.jpg/500px-Tomulawa_%28Curcuma_zanthorrhiza%29_01.jpg" alt="Foto asli tanaman temulawak dengan daun dan batang" loading="lazy" />
+              <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Tomulawa_%28Curcuma_zanthorrhiza%29_03.jpg/500px-Tomulawa_%28Curcuma_zanthorrhiza%29_03.jpg" alt="Foto asli akar dan rimpang temulawak" loading="lazy" />
+              <span class="herb-photo-label">Tanaman</span>
+              <span class="herb-photo-label herb-photo-label-root">Akar &amp; rimpang</span>
+              <a class="herb-photo-credit" href="https://commons.wikimedia.org/wiki/File:Tomulawa_(Curcuma_zanthorrhiza)_03.jpg" target="_blank" rel="noopener noreferrer">Foto: Rahmatlahay / Wikimedia Commons</a>
               <span class="herb-badge">Digestif</span>
             </div>
             <div class="herb-body">
@@ -1603,7 +1784,7 @@
               <p class="herb-snippet">Kandungan xanthorrhizol terbukti klinis meningkatkan nafsu makan dan menjaga kestabilan saluran cerna.</p>
               <div class="herb-footer">
                 <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
-                <a href="katalog.html?id=temulawak" class="btn-detail">Lihat Detail &rarr;</a>
+                <button type="button" class="btn-detail" data-herb="temulawak" aria-haspopup="dialog">Lihat Detail &rarr;</button>
               </div>
             </div>
           </div>
@@ -1612,7 +1793,8 @@
           <!-- PLACEHOLDER FOTO: herb-lidah-buaya.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80" alt="Lidah Buaya (Aloe vera)" />
+              <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Aloevera_Plant.jpg" alt="Lidah buaya hijau segar dengan daun tebal berduri (Aloe vera)" loading="lazy" />
+              <a class="herb-photo-credit" href="https://commons.wikimedia.org/wiki/File:Aloevera_Plant.jpg" target="_blank" rel="noopener noreferrer">Foto: Wikimedia Commons</a>
               <span class="herb-badge">Dermatologis</span>
             </div>
             <div class="herb-body">
@@ -1621,7 +1803,7 @@
               <p class="herb-snippet">Mengandung polisakarida asemannan yang mempercepat regenerasi sel kulit dan penyembuhan luka bakar.</p>
               <div class="herb-footer">
                 <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
-                <a href="katalog.html?id=aloevera" class="btn-detail">Lihat Detail &rarr;</a>
+                <button type="button" class="btn-detail" data-herb="aloevera" aria-haspopup="dialog">Lihat Detail &rarr;</button>
               </div>
             </div>
           </div>
@@ -1630,7 +1812,8 @@
           <!-- PLACEHOLDER FOTO: herb-sirih.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80" alt="Sirih (Piper betle)" />
+              <img src="https://live.staticflickr.com/5128/5273307331_6f552a465d_b.jpg" alt="Daun sirih hijau segar dilihat dari dekat (Piper betle)" loading="lazy" />
+              <a class="herb-photo-credit" href="https://www.flickr.com/photos/49694447@N00/5273307331" target="_blank" rel="noopener noreferrer">Foto: Kumaravel / Flickr (CC BY 2.0)</a>
               <span class="herb-badge">Antiseptik</span>
             </div>
             <div class="herb-body">
@@ -1639,7 +1822,7 @@
               <p class="herb-snippet">Mengandung kavikol dan eugenol dengan aktivitas bakterisidal kuat alami untuk higienitas dan kesehatan mukosa.</p>
               <div class="herb-footer">
                 <span style="font-size:0.78rem; color:var(--text-muted);">3D Fitokimia Tersedia</span>
-                <a href="katalog.html?id=sirih" class="btn-detail">Lihat Detail &rarr;</a>
+                <button type="button" class="btn-detail" data-herb="sirih" aria-haspopup="dialog">Lihat Detail &rarr;</button>
               </div>
             </div>
           </div>
@@ -1648,7 +1831,8 @@
           <!-- PLACEHOLDER FOTO: herb-jahe-merah.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80" alt="Jahe Merah (Zingiber officinale var. rubrum)" />
+              <img src="https://images.pexels.com/photos/10899474/pexels-photo-10899474.jpeg?auto=compress&amp;w=700" alt="Foto asli rimpang jahe segar" loading="lazy" />
+              <a class="herb-photo-credit" href="https://www.pexels.com/photo/a-bowl-of-ginger-10899474/" target="_blank" rel="noopener noreferrer">Foto: Engin Akyurt / Pexels</a>
               <span class="herb-badge">Analgesik Alami</span>
             </div>
             <div class="herb-body">
@@ -1657,13 +1841,37 @@
               <p class="herb-snippet">Konsentrasi minyak atsiri dan oleoresin yang lebih pekat, umum diformulasikan untuk stamina dan pereda nyeri sendi.</p>
               <div class="herb-footer">
                 <span style="font-size:0.78rem; color:var(--text-muted);">AR Ready</span>
-                <a href="katalog.html?id=jahemerah" class="btn-detail">Lihat Detail &rarr;</a>
+                <button type="button" class="btn-detail" data-herb="jahemerah" aria-haspopup="dialog">Lihat Detail &rarr;</button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    <dialog class="herb-dialog" id="herbDialog" aria-labelledby="herbDialogTitle">
+      <div class="herb-dialog-photo-pair" id="herbDialogPhotoPair">
+        <img class="herb-dialog-image" id="herbDialogImage" alt="" />
+        <img class="herb-dialog-image" id="herbDialogSecondaryImage" alt="" hidden />
+      </div>
+      <a class="herb-dialog-credit" id="herbDialogCredit" target="_blank" rel="noopener noreferrer"></a>
+      <div class="herb-dialog-content">
+        <div class="herb-dialog-header">
+          <div>
+            <span class="herb-badge" id="herbDialogBadge"></span>
+            <h3 class="herb-dialog-title" id="herbDialogTitle"></h3>
+            <p class="herb-dialog-latin" id="herbDialogLatin"></p>
+          </div>
+          <button type="button" class="herb-dialog-close" id="herbDialogClose" aria-label="Tutup detail">&times;</button>
+        </div>
+        <p class="herb-dialog-description" id="herbDialogDescription"></p>
+        <h4>Kandungan yang dikenal</h4>
+        <ul id="herbDialogCompounds"></ul>
+        <h4>Penggunaan tradisional</h4>
+        <p id="herbDialogUses" class="herb-dialog-description"></p>
+        <p class="herb-dialog-note">Informasi ini untuk edukasi, bukan pengganti diagnosis atau saran tenaga kesehatan. Bukti dan keamanan penggunaan dapat berbeda pada setiap orang.</p>
+      </div>
+    </dialog>
 
     <!-- ==========================================================================
          SECTION: CTA BANNER
@@ -1774,6 +1982,7 @@
     document.addEventListener("DOMContentLoaded", () => {
       initSession();
       initScrollReveal();
+      initHerbDetails();
     });
 
     // 1. Session & Storage Mocking
@@ -1820,7 +2029,121 @@
       }
     }
 
-    // 5. Scroll Reveal Effect (IntersectionObserver)
+    // 5. Featured herb details dialog
+    function initHerbDetails() {
+      const dialog = document.getElementById("herbDialog");
+      const closeButton = document.getElementById("herbDialogClose");
+      if (!(dialog instanceof HTMLDialogElement) || !closeButton) return;
+
+      const details = {
+        jahe: {
+          name: "Jahe",
+          latin: "Zingiber officinale",
+          badge: "Imunomodulator",
+          description: "Rimpang aromatik yang banyak digunakan sebagai bumbu dan minuman tradisional.",
+          compounds: ["Gingerol dan shogaol", "Minyak atsiri"],
+          uses: "Secara tradisional digunakan untuk menghangatkan tubuh dan membantu meredakan rasa tidak nyaman pada pencernaan."
+        },
+        kunyit: {
+          name: "Kunyit",
+          latin: "Curcuma longa L.",
+          badge: "Hepatoprotektor",
+          description: "Rimpang berwarna kuning-oranye yang umum digunakan sebagai bumbu dan bahan jamu.",
+          compounds: ["Kurkuminoid, termasuk kurkumin", "Minyak atsiri"],
+          uses: "Secara tradisional dimanfaatkan dalam ramuan dan pangan; kandungan kurkuminoidnya banyak diteliti terkait aktivitas antioksidan."
+        },
+        temulawak: {
+          name: "Temulawak",
+          latin: "Curcuma xanthorrhiza",
+          badge: "Digestif",
+          description: "Tanaman rimpang asli kawasan Asia Tenggara yang dikenal luas sebagai bahan jamu Indonesia.",
+          compounds: ["Xanthorrhizol", "Kurkuminoid dan minyak atsiri"],
+          uses: "Secara tradisional digunakan sebagai bahan jamu untuk membantu menjaga nafsu makan dan kenyamanan pencernaan."
+        },
+        aloevera: {
+          name: "Lidah Buaya",
+          latin: "Aloe vera",
+          badge: "Dermatologis",
+          description: "Tanaman sukulen dengan gel bening di dalam daunnya yang banyak digunakan dalam produk perawatan kulit.",
+          compounds: ["Polisakarida, termasuk asemannan", "Senyawa fenolik pada bagian tertentu tanaman"],
+          uses: "Gel bagian dalam daun digunakan secara topikal dalam produk perawatan kulit. Hindari mengonsumsi lateks atau kulit daun tanpa arahan tenaga kesehatan."
+        },
+        sirih: {
+          name: "Sirih Hijau",
+          latin: "Piper betle",
+          badge: "Antiseptik",
+          description: "Tanaman merambat tropis yang daunnya telah lama digunakan dalam berbagai praktik tradisional.",
+          compounds: ["Kavikol", "Eugenol dan minyak atsiri"],
+          uses: "Daunnya digunakan secara tradisional dalam perawatan kebersihan. Pemakaian langsung dapat menyebabkan iritasi pada sebagian orang."
+        },
+        jahemerah: {
+          name: "Jahe Merah",
+          latin: "Zingiber officinale var. rubrum",
+          badge: "Analgesik Alami",
+          description: "Varietas jahe dengan rimpang kemerahan dan aroma kuat, kerap digunakan sebagai bahan minuman dan ramuan tradisional.",
+          compounds: ["Gingerol dan shogaol", "Minyak atsiri dan oleoresin"],
+          uses: "Secara tradisional dimanfaatkan dalam minuman penghangat dan ramuan untuk membantu meredakan rasa tidak nyaman."
+        }
+      };
+
+      const fields = {
+        image: document.getElementById("herbDialogImage"),
+        secondaryImage: document.getElementById("herbDialogSecondaryImage"),
+        photoPair: document.getElementById("herbDialogPhotoPair"),
+        credit: document.getElementById("herbDialogCredit"),
+        badge: document.getElementById("herbDialogBadge"),
+        title: document.getElementById("herbDialogTitle"),
+        latin: document.getElementById("herbDialogLatin"),
+        description: document.getElementById("herbDialogDescription"),
+        compounds: document.getElementById("herbDialogCompounds"),
+        uses: document.getElementById("herbDialogUses")
+      };
+
+      document.querySelectorAll(".btn-detail[data-herb]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const herb = details[button.dataset.herb];
+          const card = button.closest(".herb-card");
+          const images = card ? card.querySelectorAll(".herb-img-wrapper img") : [];
+          const image = images[0];
+          const credit = card && card.querySelector(".herb-photo-credit");
+          if (!herb || !image) return;
+
+          fields.image.src = image.src;
+          fields.image.alt = image.alt;
+          const secondaryImage = images[1];
+          fields.secondaryImage.hidden = !secondaryImage;
+          fields.photoPair.classList.toggle("has-pair", Boolean(secondaryImage));
+          if (secondaryImage) {
+            fields.secondaryImage.src = secondaryImage.src;
+            fields.secondaryImage.alt = secondaryImage.alt;
+          } else {
+            fields.secondaryImage.removeAttribute("src");
+            fields.secondaryImage.alt = "";
+          }
+          fields.credit.href = credit ? credit.href : "";
+          fields.credit.textContent = credit ? credit.textContent : "";
+          fields.credit.hidden = !credit;
+          fields.badge.textContent = herb.badge;
+          fields.title.textContent = herb.name;
+          fields.latin.textContent = herb.latin;
+          fields.description.textContent = herb.description;
+          fields.uses.textContent = herb.uses;
+          fields.compounds.replaceChildren(...herb.compounds.map((compound) => {
+            const item = document.createElement("li");
+            item.textContent = compound;
+            return item;
+          }));
+          dialog.showModal();
+        });
+      });
+
+      closeButton.addEventListener("click", () => dialog.close());
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+    }
+
+    // 6. Scroll Reveal Effect (IntersectionObserver)
     function initScrollReveal() {
       const reveals = document.querySelectorAll(".fade-in-scroll");
       const observer = new IntersectionObserver(
