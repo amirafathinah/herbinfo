@@ -754,6 +754,10 @@
       transition: transform 0.5s ease;
     }
 
+    .plant-photo-credit {
+      display: none;
+    }
+
     .plant-card:hover .plant-img-wrapper img {
       transform: scale(1.06);
     }
@@ -1163,44 +1167,7 @@
     }
 
     /* ==========================================================================
-       8. SECTION: AI RECOMMENDATION
-       ========================================================================== */
-    .section-ai-rec {
-      padding: 70px 0 90px;
-    }
-
-    .ai-rec-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-      margin-top: 32px;
-    }
-
-    .ai-pick-card {
-      border: 2px solid #F59E0B !important;
-      background: #FFFFFF;
-      position: relative;
-    }
-
-    .ai-pick-badge {
-      position: absolute;
-      top: -12px;
-      right: 18px;
-      background: linear-gradient(135deg, #F59E0B, #D97706);
-      color: #FFFFFF;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 12px;
-      border-radius: var(--radius-full);
-      box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      z-index: 5;
-    }
-
-    /* ==========================================================================
-       9. DETAIL MODAL DIALOG
+       8. DETAIL MODAL DIALOG
        ========================================================================== */
     .modal-backdrop {
       display: none;
@@ -1216,15 +1183,16 @@
 
     .detail-modal {
       background: #FFFFFF;
-      max-width: 640px;
+      max-width: 900px;
       width: 100%;
       border-radius: var(--radius-lg);
       overflow: hidden;
       box-shadow: var(--shadow-hover);
       position: relative;
+      height: min(620px, 90vh);
       max-height: 90vh;
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
     }
 
     .modal-close-btn {
@@ -1244,13 +1212,30 @@
       z-index: 10;
     }
 
+    .modal-image-panel {
+      flex: 0 0 42%;
+      min-width: 0;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F8FDF5;
+    }
+
     .modal-header-img {
+      display: block;
       width: 100%;
-      height: 200px;
+      height: 100%;
+      min-height: 0;
       object-fit: cover;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-subtle);
     }
 
     .modal-content-scroll {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
       padding: 24px;
       overflow-y: auto;
     }
@@ -1454,6 +1439,18 @@
       .footer-grid {
         grid-template-columns: 1fr;
       }
+      .detail-modal {
+        height: min(780px, 90vh);
+        flex-direction: column;
+      }
+      .modal-image-panel {
+        flex: 0 0 38%;
+        min-height: 180px;
+        padding: 16px;
+      }
+      .modal-content-scroll {
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -1557,7 +1554,7 @@
       <div class="container katalog-hero-content">
         <div class="badge">🍃 Digital Herbarium</div>
         <h1>Katalog Herbal</h1>
-        <p>Jelajahi kekayaan tanaman obat Indonesia dengan informasi lengkap, uji fitokimia terverifikasi, dan visualisasi 3D Web AR yang terstandar secara ilmiah.</p>
+        <p>Jelajahi tanaman obat Indonesia melalui nama ilmiah, kandungan yang diteliti, penggunaan tradisional, serta foto bersumber dan visualisasi 3D pada tanaman tertentu.</p>
       </div>
     </section>
 
@@ -1575,7 +1572,7 @@
             type="text" 
             id="searchInput" 
             class="search-input" 
-            placeholder="Cari nama latin, nama lokal, atau indikasi medis (contoh: Kunyit, Zingiber, Antiinflamasi)..." 
+            placeholder="Cari nama tanaman, nama ilmiah, famili, kandungan, atau penggunaan..."
             oninput="handleSearchInput()" 
           />
           <button class="btn-search-exec" onclick="applyAllFilters()">Cari Spesies</button>
@@ -1583,31 +1580,14 @@
 
         <!-- Filter Indikasi (Horizontal Pills) -->
         <div class="filter-pills-row">
-          <span class="filter-pill-label">Filter Indikasi:</span>
-          <div class="pills-scroll-container" id="indicationPillsGroup">
-            <button class="filter-chip active" data-indication="Semua" onclick="setIndicationFilter('Semua')">Semua</button>
-            <button class="filter-chip" data-indication="Immunomodulator" onclick="setIndicationFilter('Immunomodulator')">Immunomodulator</button>
-            <button class="filter-chip" data-indication="Antiinflamasi" onclick="setIndicationFilter('Antiinflamasi')">Antiinflamasi</button>
-            <button class="filter-chip" data-indication="Analgesik" onclick="setIndicationFilter('Analgesik')">Analgesik</button>
-            <button class="filter-chip" data-indication="Antidiabetes" onclick="setIndicationFilter('Antidiabetes')">Antidiabetes</button>
-            <button class="filter-chip" data-indication="Hepatoprotektor" onclick="setIndicationFilter('Hepatoprotektor')">Hepatoprotektor</button>
-          </div>
+          <span class="filter-pill-label">Filter Kategori:</span>
+          <div class="pills-scroll-container" id="indicationPillsGroup"></div>
         </div>
 
         <!-- Filter Organ (Horizontal Pills) -->
         <div class="filter-pills-row">
           <span class="filter-pill-label">Filter Organ:</span>
-          <div class="pills-scroll-container" id="organPillsGroup">
-            <button class="filter-chip active" data-organ="Semua" onclick="setOrganFilter('Semua')">Semua Organ</button>
-            <!-- PLACEHOLDER ICON: icon-category-rimpang.svg -->
-            <button class="filter-chip" data-organ="Rimpang" onclick="setOrganFilter('Rimpang')">🫚 Rimpang</button>
-            <!-- PLACEHOLDER ICON: icon-category-daun.svg -->
-            <button class="filter-chip" data-organ="Daun" onclick="setOrganFilter('Daun')">🍃 Daun</button>
-            <!-- PLACEHOLDER ICON: icon-category-batang.svg -->
-            <button class="filter-chip" data-organ="Batang" onclick="setOrganFilter('Batang')">🌿 Batang</button>
-            <!-- PLACEHOLDER ICON: icon-category-bunga.svg -->
-            <button class="filter-chip" data-organ="Bunga" onclick="setOrganFilter('Bunga')">🌸 Bunga</button>
-          </div>
+          <div class="pills-scroll-container" id="organPillsGroup"></div>
         </div>
 
         <!-- Tombol Buka Filter Mobile -->
@@ -1632,23 +1612,7 @@
             <ul class="category-list">
               <li class="category-item active" data-cat="Semua" onclick="selectSidebarCategory('Semua')">
                 <span>✅ Semua Tanaman</span>
-                <span class="category-count" id="countAll">48</span>
-              </li>
-              <li class="category-item" data-cat="Rimpang" onclick="selectSidebarCategory('Rimpang')">
-                <span>🫚 Rimpang</span>
-                <span class="category-count">12</span>
-              </li>
-              <li class="category-item" data-cat="Daun" onclick="selectSidebarCategory('Daun')">
-                <span>🍃 Daun</span>
-                <span class="category-count">15</span>
-              </li>
-              <li class="category-item" data-cat="Batang" onclick="selectSidebarCategory('Batang')">
-                <span>🌿 Batang</span>
-                <span class="category-count">5</span>
-              </li>
-              <li class="category-item" data-cat="Bunga" onclick="selectSidebarCategory('Bunga')">
-                <span>🌸 Bunga</span>
-                <span class="category-count">7</span>
+                <span class="category-count" id="countAll">0</span>
               </li>
             </ul>
           </div>
@@ -1656,32 +1620,7 @@
           <!-- Famili Botani Multi-Select -->
           <div class="sidebar-section">
             <h3 class="sidebar-title">🔬 Famili Botani</h3>
-            <div class="family-checklist">
-              <label class="family-check-label">
-                <input type="checkbox" value="Zingiberaceae" onchange="handleFamilyChange(this)"> Zingiberaceae
-              </label>
-              <label class="family-check-label">
-                <input type="checkbox" value="Piperaceae" onchange="handleFamilyChange(this)"> Piperaceae
-              </label>
-              <label class="family-check-label">
-                <input type="checkbox" value="Apiaceae" onchange="handleFamilyChange(this)"> Apiaceae
-              </label>
-              <label class="family-check-label">
-                <input type="checkbox" value="Asteraceae" onchange="handleFamilyChange(this)"> Asteraceae
-              </label>
-              <label class="family-check-label">
-                <input type="checkbox" value="Moringaceae" onchange="handleFamilyChange(this)"> Moringaceae
-              </label>
-              <label class="family-check-label">
-                <input type="checkbox" value="Acanthaceae" onchange="handleFamilyChange(this)"> Acanthaceae
-              </label>
-              <label class="family-check-label">
-                <input type="checkbox" value="Phyllanthaceae" onchange="handleFamilyChange(this)"> Phyllanthaceae
-              </label>
-              <label class="family-check-label">
-                <input type="checkbox" value="Lamiaceae" onchange="handleFamilyChange(this)"> Lamiaceae
-              </label>
-            </div>
+            <div class="family-checklist"></div>
           </div>
 
           <!-- Urutkan Berdasarkan -->
@@ -1706,7 +1645,7 @@
           <!-- Bottom Info Card -->
           <div class="sidebar-info-card">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
-            <p>Informasi lengkap terstandar Farmakope Herbal Indonesia, untuk keputusan terapi yang lebih aman.</p>
+            <p>Informasi ini untuk edukasi dan bukan pengganti diagnosis atau saran tenaga kesehatan.</p>
           </div>
         </aside>
 
@@ -1756,51 +1695,9 @@
       <div class="container">
         <div class="badge">Pilihan Farmakolog</div>
         <h2 style="font-size: 2rem; margin-top: 6px;">🌟 Tanaman Unggulan Minggu Ini</h2>
-        <p style="color: var(--text-muted); font-size: 0.95rem;">Riset dan monografi terbaru dengan data klinis teruji untuk kajian fitoterapi modern.</p>
+        <p style="color: var(--text-muted); font-size: 0.95rem;">Kenali nama ilmiah, kandungan yang diteliti, dan penggunaan tradisional tanaman pilihan.</p>
 
-        <div class="featured-scroll-row">
-          <!-- Featured 1: Kunyit -->
-          <div class="featured-big-card">
-            <div class="featured-img-top">
-              <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80" alt="Kunyit" />
-              <span class="star-tag-badge">★ Featured</span>
-            </div>
-            <div class="featured-card-body">
-              <h3 style="font-size: 1.25rem;">Kunyit</h3>
-              <em style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 6px;">Curcuma longa L. | Zingiberaceae</em>
-              <p class="featured-card-desc">Kandungan kurkuminoid tinggi berperan vital dalam meregulasi ekspresi sitokin dan proteksi epitel lambung dari inflamasi kronis.</p>
-              <button class="btn-card-detail" style="width:100%;" onclick="openPlantDetailModal(1)">Pelajari Lebih Lanjut &rarr;</button>
-            </div>
-          </div>
-
-          <!-- Featured 2: Pegagan -->
-          <div class="featured-big-card">
-            <div class="featured-img-top">
-              <img src="https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80" alt="Pegagan" />
-              <span class="star-tag-badge">★ Featured</span>
-            </div>
-            <div class="featured-card-body">
-              <h3 style="font-size: 1.25rem;">Pegagan</h3>
-              <em style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 6px;">Centella asiatica (L.) Urban | Apiaceae</em>
-              <p class="featured-card-desc">Mengandung triterpenoid asiatikosida yang secara ilmiah menstimulasi sintesis kolagen mikrosirkulasi dan regenerasi sel neuron serebral.</p>
-              <button class="btn-card-detail" style="width:100%;" onclick="openPlantDetailModal(7)">Pelajari Lebih Lanjut &rarr;</button>
-            </div>
-          </div>
-
-          <!-- Featured 3: Sambiloto -->
-          <div class="featured-big-card">
-            <div class="featured-img-top">
-              <img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80" alt="Sambiloto" />
-              <span class="star-tag-badge">★ Featured</span>
-            </div>
-            <div class="featured-card-body">
-              <h3 style="font-size: 1.25rem;">Sambiloto</h3>
-              <em style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 6px;">Andrographis paniculata Nees | Acanthaceae</em>
-              <p class="featured-card-desc">Senyawa pahit andrografolid terbukti meningkatkan aktivitas fagositosis limfosit dan respon imunitas adaptif melawan patogen pernapasan.</p>
-              <button class="btn-card-detail" style="width:100%;" onclick="openPlantDetailModal(6)">Pelajari Lebih Lanjut &rarr;</button>
-            </div>
-          </div>
-        </div>
+        <div class="featured-scroll-row" id="featuredPlants"></div>
       </div>
     </section>
 
@@ -1813,15 +1710,15 @@
           <div class="stat-box-icon">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
           </div>
-          <div class="stat-box-number">48+</div>
-          <div class="stat-box-label">Spesies Tanaman Terkurasi</div>
+          <div class="stat-box-number" id="statSpeciesCount">0</div>
+          <div class="stat-box-label">Tanaman dalam Katalog</div>
         </div>
 
         <div class="stat-box">
           <div class="stat-box-icon">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
           </div>
-          <div class="stat-box-number">15+</div>
+          <div class="stat-box-number" id="statFamilyCount">0</div>
           <div class="stat-box-label">Famili Botani Farmasi</div>
         </div>
 
@@ -1829,36 +1726,20 @@
           <div class="stat-box-icon">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="m10.5 10.5-4 7"/><path d="m13.5 13.5 4-7"/></svg>
           </div>
-          <div class="stat-box-number">120+</div>
-          <div class="stat-box-label">Senyawa Fitokimia 3D</div>
+          <div class="stat-box-number" id="statCompoundCount">0</div>
+          <div class="stat-box-label">Kandungan kunci tercatat</div>
         </div>
 
         <div class="stat-box">
           <div class="stat-box-icon">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><polyline points="10 2 10 10 13 7 16 10 16 2"/></svg>
           </div>
-          <div class="stat-box-number">200+</div>
-          <div class="stat-box-label">Referensi Ilmiah &amp; Jurnal</div>
+          <div class="stat-box-number" id="statPhotoCount">0</div>
+          <div class="stat-box-label">Foto dengan sumber</div>
         </div>
       </div>
     </section>
 
-    <!-- ==========================================================================
-         SECTION: AI RECOMMENDATION
-         ========================================================================== -->
-    <section class="section-ai-rec">
-      <div class="container">
-        <div style="text-align: center; max-width: 680px; margin: 0 auto;">
-          <div class="badge">Smart Assistant Suggestion</div>
-          <h2 style="font-size: 2rem; margin-top: 6px;">🤖 Rekomendasi AI untuk Anda</h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem;">Berdasarkan tren pencarian praktikum farmakognosi dan literatur fitoterapi terkini.</p>
-        </div>
-
-        <div class="ai-rec-grid" id="aiRecContainer">
-          <!-- Item Rekomendasi AI Diinjeksi via JS -->
-        </div>
-      </div>
-    </section>
   </main>
 
   <!-- ==========================================================================
@@ -1867,9 +1748,11 @@
   <div class="modal-backdrop" id="detailModalBackdrop" onclick="closeModalOnOutsideClick(event)">
     <div class="detail-modal" id="detailModalContent">
       <button class="modal-close-btn" onclick="closePlantDetailModal()">✕</button>
-      <img id="modalImg" src="" alt="Detail Tanaman" class="modal-header-img" />
+      <div class="modal-image-panel">
+        <img id="modalImg" src="" alt="Detail Tanaman" class="modal-header-img" />
+      </div>
       <div class="modal-content-scroll">
-        <span class="badge" id="modalBadge" style="margin-bottom: 8px;">Indikasi Medis</span>
+        <span class="badge" id="modalBadge" style="margin-bottom: 8px;">Kategori penggunaan</span>
         <h2 id="modalCommonName" style="font-size: 1.8rem; margin-bottom: 2px;">Nama Tanaman</h2>
         <em id="modalLatinName" style="color: var(--text-muted); font-size: 1rem; display:block; margin-bottom: 14px;">Nama Latin</em>
 
@@ -1879,8 +1762,9 @@
           <p style="font-size: 0.88rem;"><strong>Kandungan Kunci:</strong> <span id="modalCompound" style="color:var(--primary); font-weight:700;">-</span></p>
         </div>
 
-        <h4 style="font-size: 1.05rem; margin-bottom: 6px;">Deskripsi &amp; Kajian Farmakologi</h4>
+        <h4 style="font-size: 1.05rem; margin-bottom: 6px;">Deskripsi dan kandungan yang diteliti</h4>
         <p id="modalDescription" style="font-size: 0.9rem; color: #4A5568; line-height: 1.6; margin-bottom: 24px;">Deskripsi lengkap tanaman...</p>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px;">Informasi ini untuk edukasi. Penggunaan tradisional dan kandungan yang diteliti tidak menjamin khasiat atau keamanan, serta bukan pengganti saran tenaga kesehatan.</p>
 
         <div style="display:flex; gap:12px; flex-wrap:wrap;">
           <a id="modalBtnAR" href="ar-scan.html" class="btn-card-ar" style="flex:1; padding: 12px; font-size:0.9rem;">
@@ -1965,7 +1849,10 @@
 
       <!-- Bottom Bar -->
       <div class="footer-bottom">
-        <div>&copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.</div>
+        <div>
+          &copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.
+          <small style="display:block; margin-top:6px; color:#A0AEC0; font-size:0.75rem;">Kredit foto: Temulawak — <a href="https://commons.wikimedia.org/wiki/File:Tomulawa_(Curcuma_zanthorrhiza)_03.jpg" target="_blank" rel="noopener noreferrer">Rahmatlahay</a>; Lengkuas — <a href="https://commons.wikimedia.org/wiki/File:Thai_ginger_(Alpinia_galanga).jpg" target="_blank" rel="noopener noreferrer">Susan Slater</a>; Kencur — <a href="https://commons.wikimedia.org/wiki/File:Kaempferia_galanga.jpg" target="_blank" rel="noopener noreferrer">Hariadhi</a>. Foto Lengkuas dan Kencur berlisensi <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</small>
+        </div>
         <div class="footer-legal-links">
           <a href="privacy.html">Kebijakan Privasi</a>
           <a href="terms.html">Syarat &amp; Ketentuan</a>
@@ -1985,7 +1872,7 @@
        ========================================================================== -->
   <script>
     /* --------------------------------------------------------------------------
-       1. DATA TANAMAN DEMO (12 DATASET LENGKAP & STRUKTUR SIAP API)
+       1. DATA TANAMAN KATALOG
        -------------------------------------------------------------------------- */
     const plantDatabase = [
       {
@@ -1995,11 +1882,14 @@
         family: "Zingiberaceae",
         localName: "Kunyit",
         activeCompound: "Kurkumin",
-        indication: "Immunomodulator",
+        indication: "Antioksidan",
         organ: "Rimpang",
         colorBadge: "green",
-        image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80",
-        description: "Rimpang kunyit kaya akan kurkuminoid dan minyak atsiri. Diindikasikan sebagai imunomodulator dan pelindung membran hepatosit dari peroksidasi lipid."
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5b/Curcuma_longa_roots.jpg/960px-Curcuma_longa_roots.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Curcuma_longa_roots.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        model3d: "models/kunyit.glb",
+        description: "Rimpang kunyit mengandung kurkuminoid, termasuk kurkumin, serta minyak atsiri. Banyak dipakai sebagai bumbu dan bahan jamu; bukti manfaat klinis bergantung pada bentuk serta dosis."
       },
       {
         id: 2,
@@ -2011,8 +1901,11 @@
         indication: "Antiinflamasi",
         organ: "Daun",
         colorBadge: "blue",
-        image: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80",
-        description: "Daun sirih mengandung senyawa fenolik eugenol dan kavikol dengan daya antibakteri dan antiinflamasi alami terhadap jaringan mukosa."
+        image: "https://images.pexels.com/photos/15378536/pexels-photo-15378536/free-photo-of-green-leaves-in-brown-woven-basket.jpeg?auto=compress&cs=tinysrgb&w=960",
+        imageAlt: "Daun sirih segar (Piper betle)",
+        imageSource: "https://www.pexels.com/photo/green-leaves-in-brown-woven-basket-15378536/",
+        imageCredit: "Foto: Jabir Ms / Pexels",
+        description: "Daun sirih mengandung minyak atsiri dengan senyawa fenolik, termasuk eugenol. Penggunaan tradisional tidak menggantikan pemeriksaan atau terapi medis."
       },
       {
         id: 3,
@@ -2024,8 +1917,11 @@
         indication: "Analgesik",
         organ: "Rimpang",
         colorBadge: "orange",
-        image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=600&q=80",
-        description: "Gingerol dan shogaol menekan enzim siklooksigenase (COX-2) dan prostaglandin, meredakan nyeri muskuloskeletal dan mual."
+        image: "https://images.pexels.com/photos/10899474/pexels-photo-10899474.jpeg?auto=compress&cs=tinysrgb&w=960",
+        imageAlt: "Rimpang jahe segar (Zingiber officinale)",
+        imageSource: "https://www.pexels.com/photo/a-bowl-of-ginger-10899474/",
+        imageCredit: "Foto: Engin Akyurt / Pexels",
+        description: "Rimpang jahe mengandung gingerol dan shogaol. Jahe umum digunakan sebagai bumbu dan minuman tradisional; respons dan keamanan dapat berbeda pada tiap orang."
       },
       {
         id: 4,
@@ -2037,8 +1933,11 @@
         indication: "Hepatoprotektor",
         organ: "Rimpang",
         colorBadge: "green",
-        image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80",
-        description: "Xanthorrhizol spesifik merangsang sekresi empedu, memulihkan enzim transaminase hepar, dan meredakan peradangan lambung."
+        image: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Tomulawa_%28Curcuma_zanthorrhiza%29_03.jpg/960px-Tomulawa_%28Curcuma_zanthorrhiza%29_03.jpg",
+        imageAlt: "Rimpang temulawak segar (Curcuma xanthorrhiza)",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Tomulawa_(Curcuma_zanthorrhiza)_03.jpg",
+        imageCredit: "Foto: Rahmatlahay / Wikimedia Commons (CC BY-SA 4.0)",
+        description: "Rimpang temulawak mengandung xanthorrhizol, kurkuminoid, dan minyak atsiri. Tanaman ini dikenal sebagai bahan jamu tradisional Indonesia."
       },
       {
         id: 5,
@@ -2050,8 +1949,10 @@
         indication: "Antidiabetes",
         organ: "Daun",
         colorBadge: "purple",
-        image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80",
-        description: "Kandungan kuersetin dan klorogenat membantu meningkatkan sensitivitas insulin dan menghambat penyerapan glukosa intestinal."
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/16/Kalamunggay_%28Moringa_oleifera%29%2C_Philippines.jpg/960px-Kalamunggay_%28Moringa_oleifera%29%2C_Philippines.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Kalamunggay_(Moringa_oleifera),_Philippines.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Daun kelor mengandung berbagai polifenol, termasuk flavonoid. Daunnya dimanfaatkan sebagai pangan; klaim terapi penyakit memerlukan bukti klinis yang memadai."
       },
       {
         id: 6,
@@ -2063,8 +1964,10 @@
         indication: "Immunomodulator",
         organ: "Daun",
         colorBadge: "green",
-        image: "https://images.unsplash.com/photo-1514733670139-4d87a1941d55?auto=format&fit=crop&w=600&q=80",
-        description: "Dikenal sebagai rajanya tanaman pahit, andrografolid mengaktifkan respon proliferasi sel imun terhadap infeksi virus."
+        image: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Andrographis_paniculata_001.JPG",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Andrographis_paniculata_001.JPG",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Sambiloto memiliki rasa pahit dan mengandung andrographolide. Daun dan bagian aerialnya digunakan dalam jamu; konsultasikan penggunaan dengan tenaga kesehatan."
       },
       {
         id: 7,
@@ -2076,8 +1979,10 @@
         indication: "Antiinflamasi",
         organ: "Daun",
         colorBadge: "blue",
-        image: "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=600&q=80",
-        description: "Triterpen glikosida menstimulasi sirkulasi mikrovaskular otak, perbaikan jaringan kolagen, dan stabilitas transmisi saraf."
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Centella_asiatica_6121.jpg/960px-Centella_asiatica_6121.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Centella_asiatica_6121.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Pegagan mengandung triterpenoid seperti asiaticoside dan madecassoside. Daunnya digunakan sebagai pangan dan dalam ramuan tradisional."
       },
       {
         id: 8,
@@ -2089,8 +1994,10 @@
         indication: "Antiinflamasi",
         organ: "Daun",
         colorBadge: "blue",
-        image: "https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=600&q=80",
-        description: "Kaya antioksidan fenolik yang menurunkan resistensi vaskular perifer dan meredakan peradangan sistemik."
+        image: "https://upload.wikimedia.org/wikipedia/commons/6/68/Gynura_procumbens_%28Diabetes_plant%29_%281%29.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Gynura_procumbens_(Diabetes_plant)_(1).jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Sambung nyawa merupakan tanaman berdaun yang juga dikenal sebagai pangan di beberapa daerah. Penelitian awal pada kandungan flavonoid tidak membuktikan khasiat klinis."
       },
       {
         id: 9,
@@ -2102,8 +2009,11 @@
         indication: "Analgesik",
         organ: "Rimpang",
         colorBadge: "orange",
-        image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=600&q=80",
-        description: "EPMS (etil p-metoksisinamat) menunjukkan efek analgesik sentral dan perifer serta antispasmodik pada saluran napas."
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/aa/Kaempferia_galanga.jpg/960px-Kaempferia_galanga.jpg",
+        imageAlt: "Rimpang kencur di samping penggaris",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Kaempferia_galanga.jpg",
+        imageCredit: "Hariadhi / Wikimedia Commons, CC BY-SA 4.0",
+        description: "Kencur adalah rimpang aromatik yang mengandung etil p-metoksisinamat dan digunakan dalam bumbu serta jamu tradisional."
       },
       {
         id: 10,
@@ -2115,8 +2025,11 @@
         indication: "Immunomodulator",
         organ: "Rimpang",
         colorBadge: "green",
-        image: "https://images.unsplash.com/photo-1588691893409-f81d1136c1e3?auto=format&fit=crop&w=600&q=80",
-        description: "Flavonol galangin dan 1'-asetoksikavikol asetat terbukti menghambat replikasi sel mikroba patogen dan modulasi sitokin."
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Thai_ginger_%28Alpinia_galanga%29.jpg/960px-Thai_ginger_%28Alpinia_galanga%29.jpg",
+        imageAlt: "Rimpang lengkuas segar",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Thai_ginger_(Alpinia_galanga).jpg",
+        imageCredit: "Susan Slater / Wikimedia Commons, CC BY-SA 4.0",
+        description: "Lengkuas adalah rimpang aromatik dari keluarga jahe yang digunakan sebagai bumbu. Rimpangnya mengandung minyak atsiri dan senyawa fenolik."
       },
       {
         id: 11,
@@ -2124,12 +2037,15 @@
         latinName: "Zingiber officinale var. rubrum",
         family: "Zingiberaceae",
         localName: "Jahe Merah",
-        activeCompound: "Zingeron",
+        activeCompound: "Gingerol dan shogaol",
         indication: "Antiinflamasi",
         organ: "Rimpang",
         colorBadge: "blue",
-        image: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80",
-        description: "Konsentrasi oleoresin dan minyak atsiri lebih tinggi, efektif untuk inflamasi sendi artritis dan kehangatan metabolik."
+        image: "https://images.pexels.com/photos/5202089/pexels-photo-5202089.jpeg?auto=compress&cs=tinysrgb&w=960",
+        imageAlt: "Rimpang jahe segar di atas alas merah; varietas merah tidak terverifikasi",
+        imageSource: "https://www.pexels.com/photo/ginger-in-red-plate-5202089/",
+        imageCredit: "Foto: Kaboompics.com / Pexels",
+        description: "Jahe merah merupakan varietas jahe yang dikenal dalam penggunaan tradisional. Foto rimpang pada kartu ini menunjukkan jahe segar, tetapi varietas merahnya tidak dapat dipastikan dari foto."
       },
       {
         id: 12,
@@ -2139,10 +2055,133 @@
         localName: "Meniran",
         activeCompound: "Filantin",
         indication: "Immunomodulator",
+        organ: "Herba",
+        colorBadge: "green",
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/19/Phyllanthus_niruri_.jpg/960px-Phyllanthus_niruri_.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Phyllanthus_niruri_.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Meniran adalah herba kecil dengan buah yang tumbuh di sisi bawah ranting. Senyawa yang diteliti antara lain filantin; bukti penelitian tidak otomatis menunjukkan manfaat klinis."
+      },
+      {
+        id: 13,
+        commonName: "Bawang Putih",
+        latinName: "Allium sativum L.",
+        family: "Amaryllidaceae",
+        localName: "Bawang putih",
+        activeCompound: "Allicin",
+        indication: "Kajian antimikroba",
+        organ: "Umbi",
+        colorBadge: "orange",
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9a/Garlic_bulbs_and_cloves.jpg/960px-Garlic_bulbs_and_cloves.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Garlic_bulbs_and_cloves.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Umbi bawang putih mengandung senyawa sulfur seperti alliin yang dapat membentuk allicin saat jaringan dihancurkan. Bawang putih terutama digunakan sebagai bahan pangan."
+      },
+      {
+        id: 14,
+        commonName: "Jambu Biji",
+        latinName: "Psidium guajava L.",
+        family: "Myrtaceae",
+        localName: "Jambu biji",
+        activeCompound: "Tanin dan flavonoid",
+        indication: "Penggunaan tradisional",
+        organ: "Daun",
+        colorBadge: "green",
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Psidium_guajava_leaves_LR.jpg/960px-Psidium_guajava_leaves_LR.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Psidium_guajava_leaves_LR.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Daun jambu biji mengandung tanin dan flavonoid, sedangkan buahnya dikonsumsi sebagai pangan. Penggunaan daun sebagai ramuan merupakan praktik tradisional."
+      },
+      {
+        id: 15,
+        commonName: "Mengkudu",
+        latinName: "Morinda citrifolia L.",
+        family: "Rubiaceae",
+        localName: "Mengkudu",
+        activeCompound: "Iridoid",
+        indication: "Penggunaan tradisional",
+        organ: "Buah",
+        colorBadge: "blue",
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a3/Indian_mulberry_%28Morinda_citrifolia%29_1583.jpg/960px-Indian_mulberry_%28Morinda_citrifolia%29_1583.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Indian_mulberry_(Morinda_citrifolia)_1583.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Buah mengkudu memiliki aroma khas dan dimanfaatkan sebagai pangan maupun dalam ramuan tradisional. Kandungan dan manfaat produk olahannya dapat berbeda."
+      },
+      {
+        id: 16,
+        commonName: "Kayu Manis",
+        latinName: "Cinnamomum burmannii (Nees & T.Nees) Blume",
+        family: "Lauraceae",
+        localName: "Kayu manis",
+        activeCompound: "Sinamaldehida",
+        indication: "Antioksidan",
+        organ: "Kulit batang",
+        colorBadge: "orange",
+        image: "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ee/Canelle_Cinnamomum_burmanni_Luc_Viatour.jpg/960px-Canelle_Cinnamomum_burmanni_Luc_Viatour.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Canelle_Cinnamomum_burmanni_Luc_Viatour.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Kulit batang kayu manis digunakan sebagai rempah dan mengandung minyak atsiri, termasuk sinamaldehida. Konsumsi berlebihan tidak dianjurkan."
+      },
+      {
+        id: 17,
+        commonName: "Kumis Kucing",
+        latinName: "Orthosiphon aristatus (Blume) Miq.",
+        family: "Lamiaceae",
+        localName: "Kumis kucing",
+        activeCompound: "Sinensetin",
+        indication: "Penggunaan tradisional",
+        organ: "Daun",
+        colorBadge: "blue",
+        image: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Orthosiphon_aristatus_in_Kadavoor.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Orthosiphon_aristatus_in_Kadavoor.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Daun kumis kucing digunakan dalam ramuan tradisional dan mengandung flavonoid seperti sinensetin. Penggunaan sebagai obat perlu memperhatikan kondisi kesehatan dan obat lain."
+      },
+      {
+        id: 18,
+        commonName: "Brotowali",
+        latinName: "Tinospora crispa (L.) Hook.f. & Thomson",
+        family: "Menispermaceae",
+        localName: "Brotowali",
+        activeCompound: "Tinosporaside",
+        indication: "Penggunaan tradisional",
         organ: "Batang",
         colorBadge: "green",
-        image: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=600&q=80",
-        description: "Senyawa lignan filantin dan hipofilantin telah teruji klinis sebagai imunostimulan lini pertama fitofarmaka Indonesia."
+        image: "https://inaturalist-open-data.s3.amazonaws.com/photos/27559015/medium.jpeg",
+        imageAlt: "Batang brotowali dengan tonjolan ruas yang terlihat jelas",
+        imageSource: "https://www.inaturalist.org/observations/18025691",
+        imageCredit: "Foto CC0 / iNaturalist",
+        description: "Brotowali merupakan tanaman merambat dengan batang yang digunakan dalam jamu tradisional. Rasanya sangat pahit; keamanan penggunaan tetap perlu diperhatikan."
+      },
+      {
+        id: 19,
+        commonName: "Beluntas",
+        latinName: "Pluchea indica (L.) Less.",
+        family: "Asteraceae",
+        localName: "Beluntas",
+        activeCompound: "Flavonoid",
+        indication: "Penggunaan tradisional",
+        organ: "Daun",
+        colorBadge: "green",
+        image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Starr_060405-9141_Pluchea_indica.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Starr_060405-9141_Pluchea_indica.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Daun beluntas beraroma khas dan digunakan sebagai pangan maupun dalam praktik tradisional di Indonesia. Penelitian kandungannya masih perlu dibedakan dari bukti manfaat klinis."
+      },
+      {
+        id: 20,
+        commonName: "Bangle",
+        latinName: "Zingiber montanum (J.Koenig) Link ex A.Dietr.",
+        family: "Zingiberaceae",
+        localName: "Bangle",
+        activeCompound: "Minyak atsiri",
+        indication: "Penggunaan tradisional",
+        organ: "Rimpang",
+        colorBadge: "orange",
+        image: "https://upload.wikimedia.org/wikipedia/commons/f/f5/Banglai_Feuilles_et_Fleurs_3890.jpg",
+        imageSource: "https://commons.wikimedia.org/wiki/File:Banglai_Feuilles_et_Fleurs_3890.jpg",
+        imageCredit: "Foto: Wikimedia Commons",
+        description: "Bangle adalah tanaman sekerabat jahe yang rimpangnya digunakan dalam ramuan tradisional. Kandungan dan keamanan dapat berbeda menurut cara pengolahan."
       }
     ];
 
@@ -2165,10 +2204,90 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       initMobileMenu();
+      syncCatalogFacets();
       loadFilterPreferences();
-      renderAIRecSection();
+      renderFeaturedPlants();
       applyAllFilters();
     });
+
+    function syncCatalogFacets() {
+      const organIcons = {
+        "Rimpang": "🫚",
+        "Daun": "🍃",
+        "Batang": "🌿",
+        "Kulit batang": "🌳",
+        "Bunga": "🌸",
+        "Buah": "🍈",
+        "Biji": "🌰",
+        "Umbi": "🧄",
+        "Herba": "🌱"
+      };
+      const indications = [...new Set(plantDatabase.map(plant => plant.indication))].sort();
+      const organs = [...new Set(plantDatabase.map(plant => plant.organ))].sort();
+      const families = [...new Set(plantDatabase.map(plant => plant.family))].sort();
+      const categoryList = document.querySelector(".category-list");
+
+      document.getElementById("indicationPillsGroup").innerHTML = [
+        `<button class="filter-chip active" data-indication="Semua" onclick="setIndicationFilter('Semua')">Semua</button>`,
+        ...indications.map(indication =>
+          `<button class="filter-chip" data-indication="${indication}" onclick="setIndicationFilter('${indication}')">${indication}</button>`
+        )
+      ].join("");
+      document.getElementById("organPillsGroup").innerHTML = [
+        `<button class="filter-chip active" data-organ="Semua" onclick="setOrganFilter('Semua')">Semua Organ</button>`,
+        ...organs.map(organ =>
+          `<button class="filter-chip" data-organ="${organ}" onclick="setOrganFilter('${organ}')">${organIcons[organ] || "🌿"} ${organ}</button>`
+        )
+      ].join("");
+      categoryList.innerHTML = `
+        <li class="category-item active" data-cat="Semua" onclick="selectSidebarCategory('Semua')">
+          <span>✅ Semua Tanaman</span>
+          <span class="category-count" id="countAll">${plantDatabase.length}</span>
+        </li>
+        ${organs.map(organ => `
+          <li class="category-item" data-cat="${organ}" onclick="selectSidebarCategory('${organ}')">
+            <span>${organIcons[organ] || "🌿"} ${organ}</span>
+            <span class="category-count">${plantDatabase.filter(plant => plant.organ === organ).length}</span>
+          </li>
+        `).join("")}
+      `;
+      document.querySelector(".family-checklist").innerHTML = families.map(family => `
+        <label class="family-check-label">
+          <input type="checkbox" value="${family}" onchange="handleFamilyChange(this)"> ${family}
+        </label>
+      `).join("");
+
+      document.getElementById("statSpeciesCount").textContent = plantDatabase.length;
+      document.getElementById("statFamilyCount").textContent = families.length;
+      document.getElementById("statCompoundCount").textContent = new Set(plantDatabase.map(plant => plant.activeCompound)).size;
+      document.getElementById("statPhotoCount").textContent = plantDatabase.filter(plant => plant.image && plant.imageSource).length;
+    }
+
+    function renderFeaturedPlants() {
+      const featuredIds = [1, 7, 6];
+      const featuredPlants = featuredIds.map(id => plantDatabase.find(plant => plant.id === id)).filter(Boolean);
+      document.getElementById("featuredPlants").innerHTML = featuredPlants.map(plant => `
+        <div class="featured-big-card">
+          <div class="featured-img-top">
+            <img src="${plant.image}" alt="${plant.imageAlt || plant.commonName}" loading="lazy" />
+            ${plant.imageSource ? `<a class="plant-photo-credit" href="${plant.imageSource}" target="_blank" rel="noopener noreferrer">${plant.imageCredit}</a>` : `<span class="plant-photo-credit">${plant.imageCredit}</span>`}
+            <span class="star-tag-badge">★ Featured</span>
+          </div>
+          <div class="featured-card-body">
+            <h3 style="font-size: 1.25rem;">${plant.commonName}</h3>
+            <em style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 6px;">${plant.latinName} | ${plant.family}</em>
+            <p class="featured-card-desc">${plant.description}</p>
+            <button class="btn-card-detail" style="width:100%;" onclick="openPlantDetailModal(${plant.id})">Pelajari Lebih Lanjut &rarr;</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function getPlantARLink(plant) {
+      if (!plant.model3d) return "ar-scan.html";
+      const params = new URLSearchParams({ plantId: String(plant.id), plant: plant.commonName });
+      return `ar-scan.html?${params.toString()}`;
+    }
 
     /* --------------------------------------------------------------------------
        3. TOAST & MOBILE TOGGLE HANDLERS
@@ -2237,14 +2356,22 @@
 
     function setOrganFilter(organName) {
       currentFilterState.organ = organName;
+      currentFilterState.sidebarCategory = "Semua";
+      currentFilterState.indication = "Semua";
       currentFilterState.currentPage = 1;
 
+      document.querySelectorAll("#indicationPillsGroup .filter-chip").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.indication === "Semua");
+      });
       document.querySelectorAll("#organPillsGroup .filter-chip").forEach(btn => {
         if (btn.dataset.organ === organName) {
           btn.classList.add("active");
         } else {
           btn.classList.remove("active");
         }
+      });
+      document.querySelectorAll(".category-list .category-item").forEach(item => {
+        item.classList.toggle("active", item.dataset.cat === "Semua");
       });
 
       saveFilterPreferences();
@@ -2253,14 +2380,22 @@
 
     function selectSidebarCategory(catName) {
       currentFilterState.sidebarCategory = catName;
+      currentFilterState.organ = "Semua";
+      currentFilterState.indication = "Semua";
       currentFilterState.currentPage = 1;
 
+      document.querySelectorAll("#indicationPillsGroup .filter-chip").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.indication === "Semua");
+      });
       document.querySelectorAll(".category-list .category-item").forEach(item => {
         if (item.dataset.cat === catName) {
           item.classList.add("active");
         } else {
           item.classList.remove("active");
         }
+      });
+      document.querySelectorAll("#organPillsGroup .filter-chip").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.organ === "Semua");
       });
 
       saveFilterPreferences();
@@ -2318,11 +2453,16 @@
           // 1. Search Query
           if (currentFilterState.search) {
             const q = currentFilterState.search;
-            const matchName = item.commonName.toLowerCase().includes(q);
-            const matchLatin = item.latinName.toLowerCase().includes(q);
-            const matchIndic = item.indication.toLowerCase().includes(q);
-            const matchCompound = item.activeCompound.toLowerCase().includes(q);
-            if (!matchName && !matchLatin && !matchIndic && !matchCompound) return false;
+            const searchableFields = [
+              item.commonName,
+              item.localName,
+              item.latinName,
+              item.family,
+              item.organ,
+              item.indication,
+              item.activeCompound
+            ];
+            if (!searchableFields.some(value => value.toLowerCase().includes(q))) return false;
           }
 
           // 2. Filter Indikasi
@@ -2413,7 +2553,8 @@
         return `
           <div class="plant-card">
             <div class="plant-img-wrapper">
-              <img src="${plant.image}" alt="${plant.commonName}" loading="lazy" />
+              <img src="${plant.image}" alt="${plant.imageAlt || plant.commonName}" loading="lazy" />
+              ${plant.imageSource ? `<a class="plant-photo-credit" href="${plant.imageSource}" target="_blank" rel="noopener noreferrer">${plant.imageCredit}</a>` : `<span class="plant-photo-credit">${plant.imageCredit}</span>`}
               <span class="indication-badge ${plant.colorBadge}">${plant.indication}</span>
               <button 
                 class="favorite-toggle-btn ${isFav ? 'favorited' : ''}" 
@@ -2438,10 +2579,10 @@
 
               <div class="plant-card-actions">
                 <button class="btn-card-detail" onclick="openPlantDetailModal(${plant.id})">
-                  🔍 Detail Medis
+                  🔍 Detail Tanaman
                 </button>
-                <a href="ar-scan.html?plantId=${plant.id}&plant=${encodeURIComponent(plant.commonName)}" class="btn-card-ar">
-                  🌿 Studio AR 3D
+                <a href="${getPlantARLink(plant)}" class="btn-card-ar">
+                  ${plant.model3d ? "🌿 Lihat model 3D" : "📷 Buka AR Scanner"}
                 </a>
               </div>
             </div>
@@ -2511,38 +2652,7 @@
     }
 
     /* --------------------------------------------------------------------------
-       7. AI RECOMMENDATION SECTION BUILDER
-       -------------------------------------------------------------------------- */
-    function renderAIRecSection() {
-      const container = document.getElementById("aiRecContainer");
-      const aiRecItems = [plantDatabase[0], plantDatabase[3], plantDatabase[6]]; // Kunyit, Temulawak, Pegagan
-
-      container.innerHTML = aiRecItems.map(plant => `
-        <div class="plant-card ai-pick-card">
-          <div class="ai-pick-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            AI Pick
-          </div>
-          <div class="plant-img-wrapper">
-            <img src="${plant.image}" alt="${plant.commonName}" />
-            <span class="indication-badge ${plant.colorBadge}">${plant.indication}</span>
-          </div>
-          <div class="plant-card-body">
-            <h3 class="plant-common-name">${plant.commonName}</h3>
-            <span class="plant-latin-name">${plant.latinName}</span>
-            <span class="active-compound-pill" style="margin-bottom: 12px;">🔬 ${plant.activeCompound}</span>
-            <p style="font-size:0.83rem; color:#4A5568; margin-bottom:16px;">${plant.description.substring(0, 85)}...</p>
-            <div class="plant-card-actions">
-              <button class="btn-card-detail" onclick="openPlantDetailModal(${plant.id})">Detail Medis</button>
-              <a href="ar-scan.html?plantId=${plant.id}&plant=${encodeURIComponent(plant.commonName)}" class="btn-card-ar">Studio AR 3D</a>
-            </div>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    /* --------------------------------------------------------------------------
-       8. MODAL DETAIL POPUP
+       7. MODAL DETAIL POPUP
        -------------------------------------------------------------------------- */
     function openPlantDetailModal(plantId) {
       const plant = plantDatabase.find(p => p.id === plantId);
@@ -2550,6 +2660,7 @@
 
       activePlantForModal = plant;
       document.getElementById("modalImg").src = plant.image;
+      document.getElementById("modalImg").alt = plant.imageAlt || plant.commonName;
       document.getElementById("modalBadge").innerText = plant.indication;
       document.getElementById("modalCommonName").innerText = plant.commonName;
       document.getElementById("modalLatinName").innerText = plant.latinName;
@@ -2557,7 +2668,9 @@
       document.getElementById("modalOrgan").innerText = plant.organ;
       document.getElementById("modalCompound").innerText = plant.activeCompound;
       document.getElementById("modalDescription").innerText = plant.description;
-      document.getElementById("modalBtnAR").href = `ar-scan.html?plantId=${plant.id}&plant=${encodeURIComponent(plant.commonName)}`;
+      const arButton = document.getElementById("modalBtnAR");
+      arButton.href = getPlantARLink(plant);
+      arButton.textContent = plant.model3d ? "🌿 Buka model 3D" : "📷 Buka AR Scanner";
 
       document.getElementById("detailModalBackdrop").style.display = "flex";
     }
@@ -2623,20 +2736,38 @@
       if (!saved) return;
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.indication) setIndicationFilter(parsed.indication);
-        if (parsed.organ) setOrganFilter(parsed.organ);
-        if (parsed.sidebarCategory) selectSidebarCategory(parsed.sidebarCategory);
-        if (parsed.sortBy) {
-          currentFilterState.sortBy = parsed.sortBy;
-          const r = document.querySelector(`input[name="sortPlants"][value="${parsed.sortBy}"]`);
-          if (r) r.checked = true;
-        }
-        if (Array.isArray(parsed.families) && parsed.families.length > 0) {
-          currentFilterState.families = parsed.families;
-          document.querySelectorAll(".family-checklist input").forEach(cb => {
-            cb.checked = parsed.families.includes(cb.value);
-          });
-        }
+        const indications = new Set(plantDatabase.map(plant => plant.indication));
+        const organs = new Set(plantDatabase.map(plant => plant.organ));
+        const categories = new Set(["Semua", ...organs]);
+
+        currentFilterState.indication = indications.has(parsed.indication) ? parsed.indication : "Semua";
+        const savedOrgan = organs.has(parsed.organ) ? parsed.organ : "Semua";
+        const savedCategory = categories.has(parsed.sidebarCategory) ? parsed.sidebarCategory : "Semua";
+        const hasConflictingOrganFilters = savedOrgan !== "Semua" && savedCategory !== "Semua";
+        currentFilterState.organ = hasConflictingOrganFilters ? "Semua" : savedOrgan;
+        currentFilterState.sidebarCategory = hasConflictingOrganFilters ? "Semua" : savedCategory;
+        currentFilterState.sortBy = ["name-asc", "name-desc", "popular", "active-asc"].includes(parsed.sortBy)
+          ? parsed.sortBy
+          : "name-asc";
+        currentFilterState.families = Array.isArray(parsed.families)
+          ? parsed.families.filter(family => [...document.querySelectorAll(".family-checklist input")].some(input => input.value === family))
+          : [];
+
+        document.querySelectorAll("#indicationPillsGroup .filter-chip").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.indication === currentFilterState.indication);
+        });
+        document.querySelectorAll("#organPillsGroup .filter-chip").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.organ === currentFilterState.organ);
+        });
+        document.querySelectorAll(".category-list .category-item").forEach(item => {
+          item.classList.toggle("active", item.dataset.cat === currentFilterState.sidebarCategory);
+        });
+        document.querySelectorAll(".family-checklist input").forEach(input => {
+          input.checked = currentFilterState.families.includes(input.value);
+        });
+        const sortRadio = document.querySelector(`input[name="sortPlants"][value="${currentFilterState.sortBy}"]`);
+        if (sortRadio) sortRadio.checked = true;
+        saveFilterPreferences();
       } catch (e) {
         console.warn("Gagal memuat preferensi filter:", e);
       }
