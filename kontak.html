@@ -1,6 +1,3 @@
-Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sudah dihapus**, termasuk CSS dan JavaScript terkait. Tautan `faq.html` di footer tetap dipertahankan untuk halaman FAQ tersendiri.
-
-```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -653,8 +650,7 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
       transition: var(--transition);
     }
 
-    .file-dropzone:hover,
-    .file-dropzone.dragover {
+    .file-dropzone:hover, .file-dropzone.dragover {
       background: rgba(149, 213, 178, 0.25);
       border-color: var(--primary);
     }
@@ -827,30 +823,11 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
       color: #fff;
     }
 
-    .social-btn-brand.ig:hover {
-      background: #E1306C;
-      border-color: #E1306C;
-    }
-
-    .social-btn-brand.tw:hover {
-      background: #000000;
-      border-color: #000000;
-    }
-
-    .social-btn-brand.li:hover {
-      background: #0A66C2;
-      border-color: #0A66C2;
-    }
-
-    .social-btn-brand.yt:hover {
-      background: #FF0000;
-      border-color: #FF0000;
-    }
-
-    .social-btn-brand.tt:hover {
-      background: #010101;
-      border-color: #010101;
-    }
+    .social-btn-brand.ig:hover { background: #E1306C; border-color: #E1306C; }
+    .social-btn-brand.tw:hover { background: #000000; border-color: #000000; }
+    .social-btn-brand.li:hover { background: #0A66C2; border-color: #0A66C2; }
+    .social-btn-brand.yt:hover { background: #FF0000; border-color: #FF0000; }
+    .social-btn-brand.tt:hover { background: #010101; border-color: #010101; }
 
     /* Newsletter Card */
     .newsletter-form-inline {
@@ -1062,15 +1039,8 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
     }
 
     @keyframes fadeInChat {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .chat-window-header {
@@ -1275,8 +1245,7 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
     }
 
     @media (max-width: 768px) {
-      .nav-links,
-      .nav-actions {
+      .nav-links, .nav-actions {
         display: none;
       }
 
@@ -1296,8 +1265,7 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .quick-cards-grid,
-      .partnership-grid {
+      .quick-cards-grid, .partnership-grid {
         grid-template-columns: 1fr;
       }
 
@@ -1372,7 +1340,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
          HERO SECTION - KONTAK
          ========================================================================== -->
     <section class="contact-hero">
-      <!-- PLACEHOLDER: hero-pattern-leaves.png & hero-pattern-molecule.png -->
       <div class="contact-hero-bg"></div>
 
       <div class="container contact-hero-grid">
@@ -1382,7 +1349,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
           <p>Tim HerbInfoAI siap menjawab pertanyaan Anda seputar platform, fitur AR, AI Pharma Assistant, atau kerjasama institusi. Hubungi kami melalui formulir di bawah atau saluran interaktif favorit Anda.</p>
         </div>
 
-        <!-- PLACEHOLDER: hero-contact-illustration.png -->
         <div class="contact-hero-visual">
           <div class="support-card-mockup">
             <div class="support-card-icon-wrap">
@@ -1410,7 +1376,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
 
         <div class="quick-cards-grid">
           <!-- Card 1: Email -->
-          <!-- PLACEHOLDER ICON: icon-email.svg -->
           <div class="quick-card">
             <div class="quick-card-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -1423,7 +1388,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
           </div>
 
           <!-- Card 2: WhatsApp -->
-          <!-- PLACEHOLDER ICON: icon-whatsapp.svg -->
           <div class="quick-card">
             <div class="quick-card-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
@@ -1436,7 +1400,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
           </div>
 
           <!-- Card 3: Kantor Pusat -->
-          <!-- PLACEHOLDER ICON: icon-location.svg -->
           <div class="quick-card">
             <div class="quick-card-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1449,7 +1412,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
           </div>
 
           <!-- Card 4: AI Assistant -->
-          <!-- PLACEHOLDER ICON: icon-robot-chat.svg -->
           <div class="quick-card">
             <div class="quick-card-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M12 8V4H8"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
@@ -1478,7 +1440,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
           </div>
 
           <form id="contactForm" novalidate onsubmit="handleContactSubmit(event)">
-            <!-- Nama Lengkap -->
             <div class="form-group">
               <label class="form-label" for="contactName">Nama Lengkap *</label>
               <div class="input-icon-wrap">
@@ -1489,7 +1450,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
             </div>
 
             <div class="form-grid-2">
-              <!-- Email -->
               <div class="form-group">
                 <label class="form-label" for="contactEmail">Alamat Email *</label>
                 <div class="input-icon-wrap">
@@ -1499,7 +1459,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
                 <span class="error-msg" id="emailError">Format alamat email belum valid.</span>
               </div>
 
-              <!-- Telepon -->
               <div class="form-group">
                 <label class="form-label" for="contactPhone">Nomor Telepon (WhatsApp)</label>
                 <div class="input-icon-wrap">
@@ -1509,7 +1468,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
               </div>
             </div>
 
-            <!-- Subjek Pesan -->
             <div class="form-group">
               <label class="form-label" for="contactSubject">Subjek Pesan *</label>
               <div class="input-icon-wrap">
@@ -1528,7 +1486,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
               </div>
             </div>
 
-            <!-- Kategori Pengguna -->
             <div class="form-group">
               <label class="form-label">Kategori Pengguna *</label>
               <div class="user-category-group">
@@ -1551,7 +1508,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
               </div>
             </div>
 
-            <!-- Isi Pesan -->
             <div class="form-group">
               <label class="form-label" for="contactMessage">Pesan atau Pertanyaan *</label>
               <textarea id="contactMessage" class="textarea-control" placeholder="Ceritakan pertanyaan atau kebutuhan Anda secara detail..." maxlength="1000" oninput="handleMessageInput()"></textarea>
@@ -1559,7 +1515,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
               <span class="error-msg" id="messageError">Pesan wajib diisi minimal 20 karakter.</span>
             </div>
 
-            <!-- Unggah Lampiran -->
             <div class="form-group">
               <label class="form-label">Lampiran Berkas (Opsional - Screenshot/Dokumen)</label>
               <div class="file-dropzone" id="fileDropzone" onclick="document.getElementById('attachmentInput').click()">
@@ -1574,7 +1529,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
               </div>
             </div>
 
-            <!-- Persetujuan Kebijakan -->
             <div class="checkbox-agree-wrap">
               <input type="checkbox" id="agreeCheckbox" required onchange="checkFormValidity()" />
               <label for="agreeCheckbox">Saya setuju dengan <a href="privacy.html" style="color:var(--primary); font-weight:600; text-decoration:underline;">Kebijakan Privasi</a> dan memberi izin kepada tim HerbInfoAI untuk menghubungi saya kembali terkait pesan ini.</label>
@@ -1588,7 +1542,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
 
         <!-- KOLOM KANAN: DETAIL INFO, JAM OPERASIONAL & SOSMED -->
         <div class="contact-info-stack">
-          <!-- Card 1: Informasi Kontak -->
           <div class="info-card">
             <h3 class="info-card-title">📞 Informasi Kontak</h3>
             <div class="info-item-row">
@@ -1621,7 +1574,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
             </div>
           </div>
 
-          <!-- Card 2: Jam Operasional -->
           <div class="info-card">
             <h3 class="info-card-title">🕐 Jam Operasional Helpdesk</h3>
             <div id="officeStatusBadge" class="status-badge-office open">
@@ -1648,7 +1600,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
             </div>
           </div>
 
-          <!-- Card 3: Media Sosial -->
           <div class="info-card">
             <h3 class="info-card-title">🌐 Ikuti Media Sosial Kami</h3>
             <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">Dapatkan tips simplisia, kabar riset fitokimia, dan update materi praktikum:</p>
@@ -1661,7 +1612,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
             </div>
           </div>
 
-          <!-- Card 4: Newsletter -->
           <div class="info-card">
             <h3 class="info-card-title">📬 Berlangganan Newsletter</h3>
             <p style="font-size:0.82rem; color:var(--text-muted);">Buletin mingguan monografi fitofarmaka &amp; rilis fitur AR terkini.</p>
@@ -1684,8 +1634,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
         <h2 style="font-size:1.8rem; margin-top:6px;">📍 Lokasi Kantor Pusat &amp; Laboratorium</h2>
         <p style="font-size:0.92rem; color:var(--text-muted);">Terbuka untuk audiensi akademik, demonstrasi Web AR laboratorium, dan validasi riset.</p>
 
-        <!-- Google Maps Embed Placeholder Frame -->
-        <!-- PLACEHOLDER: map-office-location.png -->
         <div class="map-frame-wrapper">
           <iframe
             title="Peta Lokasi HerbInfoAI"
@@ -1724,8 +1672,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
         </div>
 
         <div class="partnership-grid">
-          <!-- Card 1 -->
-          <!-- PLACEHOLDER: partnership-campus.jpg -->
           <div class="partnership-card">
             <div class="partnership-icon">🏛️</div>
             <h3>Lisensi Kampus (SaaS B2B)</h3>
@@ -1738,8 +1684,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
             <a href="estore.html" class="btn-partnership-action">Pelajari Paket Kampus &rarr;</a>
           </div>
 
-          <!-- Card 2 -->
-          <!-- PLACEHOLDER: partnership-lab.jpg -->
           <div class="partnership-card">
             <div class="partnership-icon">🔬</div>
             <h3>Riset &amp; Validasi Molekuler</h3>
@@ -1752,8 +1696,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
             <button class="btn-partnership-action" onclick="setSubjectFormAndScroll('Kerjasama Institusi (B2B)')">Hubungi Tim Riset &rarr;</button>
           </div>
 
-          <!-- Card 3 -->
-          <!-- PLACEHOLDER: partnership-team.jpg -->
           <div class="partnership-card">
             <div class="partnership-icon">📚</div>
             <h3>Kontributor Konten Herbal</h3>
@@ -1773,13 +1715,11 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
   <!-- ==========================================================================
        FLOATING LIVE CHAT WIDGET
        ========================================================================== -->
-  <!-- Launcher Button -->
   <button class="floating-chat-launcher" id="chatLauncher" onclick="toggleFloatingChat()" aria-label="Buka Live Chat">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     <span class="chat-unread-bubble" id="unreadBadge">1</span>
   </button>
 
-  <!-- Chat Window -->
   <div class="floating-chat-window" id="chatWindow">
     <div class="chat-window-header">
       <div style="display:flex; align-items:center; gap:8px;">
@@ -1792,21 +1732,18 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
       <button onclick="toggleFloatingChat(false)" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;" aria-label="Tutup Chat">✕</button>
     </div>
 
-    <!-- Messages Container -->
     <div class="chat-window-body" id="chatBody">
       <div class="chat-msg bot">
         Halo! Saya asisten AI HerbInfoAI. Ada yang dapat kami bantu seputar Web AR, pembuatan laporan, atau paket lisensi?
       </div>
     </div>
 
-    <!-- Quick Replies -->
     <div class="chat-quick-replies">
       <button class="chat-quick-chip" onclick="sendChatFromChip('Bagaimana cara pakai AR Scan?')">Cara Pakai AR</button>
       <button class="chat-quick-chip" onclick="sendChatFromChip('Berapa harga langganan Pro?')">Harga Pro</button>
       <button class="chat-quick-chip" onclick="sendChatFromChip('Bagaimana kerjasama kampus?')">Kerjasama Kampus</button>
     </div>
 
-    <!-- Input Box -->
     <div class="chat-input-bar">
       <input type="text" id="chatInput" class="chat-input-field" placeholder="Ketik pertanyaan Anda..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
       <button class="chat-send-btn" onclick="sendChatMessage()" aria-label="Kirim Pesan">➤</button>
@@ -1899,17 +1836,14 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
     function showToast(message, type = "success") {
       const container = document.getElementById("toastContainer");
       const toast = document.createElement("div");
-
       toast.className = `toast-box ${type === 'error' ? 'error' : ''}`;
       toast.innerHTML = `
         <span>${type === 'error' ? '⚠️' : '✓'}</span>
         <span>${message}</span>
       `;
-
       container.appendChild(toast);
 
       setTimeout(() => toast.classList.add("show"), 50);
-
       setTimeout(() => {
         toast.classList.remove("show");
         setTimeout(() => toast.remove(), 300);
@@ -1922,7 +1856,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
     function initMobileMenu() {
       const toggle = document.getElementById("menuToggle");
       const menu = document.getElementById("mobileMenu");
-
       if (toggle && menu) {
         toggle.addEventListener("click", () => menu.classList.toggle("open"));
       }
@@ -1938,8 +1871,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
 
     function updateOfficeStatus() {
       const now = new Date();
-
-      // Konversi waktu ke zona WIB (UTC+7)
       const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
       const wibTime = new Date(utc + (3600000 * 7));
 
@@ -1949,17 +1880,13 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
       const timeVal = hours + (minutes / 60);
 
       let isOpen = false;
-
       if (day >= 1 && day <= 5) {
-        // Senin - Jumat: 09:00 - 17:00
         if (timeVal >= 9 && timeVal < 17) isOpen = true;
       } else if (day === 6) {
-        // Sabtu: 09:00 - 13:00
         if (timeVal >= 9 && timeVal < 13) isOpen = true;
       }
 
       const badge = document.getElementById("officeStatusBadge");
-
       if (badge) {
         if (isOpen) {
           badge.className = "status-badge-office open";
@@ -1978,11 +1905,9 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
       const name = document.getElementById("contactName");
       const error = document.getElementById("nameError");
       const isValid = name.value.trim().length >= 3;
-
       name.classList.toggle("invalid", !isValid);
       error.classList.toggle("visible", !isValid);
       checkFormValidity();
-
       return isValid;
     }
 
@@ -1991,11 +1916,9 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
       const error = document.getElementById("emailError");
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const isValid = emailRegex.test(email.value.trim());
-
       email.classList.toggle("invalid", !isValid);
       error.classList.toggle("visible", !isValid);
       checkFormValidity();
-
       return isValid;
     }
 
@@ -2004,15 +1927,12 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
       const counter = document.getElementById("charCount");
       const error = document.getElementById("messageError");
       const len = msg.value.length;
-
       counter.innerText = len;
 
       const isValid = len >= 20;
-
       msg.classList.toggle("invalid", !isValid);
       error.classList.toggle("visible", !isValid);
       checkFormValidity();
-
       return isValid;
     }
 
@@ -2029,7 +1949,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
 
     function handleContactSubmit(e) {
       e.preventDefault();
-
       if (!validateNameField() || !validateEmailField() || !handleMessageInput()) {
         showToast("Mohon periksa kembali kolom formulir yang belum sesuai.", "error");
         return;
@@ -2051,23 +1970,19 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
         timestamp: new Date().toISOString()
       };
 
-      // Simulasi request POST 2 detik
       setTimeout(() => {
         let messages = JSON.parse(localStorage.getItem("herbinfo_contact_messages") || "[]");
-
         messages.unshift(payload);
         localStorage.setItem("herbinfo_contact_messages", JSON.stringify(messages));
 
         btn.disabled = false;
         btn.innerHTML = `📤 Kirim Pesan Sekarang`;
-
         document.getElementById("contactForm").reset();
         clearSelectedFile();
         document.getElementById("charCount").innerText = "0";
 
         showToast("Pesan berhasil dikirim! Tim kami akan menghubungi Anda dalam 1x24 jam.");
 
-        // Simulasi notifikasi balasan otomatis
         setTimeout(() => {
           showToast(`Konfirmasi pengiriman telah dikirim ke ${payload.email}.`);
         }, 3200);
@@ -2079,21 +1994,18 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
        -------------------------------------------------------------------------- */
     function initDragDropArea() {
       const zone = document.getElementById("fileDropzone");
-
       ['dragenter', 'dragover'].forEach(name => {
         zone.addEventListener(name, (e) => {
           e.preventDefault();
           zone.classList.add("dragover");
         });
       });
-
       ['dragleave', 'drop'].forEach(name => {
         zone.addEventListener(name, (e) => {
           e.preventDefault();
           zone.classList.remove("dragover");
         });
       });
-
       zone.addEventListener("drop", (e) => {
         const files = e.dataTransfer.files;
         handleFileSelect(files);
@@ -2102,7 +2014,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
 
     function handleFileSelect(files) {
       if (!files || files.length === 0) return;
-
       const file = files[0];
       const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
 
@@ -2110,20 +2021,14 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
         showToast("Format file tidak didukung! Gunakan JPG, PNG, atau PDF.", "error");
         return;
       }
-
       if (file.size > 5 * 1024 * 1024) {
         showToast("Ukuran berkas melebihi batas 5MB.", "error");
         return;
       }
 
-      attachedFileMeta = {
-        name: file.name,
-        size: file.size
-      };
-
+      attachedFileMeta = { name: file.name, size: file.size };
       document.getElementById("fileNameDisplay").innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
       document.getElementById("filePreviewWrap").style.display = "flex";
-
       showToast("Berkas berhasil dilampirkan.");
     }
 
@@ -2135,12 +2040,8 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
 
     function setSubjectFormAndScroll(subjectVal) {
       const subjectSelect = document.getElementById("contactSubject");
-
       if (subjectSelect) subjectSelect.value = subjectVal;
-
-      document.getElementById("formPesan").scrollIntoView({
-        behavior: 'smooth'
-      });
+      document.getElementById("formPesan").scrollIntoView({ behavior: 'smooth' });
     }
 
     /* --------------------------------------------------------------------------
@@ -2162,13 +2063,11 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
     function sendChatMessage() {
       const input = document.getElementById("chatInput");
       const msg = input.value.trim();
-
       if (!msg) return;
 
       appendChatBubble(msg, "user");
       input.value = "";
 
-      // AI Response Simulator
       setTimeout(() => {
         generateAiChatReply(msg);
       }, 700);
@@ -2176,7 +2075,6 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
 
     function sendChatFromChip(text) {
       appendChatBubble(text, "user");
-
       setTimeout(() => {
         generateAiChatReply(text);
       }, 600);
@@ -2185,21 +2083,13 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
     function appendChatBubble(text, sender) {
       const body = document.getElementById("chatBody");
       const div = document.createElement("div");
-
       div.className = `chat-msg ${sender}`;
       div.innerText = text;
       body.appendChild(div);
       body.scrollTop = body.scrollHeight;
 
-      // Simpan percakapan ke localStorage
       let history = JSON.parse(localStorage.getItem("herbinfo_chat_history") || "[]");
-
-      history.push({
-        sender,
-        text,
-        time: new Date().toISOString()
-      });
-
+      history.push({ sender, text, time: new Date().toISOString() });
       localStorage.setItem("herbinfo_chat_history", JSON.stringify(history));
     }
 
@@ -2222,11 +2112,9 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
 
     function loadChatHistory() {
       const history = JSON.parse(localStorage.getItem("herbinfo_chat_history") || "[]");
-
       if (history.length > 0) {
         const body = document.getElementById("chatBody");
         body.innerHTML = "";
-
         history.slice(-8).forEach(item => {
           const div = document.createElement("div");
           div.className = `chat-msg ${item.sender}`;
@@ -2241,13 +2129,11 @@ Berikut kode yang sudah diperbarui. **Section FAQ dan seluruh blok statistik sud
        -------------------------------------------------------------------------- */
     function handleInlineNewsletter(e) {
       e.preventDefault();
-
       const input = e.target.querySelector("input[type='email']");
       if (!input || !input.value) return;
 
       const email = input.value.trim();
       let subs = JSON.parse(localStorage.getItem("herbinfo_newsletter_subscribers") || "[]");
-
       if (!subs.includes(email)) {
         subs.push(email);
         localStorage.setItem("herbinfo_newsletter_subscribers", JSON.stringify(subs));
