@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Pusat Bantuan & FAQ HerbInfoAI - Temukan jawaban lengkap seputar Web AR, AI Pharma Assistant, Katalog Herbal, E-Store, dan Laporan Praktikum." />
+  <title>Pusat Bantuan &amp; FAQ — HerbInfoAI</title>
+
+  <!-- Google Fonts: Poppins & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. DESIGN SYSTEM & CSS VARIABLES
+       ========================================================================== */
+    :root {
+      --primary: #2D6A4F;       /* Hijau Tua */
+      --secondary: #52B788;     /* Hijau Medium */
+      --accent: #95D5B2;        /* Hijau Muda */
+      --bg-main: #F8FDF5;       /* Putih Kehijauan */
+      --bg-card: #FFFFFF;
+      --text-dark: #1B4332;
+      --text-muted: #52796F;
+      --text-light: #FFFFFF;
+      --border-color: rgba(82, 183, 136, 0.22);
+      --shadow-subtle: 0 10px 25px -5px rgba(45, 106, 79, 0.08), 0 8px 10px -6px rgba(45, 106, 79, 0.04);
+      --shadow-hover: 0 20px 30px -10px rgba(45, 106, 79, 0.16);
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --transition: all 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      color: var(--text-dark);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+    }
+
+    button, input, select, textarea {
+      font-family: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: rgba(82, 183, 136, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: #1B4332;
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.22);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: var(--transition);
+      border-left: 4px solid var(--secondary);
+    }
+
+    .toast-box.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       2. NAVIGATION BAR (STICKY)
+       ========================================================================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(248, 253, 245, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .navbar-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+    }
+
+    .logo-text h1 {
+      font-size: 1.35rem;
+      letter-spacing: -0.5px;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .logo-text h1 span {
+      color: var(--secondary);
+    }
+
+    .logo-text p {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 8px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      border-radius: var(--radius-full);
+    }
+
+    .nav-item a:hover {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.12);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-chat-ai {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--primary);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+      transition: var(--transition);
+    }
+
+    .btn-chat-ai:hover {
+      background-color: #1f4e39;
+      transform: translateY(-2px);
+    }
+
+    .user-avatar-link {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #E8F5E9;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--primary);
+      padding: 8px;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: #fff;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      border-bottom: 2px solid var(--accent);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu .nav-item a {
+      padding: 12px 16px;
+      width: 100%;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION - FAQ
+       ========================================================================== */
+    .faq-hero {
+      position: relative;
+      padding: 60px 0 70px;
+      background: radial-gradient(circle at 10% 20%, rgba(149, 213, 178, 0.28) 0%, transparent 60%),
+                  radial-gradient(circle at 90% 80%, rgba(82, 183, 136, 0.2) 0%, transparent 60%);
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .faq-hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(var(--accent) 0.85px, transparent 0.85px);
+      background-size: 26px 26px;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .faq-hero-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .faq-hero-content h1 {
+      font-size: 3rem;
+      letter-spacing: -0.8px;
+      margin: 14px 0 16px;
+      color: var(--primary);
+    }
+
+    .faq-hero-content p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 580px;
+    }
+
+    .faq-hero-visual {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .faq-support-card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      border: 2px solid rgba(82, 183, 136, 0.35);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-hover);
+      text-align: center;
+      position: relative;
+    }
+
+    .faq-support-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, var(--secondary), var(--primary));
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 10px 20px rgba(45, 106, 79, 0.2);
+    }
+
+    /* ==========================================================================
+       4. SEARCH BAR SECTION DENGAN AUTO-SUGGEST
+       ========================================================================== */
+    .section-search {
+      padding: 40px 0 20px;
+      position: relative;
+      z-index: 20;
+    }
+
+    .search-outer-wrap {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .search-container {
+      background: #FFFFFF;
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 8px 12px 8px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+    }
+
+    .search-container:focus-within {
+      border-color: var(--secondary);
+      box-shadow: 0 10px 30px rgba(45, 106, 79, 0.15);
+    }
+
+    .search-input-field {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      color: var(--text-dark);
+      background: transparent;
+    }
+
+    .btn-search-ai {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-search-ai:hover {
+      background: #1f4e39;
+      transform: translateY(-1px);
+    }
+
+    /* Auto Suggest Dropdown */
+    .suggest-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+      max-height: 320px;
+      overflow-y: auto;
+      display: none;
+      z-index: 100;
+    }
+
+    .suggest-item {
+      padding: 12px 20px;
+      border-bottom: 1px solid #EDF2F7;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: var(--transition);
+    }
+
+    .suggest-item:last-child {
+      border-bottom: none;
+    }
+
+    .suggest-item:hover {
+      background: #F0FFF4;
+      color: var(--primary);
+    }
+
+    .suggest-item mark {
+      background: rgba(149, 213, 178, 0.4);
+      color: var(--primary);
+      font-weight: 700;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
+    .suggest-category-tag {
+      font-size: 0.72rem;
+      background: #E8F5E9;
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+    }
+
+    /* Popular Searches Pills */
+    .popular-searches {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .popular-chip {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      padding: 4px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .popular-chip:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       5. STATISTIK BANTUAN SECTION
+       ========================================================================== */
+    .section-stats {
+      padding: 30px 0 50px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      text-align: center;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .stat-icon {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+    }
+
+    .stat-number {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+
+    .stat-desc {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       6. KATEGORI FAQ CARDS (QUICK ACCESS)
+       ========================================================================== */
+    .section-categories {
+      padding: 30px 0 60px;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .category-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .category-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--secondary);
+    }
+
+    .cat-icon-wrap {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-md);
+      background: rgba(82, 183, 136, 0.15);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 14px;
+    }
+
+    .cat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .cat-card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .cat-count-badge {
+      font-size: 0.72rem;
+      background: #EDF2F7;
+      color: #64748B;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+    }
+
+    .cat-card-desc {
+      font-size: 0.82rem;
+      color: #4A5568;
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       7. MAIN FAQ ACCORDION CONTENT
+       ========================================================================== */
+    .section-faq-content {
+      padding: 20px 0 80px;
+    }
+
+    .faq-category-block {
+      margin-bottom: 50px;
+      scroll-margin-top: 100px;
+    }
+
+    .cat-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--accent);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .cat-title-text h2 {
+      font-size: 1.6rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cat-title-text p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .cat-toggle-btns {
+      display: flex;
+      gap: 8px;
+    }
+
+    .cat-btn-small {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .cat-btn-small:hover {
+      background: rgba(82, 183, 136, 0.12);
+      color: var(--primary);
+    }
+
+    /* Accordion Item Styles */
+    .faq-accordion-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      transition: var(--transition);
+    }
+
+    .faq-item:hover {
+      border-color: var(--secondary);
+    }
+
+    .faq-question {
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+      font-size: 0.98rem;
+      color: var(--text-dark);
+      transition: var(--transition);
+    }
+
+    .faq-question:hover {
+      background: #F8FDF5;
+      color: var(--primary);
+    }
+
+    .faq-icon {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--secondary);
+      transition: transform 0.25s ease;
+      line-height: 1;
+      width: 24px;
+      text-align: center;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 20px 24px;
+      background: #F0FFF4;
+      border-left: 4px solid var(--primary);
+      font-size: 0.92rem;
+      color: var(--text-dark);
+      line-height: 1.65;
+    }
+
+    .faq-answer p {
+      margin-bottom: 12px;
+    }
+
+    .faq-answer p:last-child {
+      margin-bottom: 0;
+    }
+
+    .faq-related-links {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--accent);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+    }
+
+    .faq-related-links a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    .faq-related-links a:hover {
+      color: var(--secondary);
+    }
+
+    /* ==========================================================================
+       8. SECTION: AI-POWERED FAQ SEARCH
+       ========================================================================== */
+    .section-ai-faq {
+      padding: 40px 0 70px;
+    }
+
+    .ai-faq-card {
+      background: linear-gradient(135deg, rgba(45, 106, 79, 0.08) 0%, rgba(82, 183, 136, 0.16) 100%);
+      border: 2px solid var(--secondary);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      box-shadow: var(--shadow-subtle);
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .ai-faq-features {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 16px;
+      margin: 18px 0 24px;
+      font-size: 0.88rem;
+    }
+
+    .ai-search-box-wrap {
+      display: flex;
+      gap: 8px;
+    }
+
+    .ai-search-input {
+      flex: 1;
+      padding: 12px 18px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-full);
+      font-size: 0.92rem;
+      outline: none;
+      background: #FFFFFF;
+    }
+
+    .ai-search-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* ==========================================================================
+       9. SECTION: ARTIKEL & PANDUAN TERKAIT
+       ========================================================================== */
+    .section-guides {
+      padding: 30px 0 70px;
+    }
+
+    .guides-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+      margin-top: 26px;
+    }
+
+    .guide-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .guide-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--secondary);
+    }
+
+    .guide-thumb-wrap {
+      height: 140px;
+      background: #2D3748;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: #fff;
+      position: relative;
+    }
+
+    .guide-badge-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    .guide-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .guide-body h4 {
+      font-size: 1.05rem;
+      margin-bottom: 6px;
+      color: var(--text-dark);
+    }
+
+    .guide-body p {
+      font-size: 0.82rem;
+      color: #4A5568;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .guide-meta {
+      margin-top: auto;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #EDF2F7;
+      padding-top: 10px;
+    }
+
+    /* ==========================================================================
+       10. SECTION: MASIH PUNYA PERTANYAAN (CTA BANNER)
+       ========================================================================== */
+    .section-contact-cta {
+      padding: 20px 0 60px;
+    }
+
+    .cta-banner-box {
+      background: linear-gradient(135deg, var(--primary) 0%, #17422E 100%);
+      border-radius: var(--radius-lg);
+      padding: 50px;
+      color: #fff;
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      align-items: center;
+      gap: 40px;
+      box-shadow: var(--shadow-hover);
+    }
+
+    .cta-btn-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .btn-cta-white {
+      background: #FFFFFF;
+      color: var(--primary);
+      padding: 12px 22px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-cta-white:hover {
+      background: var(--bg-main);
+      transform: translateY(-2px);
+    }
+
+    .btn-cta-outline {
+      background: transparent;
+      color: #FFFFFF;
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      padding: 11px 20px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-cta-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #FFFFFF;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       11. SECTION: FEEDBACK & VOTING
+       ========================================================================== */
+    .section-feedback {
+      padding: 10px 0 70px;
+    }
+
+    .feedback-box {
+      max-width: 640px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      text-align: center;
+      box-shadow: var(--shadow-subtle);
+    }
+
+    .feedback-btn-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 20px 0 12px;
+    }
+
+    .btn-vote {
+      padding: 10px 24px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-vote.yes {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-vote.yes:hover {
+      background: #1f4e39;
+    }
+
+    .btn-vote.no {
+      background: transparent;
+      color: #DC2626;
+      border: 1.5px solid #DC2626;
+    }
+
+    .btn-vote.no:hover {
+      background: #FEE2E2;
+    }
+
+    .feedback-form-slide {
+      display: none;
+      margin-top: 16px;
+      text-align: left;
+    }
+
+    .feedback-textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 0.88rem;
+      outline: none;
+      resize: vertical;
+      min-height: 80px;
+      margin-bottom: 8px;
+    }
+
+    /* ==========================================================================
+       12. CHAT AI MODAL POPUP
+       ========================================================================== */
+    .modal-chat-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 40, 30, 0.7);
+      backdrop-filter: blur(6px);
+      z-index: 2500;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-chat-box {
+      background: #FFFFFF;
+      max-width: 540px;
+      width: 100%;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-hover);
+      display: flex;
+      flex-direction: column;
+      height: 580px;
+    }
+
+    .modal-chat-header {
+      background: linear-gradient(135deg, var(--primary), #17422E);
+      color: #fff;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-chat-body {
+      flex: 1;
+      padding: 18px;
+      overflow-y: auto;
+      background: #FAFDF9;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-bubble {
+      max-width: 84%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .chat-bubble.bot {
+      align-self: flex-start;
+      background: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 3px;
+    }
+
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: #FFFFFF;
+      border-bottom-right-radius: 3px;
+    }
+
+    .modal-chat-footer {
+      padding: 12px 16px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       13. FOOTER
+       ========================================================================== */
+    .site-footer {
+      background: #12281E;
+      color: #E2E8F0;
+      padding: 70px 0 24px;
+      border-top: 1px solid rgba(82, 183, 136, 0.2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .footer-col h4 {
+      color: #FFFFFF;
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 28px;
+      height: 2px;
+      background: var(--secondary);
+    }
+
+    .footer-desc {
+      font-size: 0.88rem;
+      color: #A0AEC0;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: #CBD5E0;
+    }
+
+    .footer-links a:hover {
+      color: var(--secondary);
+      padding-left: 4px;
+    }
+
+    .newsletter-form-inline {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .newsletter-input-field {
+      flex: 1;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(82, 183, 136, 0.3);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .newsletter-submit-btn {
+      background: var(--secondary);
+      color: #0c2117;
+      font-weight: 600;
+      border: none;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #CBD5E0;
+    }
+
+    .social-icon:hover {
+      background: var(--secondary);
+      color: #12281E;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #A0AEC0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    /* ==========================================================================
+       14. RESPONSIVE BREAKPOINTS
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .faq-hero-grid, .ai-faq-card, .cta-banner-box {
+        grid-template-columns: 1fr;
+      }
+      .stats-grid, .category-grid, .guides-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .btn-chat-ai {
+        display: none;
+      }
+      .hamburger-btn {
+        display: block;
+      }
+      .faq-hero-content h1 {
+        font-size: 2.2rem;
+      }
+      .search-container {
+        flex-direction: column;
+        border-radius: var(--radius-md);
+        padding: 12px;
+      }
+      .search-input-field {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+      .btn-search-ai {
+        width: 100%;
+        justify-content: center;
+      }
+      .stats-grid, .category-grid, .guides-grid {
+        grid-template-columns: 1fr;
+      }
+      .ai-search-box-wrap {
+        flex-direction: column;
+      }
+      .ai-faq-features {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       NAVIGATION BAR (STICKY)
+       ========================================================================== -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <a href="index.html" class="logo-wrapper">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>HerbInfo<span>AI</span></h1>
+          <p>Explore . Learn . Preserve</p>
+        </div>
+      </a>
+
+      <ul class="nav-links">
+        <li class="nav-item"><a href="index.html">🌱 Beranda</a></li>
+        <li class="nav-item"><a href="ar-scan.html">📷 AR Scan</a></li>
+        <li class="nav-item"><a href="katalog.html">📖 Katalog Herbal</a></li>
+        <li class="nav-item"><a href="estore.html">🛒 E-Store</a></li>
+        <li class="nav-item"><a href="laporan.html">📄 Laporan Praktikum</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button class="btn-chat-ai" onclick="openAiChatModal('Halo AI Pharma, saya ingin konsultasi panduan')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+          Chat AI
+        </button>
+
+        <a href="profil.html" class="user-avatar-link" title="Profil Pengguna">
+          <span>HI</span>
+        </a>
+      </div>
+
+      <button class="hamburger-btn" id="menuToggle" aria-label="Buka Menu">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-menu" id="mobileMenu">
+      <li class="nav-item"><a href="index.html">🌱 Beranda</a></li>
+      <li class="nav-item"><a href="ar-scan.html">📷 AR Scan</a></li>
+      <li class="nav-item"><a href="katalog.html">📖 Katalog Herbal</a></li>
+      <li class="nav-item"><a href="estore.html">🛒 E-Store</a></li>
+      <li class="nav-item"><a href="laporan.html">📄 Laporan Praktikum</a></li>
+      <li class="nav-item"><a href="profil.html">👤 Profil Pengguna</a></li>
+      <li class="nav-item"><a href="kontak.html">📞 Kontak &amp; Lab</a></li>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         HERO SECTION - FAQ
+         ========================================================================== -->
+    <section class="faq-hero">
+      <div class="faq-hero-bg"></div>
+      <div class="container faq-hero-grid">
+        <div class="faq-hero-content">
+          <div class="badge">❓ Pusat Bantuan</div>
+          <h1>Pertanyaan yang Sering Diajukan</h1>
+          <p>Temukan jawaban untuk pertanyaan umum seputar HerbInfoAI. Tidak menemukan jawaban? Hubungi tim kami atau tanya AI Pharma Assistant.</p>
+        </div>
+
+        <div class="faq-hero-visual">
+          <div class="faq-support-card">
+            <div class="faq-support-icon">💡</div>
+            <h3 style="font-size:1.2rem;">Pusat Solusi Terpadu</h3>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">97+ Panduan Terstandar Akademik &bull; Pencarian Cerdas &bull; Asistensi AI 24/7</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SEARCH BAR SECTION DENGAN AUTO-SUGGEST
+         ========================================================================== -->
+    <section class="section-search">
+      <div class="container">
+        <div class="search-outer-wrap">
+          <div class="search-container">
+            <span style="font-size:1.3rem; color:var(--primary);">🔍</span>
+            <input 
+              type="text" 
+              id="mainSearchInput" 
+              class="search-input-field" 
+              placeholder="Ketik pertanyaan Anda... (contoh: cara pakai AR scan, harga langganan, export PDF)" 
+              oninput="handleSearchSuggest(this.value)"
+              onkeydown="if(event.key === 'Enter') executeFaqSearch()"
+            />
+            <button class="btn-search-ai" onclick="askAiFromSearch()">
+              🤖 Cari dengan AI
+            </button>
+          </div>
+
+          <!-- Dropdown Auto Suggest -->
+          <div class="suggest-dropdown" id="suggestDropdown"></div>
+
+          <!-- Popular Searches Pills -->
+          <div class="popular-searches">
+            <span>Paling sering dicari:</span>
+            <button class="popular-chip" onclick="quickSearchTag('AR Scan')">AR Scan</button>
+            <button class="popular-chip" onclick="quickSearchTag('Langganan Pro')">Langganan Pro</button>
+            <button class="popular-chip" onclick="quickSearchTag('Export PDF')">Export PDF</button>
+            <button class="popular-chip" onclick="quickSearchTag('Refund')">Refund</button>
+            <button class="popular-chip" onclick="quickSearchTag('API Key')">API Key</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         STATISTIK BANTUAN
+         ========================================================================== -->
+    <section class="section-stats">
+      <div class="container stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📚</div>
+          <div class="stat-number">150+ Pertanyaan</div>
+          <div class="stat-desc">Terjawab lengkap &amp; terkurasi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-number">Respon Cepat</div>
+          <div class="stat-desc">Rata-rata tanggapan &lt; 24 jam</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🤖</div>
+          <div class="stat-number">AI 24/7</div>
+          <div class="stat-desc">AI Pharma Assistant siap sedia</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-number">98% Puas</div>
+          <div class="stat-desc">Tingkat kepuasan mahasiswa</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         KATEGORI FAQ (QUICK ACCESS)
+         ========================================================================== -->
+    <section class="section-categories">
+      <div class="container">
+        <div style="text-align:center;">
+          <span class="badge">Navigasi Topik</span>
+          <h2 style="font-size:1.8rem; margin-top:6px;">Jelajahi Berdasarkan Kategori</h2>
+          <p style="font-size:0.92rem; color:var(--text-muted);">Pilih kategori yang sesuai dengan topik pertanyaan Anda.</p>
+        </div>
+
+        <div class="category-grid">
+          <!-- 1. Memulai & Akun -->
+          <div class="category-card" onclick="scrollToCategory('cat-start')">
+            <div class="cat-icon-wrap">🚀</div>
+            <div class="cat-card-header">
+              <span class="cat-card-title">Memulai &amp; Akun</span>
+              <span class="cat-count-badge">12 FAQ</span>
+            </div>
+            <p class="cat-card-desc">Pendaftaran, login, profil, dan pengaturan keamanan akun.</p>
+          </div>
+
+          <!-- 2. AR Scan & 3D -->
+          <div class="category-card" onclick="scrollToCategory('cat-ar')">
+            <div class="cat-icon-wrap">📱</div>
+            <div class="cat-card-header">
+              <span class="cat-card-title">AR Scan &amp; 3D</span>
+              <span class="cat-count-badge">15 FAQ</span>
+            </div>
+            <p class="cat-card-desc">Cara scan tanaman, model 3D anatomi, dan kompatibilitas AR.</p>
+          </div>
+
+          <!-- 3. Katalog Herbal -->
+          <div class="category-card" onclick="scrollToCategory('cat-katalog')">
+            <div class="cat-icon-wrap">📖</div>
+            <div class="cat-card-header">
+              <span class="cat-card-title">Katalog Herbal</span>
+              <span class="cat-count-badge">10 FAQ</span>
+            </div>
+            <p class="cat-card-desc">Browsing spesimen, filter famili, dan monografi farmakope.</p>
+          </div>
+
+          <!-- 4. E-Store & Pembayaran -->
+          <div class="category-card" onclick="scrollToCategory('cat-estore')">
+            <div class="cat-icon-wrap">🛒</div>
+            <div class="cat-card-header">
+              <span class="cat-card-title">E-Store &amp; Bayar</span>
+              <span class="cat-count-badge">18 FAQ</span>
+            </div>
+            <p class="cat-card-desc">Produk simplisia, flashcard, checkout, dan transfer bank.</p>
+          </div>
+
+          <!-- 5. Langganan Pro -->
+          <div class="category-card" onclick="scrollToCategory('cat-pro')">
+            <div class="cat-icon-wrap">⚡</div>
+            <div class="cat-card-header">
+              <span class="cat-card-title">Langganan Pro</span>
+              <span class="cat-count-badge">14 FAQ</span>
+            </div>
+            <p class="cat-card-desc">Fitur Pro, upgrade, renewal otomatis, dan garansi refund.</p>
+          </div>
+
+          <!-- 6. Laporan Praktikum -->
+          <div class="category-card" onclick="scrollToCategory('cat-laporan')">
+            <div class="cat-icon-wrap">📄</div>
+            <div class="cat-card-header">
+              <span class="cat-card-title">Laporan Praktikum</span>
+              <span class="cat-count-badge">11 FAQ</span>
+            </div>
+            <p class="cat-card-desc">Generator otomatis, ekspor berkas PDF/DOCX, dan kirim ke dosen.</p>
+          </div>
+
+          <!-- 7. AI Pharma Assistant -->
+          <div class="category-card" onclick="scrollToCategory('cat-ai')">
+            <div class="cat-icon-wrap">🤖</div>
+            <div class="cat-card-header">
+              <span class="cat-card-title">AI Pharma</span>
+              <span class="cat-count-badge">9 FAQ</span>
+            </div>
+            <p class="cat-card-desc">Chatbot farmasi, API Key Google Gemini, dan batas pemakaian.</p>
+          </div>
+
+          <!-- 8. Kerjasama Institusi -->
+          <div class="category-card" onclick="scrollToCategory('cat-saas')">
+            <div class="cat-icon-wrap">🏛️</div>
+            <div class="cat-card-header">
+              <span class="cat-card-title">Kerjasama Kampus</span>
+              <span class="cat-count-badge">8 FAQ</span>
+            </div>
+            <p class="cat-card-desc">SaaS Kampus, lisensi laboratorium angkatan, dan kolaborasi riset.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+       MAIN CONTENT: ACCORDION 8 KATEGORI LENGKAP (97 ITEM)
+       ========================================================================== -->
+    <section class="section-faq-content">
+      <div class="container" id="faqContentContainer">
+        <!-- Render dinamis via JS (Semua 97 Pertanyaan) -->
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: AI-POWERED FAQ SEARCH
+         ========================================================================== -->
+    <section class="section-ai-faq">
+      <div class="container">
+        <div class="ai-faq-card">
+          <div>
+            <span class="badge" style="background:#fff;">Asistensi Instan</span>
+            <h2 style="font-size:1.8rem; margin:10px 0 4px; color:var(--primary);">🤖 Tidak Menemukan Jawaban? Tanya AI!</h2>
+            <p style="font-size:0.92rem; color:var(--text-muted);">AI Pharma Assistant kami dilatih dengan Farmakope Herbal Indonesia untuk menjawab pertanyaan spesifik Anda secara real-time.</p>
+
+            <ul class="ai-faq-features">
+              <li>✔ Jawaban instant Bahasa Indonesia</li>
+              <li>✔ Berdasarkan literatur resmi terverifikasi</li>
+              <li>✔ Mendukung follow-up pertanyaan teknis</li>
+              <li>✔ Layanan aktif 24 jam nonstop</li>
+            </ul>
+
+            <div class="ai-search-box-wrap">
+              <input type="text" id="aiCustomPrompt" class="ai-search-input" placeholder="Tanyakan apa saja seputar tanaman herbal atau sistem..." />
+              <button class="btn-search-ai" onclick="submitCustomAiPrompt()">Tanya AI Sekarang &rarr;</button>
+            </div>
+          </div>
+
+          <div style="text-align:center;">
+            <div style="font-size:5rem; filter: drop-shadow(0 10px 20px rgba(45,106,79,0.2));">🤖💬</div>
+            <strong style="color:var(--primary); font-size:1.1rem; display:block; margin-top:8px;">AI Pharma Engine v3.2</strong>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Terintegrasi Web AR Framework</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: ARTIKEL & PANDUAN TERKAIT
+         ========================================================================== -->
+    <section class="section-guides">
+      <div class="container">
+        <div style="text-align:center;">
+          <span class="badge">Edukasi Mandiri</span>
+          <h2 style="font-size:1.8rem; margin-top:6px;">📖 Panduan &amp; Tutorial Praktikum</h2>
+          <p style="font-size:0.92rem; color:var(--text-muted);">Pelajari lebih mendalam melalui artikel panduan dan video demonstrasi laboratorium kami.</p>
+        </div>
+
+        <div class="guides-grid">
+          <div class="guide-card">
+            <div class="guide-thumb-wrap">
+              <span class="guide-badge-tag">Tutorial</span>
+              📱
+            </div>
+            <div class="guide-body">
+              <h4>Panduan Lengkap AR Scan untuk Pemula</h4>
+              <p>Pelajari teknik kalibrasi kamera dan pemindaian simplisia rimpang untuk akurasi terbaik.</p>
+              <div class="guide-meta">
+                <span>15 Sep 2026</span>
+                <strong>5 min baca</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-thumb-wrap">
+              <span class="guide-badge-tag">Artikel</span>
+              📄
+            </div>
+            <div class="guide-body">
+              <h4>Cara Membuat Laporan Praktikum yang Baik</h4>
+              <p>Struktur format laporan fitokimia baku yang siap dinilai oleh dosen dan asisten lab.</p>
+              <div class="guide-meta">
+                <span>10 Sep 2026</span>
+                <strong>8 min baca</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-thumb-wrap">
+              <span class="guide-badge-tag">Artikel</span>
+              🔬
+            </div>
+            <div class="guide-body">
+              <h4>Mengenal Fitokimia Tanaman Obat Indonesia</h4>
+              <p>Eksplorasi metabolit sekunder: flavonoid, kurkuminoid, terpenoid, dan alkaloid.</p>
+              <div class="guide-meta">
+                <span>05 Sep 2026</span>
+                <strong>10 min baca</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-thumb-wrap">
+              <span class="guide-badge-tag">Video</span>
+              🎥
+            </div>
+            <div class="guide-body">
+              <h4>Video: Menggunakan AI Pharma Assistant</h4>
+              <p>Tutorial langkah demi langkah melakukan prompt farmasi dan interpretasi spektrum.</p>
+              <div class="guide-meta">
+                <span>01 Sep 2026</span>
+                <strong>3 min video</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: MASIH PUNYA PERTANYAAN (CTA BANNER)
+         ========================================================================== -->
+    <section class="section-contact-cta">
+      <div class="container">
+        <div class="cta-banner-box">
+          <div>
+            <h2 style="font-size:2.2rem; margin-bottom:10px;">Masih Bingung? Tim Kami Siap Membantu!</h2>
+            <p style="font-size:1rem; opacity:0.9;">Hubungi tim konsultan akademik dan teknis kami melalui saluran favorit Anda. Respon cepat di bawah 1x24 jam kerja.</p>
+            <div class="cta-btn-row">
+              <button class="btn-cta-white" onclick="openAiChatModal('Halo tim HerbInfoAI, saya butuh bantuan langsung.')">💬 Chat AI Sekarang</button>
+              <a href="mailto:support@herbinfoai.id" class="btn-cta-outline">📧 Email Support</a>
+              <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="btn-cta-outline">📱 WhatsApp</a>
+            </div>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); border-radius:var(--radius-md); padding:24px; text-align:center;">
+            <div style="font-size:2.5rem; margin-bottom:6px;">🎧</div>
+            <h4 style="font-size:1.1rem; color:#fff;">Dukungan Pengguna</h4>
+            <div style="font-size:0.85rem; margin-top:8px; opacity:0.85; line-height:1.6;">
+              Respon &lt; 24 jam &bull; 98% Kepuasan Pengguna &bull; Layanan Aktif 6 Hari / Minggu
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: FEEDBACK & VOTING
+         ========================================================================== -->
+    <section class="section-feedback">
+      <div class="container">
+        <div class="feedback-box">
+          <h3 style="font-size:1.25rem; color:var(--primary); margin-bottom:4px;">Bantu Kami Meningkatkan Kualitas FAQ</h3>
+          <p style="font-size:0.86rem; color:var(--text-muted);">Apakah artikel dan jawaban di halaman ini membantu menyelesaikan kendala Anda?</p>
+
+          <div class="feedback-btn-row">
+            <button class="btn-vote yes" onclick="handleVote('yes')">👍 Ya, Sangat Membantu</button>
+            <button class="btn-vote no" onclick="handleVote('no')">👎 Belum, Saya Masih Bingung</button>
+          </div>
+
+          <div class="feedback-form-slide" id="feedbackFormSlide">
+            <label style="font-size:0.82rem; font-weight:600; color:var(--text-dark); margin-bottom:4px; display:block;">Apa yang masih kurang jelas?</label>
+            <textarea id="feedbackText" class="feedback-textarea" placeholder="Tuliskan kendala Anda agar dapat kami tambahkan ke database..."></textarea>
+            <button class="btn-search-ai" style="padding:8px 18px; font-size:0.85rem;" onclick="submitFeedbackText()">Kirim Masukan</button>
+          </div>
+
+          <div style="font-size:0.75rem; color:#64748B; margin-top:10px;">
+            <span id="voteCountDisplay">1.234</span> pengguna menyatakan halaman ini bermanfaat
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       MODAL CHAT AI ASSISTANT POPUP
+       ========================================================================== -->
+  <div class="modal-chat-overlay" id="chatModalOverlay" onclick="closeChatModal(event)">
+    <div class="modal-chat-box">
+      <div class="modal-chat-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span>🤖</span>
+          <strong>AI Pharma Assistant — Solusi FAQ</strong>
+        </div>
+        <button onclick="toggleChatModal(false)" style="background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer;">✕</button>
+      </div>
+
+      <div class="modal-chat-body" id="modalChatBody">
+        <div class="chat-bubble bot">
+          Halo! Saya AI Pharma Assistant. Tanyakan apa pun seputar kendala platform, fitur AR, atau formula simplisia yang belum terjawab di atas.
+        </div>
+      </div>
+
+      <div class="modal-chat-footer">
+        <input type="text" id="modalChatInput" class="ai-search-input" style="padding:8px 14px; font-size:0.85rem;" placeholder="Ketik pertanyaan..." onkeydown="if(event.key==='Enter') sendModalChatMessage()" />
+        <button class="btn-search-ai" style="padding:8px 16px;" onclick="sendModalChatMessage()">Kirim</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       FOOTER (SAMA PERSIS DENGAN HALAMAN LAIN)
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="logo-wrapper" style="margin-bottom: 12px;">
+            <div class="logo-icon" style="background:var(--secondary); color:#12281E;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </div>
+            <div class="logo-text">
+              <h2 style="font-size:1.3rem; color:#fff;">HerbInfo<span style="color:var(--secondary);">AI</span></h2>
+              <p style="color:#A0AEC0;">Explore . Learn . Preserve</p>
+            </div>
+          </div>
+          <p class="footer-desc">
+            Platform teknologi farmasi terintegrasi Web AR dan AI Pharma Assistant untuk preservasi serta edukasi saintifik tanaman obat nusantara.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="ar-scan.html">AR Scan Praktikum</a></li>
+            <li><a href="katalog.html">Katalog Herbal 3D</a></li>
+            <li><a href="estore.html">E-Store Simplisia</a></li>
+            <li><a href="laporan.html">Laporan Praktikum Otomatis</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Pusat Bantuan</h4>
+          <ul class="footer-links">
+            <li><a href="faq.html">Tanya Jawab (FAQ)</a></li>
+            <li><a href="kontak.html">Kontak Dukungan</a></li>
+            <li><a href="profil.html">Pengaturan Akun</a></li>
+            <li><a href="privacy.html">Kebijakan Privasi</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Tetap Terhubung</h4>
+          <p style="font-size:0.85rem; color:#A0AEC0; margin-bottom: 12px;">Dapatkan wawasan fitofarmaka mingguan langsung di email Anda.</p>
+          <form class="newsletter-form-inline" onsubmit="event.preventDefault(); showToast('Terima kasih! Email Anda terdaftar.');">
+            <input type="email" placeholder="Email Anda..." class="newsletter-input-field" required />
+            <button type="submit" class="newsletter-submit-btn">Daftar</button>
+          </form>
+
+          <div class="social-links">
+            <a href="#" class="social-icon">IG</a>
+            <a href="#" class="social-icon">𝕏</a>
+            <a href="#" class="social-icon">in</a>
+            <a href="#" class="social-icon">YT</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.</div>
+        <div class="footer-legal-links">
+          <a href="privacy.html">Kebijakan Privasi</a>
+          <a href="terms.html">Syarat &amp; Ketentuan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Box Element -->
+  <div class="toast-box" id="appToast">
+    <span id="toastMsg">Notifikasi</span>
+  </div>
+
+  <!-- ==========================================================================
+       15. JAVASCRIPT: DATA FAQ, ACCORDION LOGIC, SEARCH & FEEDBACK
+       ========================================================================== -->
+  <script>
+    /* --------------------------------------------------------------------------
+       DATABASE FAQ LENGKAP (8 KATEGORI & 97 PERTANYAAN RESMI)
+       -------------------------------------------------------------------------- */
+    const faqDatabase = [
+      {
+        id: "cat-start",
+        categoryName: "Memulai & Akun",
+        icon: "🚀",
+        desc: "Pendaftaran, login, profil, dan pengaturan akun",
+        items: [
+          { q: "Apa itu HerbInfoAI?", a: "HerbInfoAI adalah platform edukasi herbal berbasis teknologi Web AR dan AI Pharma Assistant yang membantu mahasiswa farmasi, peneliti, dan enthusiast herbal untuk mempelajari tanaman obat Indonesia secara interaktif." },
+          { q: "Bagaimana cara mendaftar akun?", a: "Klik tombol 'Daftar' di navbar, isi form dengan nama, email, NIM/NIP, dan password. Atau gunakan tombol Google SSO untuk integrasi akun kampus." },
+          { q: "Apakah HerbInfoAI gratis?", a: "Ya, ada versi gratis dengan fitur dasar. Untuk fitur premium (AI unlimited, export PDF resmi, inspeksi AR 3D bebas kuota), Anda dapat menggunakan langganan Pro mulai Rp 19.000/bulan." },
+          { q: "Bagaimana cara login?", a: "Klik tombol profil di navbar, masukkan email dan password terdaftar, atau pilih 'Masuk dengan Google'." },
+          { q: "Saya lupa password, bagaimana cara reset?", a: "Klik 'Lupa Password' di halaman login, masukkan email Anda, dan ikuti instruksi pemulihan yang dikirimkan ke kotak masuk email Anda." },
+          { q: "Bagaimana cara mengubah profil?", a: "Buka halaman Profil (profil.html), klik tombol 'Edit Profil' atau pilih tab Pengaturan untuk memperbarui nama, institusi, dan nomor telepon." },
+          { q: "Apakah data saya aman?", a: "Ya, kami menggunakan enkripsi SSL end-to-end 256-bit dan mematuhi regulasi perlindungan privasi data akademik." },
+          { q: "Bagaimana cara logout?", a: "Klik ikon profil Anda di navbar, lalu pilih opsi 'Keluar' pada menu dropdown atau di halaman Profil tab Pengaturan." },
+          { q: "Bisakah saya menggunakan HerbInfoAI di mobile?", a: "Ya, platform kami dibangun dengan arsitektur web responsif yang optimal diakses dari peramban ponsel pintar Android dan iOS." },
+          { q: "Apakah ada aplikasi mobile native?", a: "Saat ini kami fokus pada Web-First platform agar pengguna tidak perlu mengunduh aplikasi berukuran besar. Aplikasi mobile native sedang dalam tahap finalisasi." },
+          { q: "Bagaimana cara menghapus akun?", a: "Buka menu Profil &gt; Pengaturan &gt; Zona Bahaya &gt; 'Hapus Akun'. Tindakan ini membutuhkan verifikasi kata sandi ganda." },
+          { q: "Apakah bisa menggunakan 1 akun di beberapa device?", a: "Ya, akun Anda dapat diakses secara simultan dari laptop praktikum dan ponsel pintar Anda." }
+        ]
+      },
+      {
+        id: "cat-ar",
+        categoryName: "AR Scan & 3D",
+        icon: "📱",
+        desc: "Cara scan tanaman, model 3D, dan fitur AR",
+        items: [
+          { q: "Bagaimana cara menggunakan AR Scan?", a: "Buka halaman AR Scan (ar-scan.html), pilih tab 'Upload Gambar' atau aktifkan webcam, posisikan organ tanaman di tengah retikel, lalu klik 'Scan Sekarang'." },
+          { q: "Format gambar apa yang didukung?", a: "Format file gambar yang didukung adalah JPG, PNG, dan WEBP dengan ukuran maksimum 10MB per berkas." },
+          { q: "Mengapa scan gagal mendeteksi tanaman?", a: "Pastikan pencahayaan ruangan merata, fokus kamera tajam pada pertulangan daun atau penampang rimpang, dan latar belakang tidak terlalu ramai." },
+          { q: "Apakah AR Scan bisa offline?", a: "Tidak, proses inferensi spektroskopi dan identifikasi fitokimia AI memerlukan sambungan internet aktif ke server model." },
+          { q: "Bagaimana cara melihat model 3D tanaman?", a: "Setelah proses identifikasi selesai, pilih tab 'Model 3D' di panel hasil scan untuk memutar dan menginspeksi organ secara 360 derajat." },
+          { q: "Model 3D apa saja yang tersedia?", a: "Tersedia 20+ model tanaman herbal populer: Kunyit, Jahe, Temulawak, Sirih, Lidah Buaya, Kencur, Lengkuas, Meniran, dan lain-lain." },
+          { q: "Bagaimana cara menggunakan mode AR di mobile?", a: "Klik tombol 'Lihat di Ruangan (Web AR)'. Perangkat Android akan membuka Google Scene Viewer, sedangkan iPhone akan membuka iOS Quick Look." },
+          { q: "Mengapa model 3D tidak muncul?", a: "Pastikan peramban Anda mendukung akselerasi perangkat keras WebGL. Disarankan menggunakan Google Chrome atau Safari versi terbaru." },
+          { q: "Bisakah saya scan tanaman yang tidak ada di katalog?", a: "Ya, AI akan memetakan kemiripan morfologi terdekat. Jika tingkat kecocokan di bawah batas toleransi, sistem akan menandainya sebagai 'Tanaman Belum Terverifikasi'." },
+          { q: "Bagaimana cara menyimpan hasil scan?", a: "Setiap scan yang berhasil secara otomatis tersimpan di riwayat akun lokal Anda (dapat dilihat di Profil tab Riwayat Scan)." },
+          { q: "Apakah bisa scan beberapa tanaman sekaligus?", a: "Saat ini pemrosesan difokuskan pada satu spesimen tunggal demi presisi fraksi fitokimia. Fitur multi-deteksi sedang dalam pengembangan." },
+          { q: "Bagaimana akurasi identifikasi AR Scan?", a: "Akurasi rata-rata berkisar antara 85% hingga 96%, tergantung pada kejernihan foto dan resolusi organ simplisia." },
+          { q: "Bisakah saya kontribusi foto untuk training AI?", a: "Tentu! Silakan hubungi kami melalui formulir kontak dengan memilih subjek 'Kontributor Konten Herbal'." },
+          { q: "Apa itu confidence score?", a: "Confidence score adalah metrik probabilitas kecocokan morfologi sampel terhadap dataset standar Farmakope Herbal Indonesia." },
+          { q: "Bagaimana cara report jika identifikasi salah?", a: "Klik tombol 'Laporkan Ketidaksesuaian' pada hasil analisis untuk ditinjau ulang oleh tim kurator farmakognosi kami." }
+        ]
+      },
+      {
+        id: "cat-katalog",
+        categoryName: "Katalog Herbal",
+        icon: "📖",
+        desc: "Browsing, filter, dan informasi tanaman",
+        items: [
+          { q: "Berapa jumlah tanaman di katalog?", a: "Saat ini terdapat 48+ monografi lengkap tanaman obat terstandar, dengan target ekspansi 200+ spesies pada akhir 2026." },
+          { q: "Bagaimana cara mencari tanaman spesifik?", a: "Gunakan kotak pencarian di halaman Katalog. Anda dapat mengetik nama lokal (contoh: Kunyit), nama binomial latin (Curcuma longa), atau indikasi klinis." },
+          { q: "Apa arti badge indikasi?", a: "Badge mengelompokkan efek terapi utama tanaman, seperti Immunomodulator (daya tahan), Antiinflamasi (peradangan), Analgesik (nyeri), dll." },
+          { q: "Bagaimana cara filter tanaman?", a: "Gunakan filter bilah samping untuk menyaring berdasarkan Kategori Organ (Rimpang/Daun/Batang/Bunga), Famili Botani, atau Khasiat." },
+          { q: "Bisakah saya memfavoritkan tanaman?", a: "Bisa! Klik ikon bintang di pojok kartu tanaman. Tanaman favorit akan otomatis terkumpul di Profil &gt; Tab Tanaman Favorit." },
+          { q: "Apa fungsi tombol 'Buka di Studio AR 3D'?", a: "Tombol tersebut akan langsung mengarahkan Anda ke modul 3D Viewer interaktif untuk memeriksa model anatomi tanaman bersangkutan." },
+          { q: "Bagaimana cara mengurutkan katalog?", a: "Gunakan dropdown 'Urutkan Berdasarkan' untuk mengurutkan menurut Nama A-Z, Nama Z-A, Kepopuleran Khasiat, atau Abjad Zat Aktif." },
+          { q: "Apakah informasi di katalog terverifikasi ilmiah?", a: "Ya, setiap monografi disusun merujuk pada Farmakope Herbal Indonesia, monografi WHO, serta artikel jurnal fitofarmaka terakreditasi." },
+          { q: "Bisakah saya request tanaman untuk ditambahkan?", a: "Tentu, kirimkan usulan spesies simplisia melalui formulir kontak kami pada kategori 'Saran & Masukan'." },
+          { q: "Bagaimana cara export data katalog?", a: "Pengguna berstatus Akun Pro dapat mengunduh lembar ringkasan fitokimia dalam format PDF melalui tombol Ekspor di halaman katalog." }
+        ]
+      },
+      {
+        id: "cat-estore",
+        categoryName: "E-Store & Pembayaran",
+        icon: "🛒",
+        desc: "Produk, harga, checkout, dan metode pembayaran",
+        items: [
+          { q: "Produk apa saja yang dijual di E-Store?", a: "Kami menyediakan Paket E-Flashcard Digital (20 spesimen AR), Langganan Akun Pro B2C, dan Lisensi SaaS Institusi Kampus B2B." },
+          { q: "Bagaimana cara membeli produk?", a: "Kunjungi halaman E-Store (estore.html), klik tombol 'Beli Sekarang' atau '+ Keranjang', lalu lanjutkan ke drawer checkout." },
+          { q: "Metode pembayaran apa saja yang tersedia?", a: "Kami mendukung Transfer Virtual Account Bank (BCA, Mandiri, BNI, BRI), E-Wallet (GoPay, OVO, DANA, ShopeePay), Kartu Kredit, dan QRIS." },
+          { q: "Apakah ada garansi uang kembali?", a: "Ya, kami menyediakan garansi 7 hari uang kembali penuh untuk paket langganan dan materi digital jika terjadi kendala teknis sistem." },
+          { q: "Bagaimana cara melakukan checkout?", a: "Klik ikon keranjang di bilah navigasi, periksa kuantitas produk, klik 'Lanjut ke Pembayaran', dan ikuti petunjuk transfer." },
+          { q: "Berapa lama akses aktif setelah pembayaran?", a: "Proses verifikasi bekerja otomatis dalam 1–5 menit setelah dana terkonfirmasi oleh gateway perbankan." },
+          { q: "Apakah harga produk bisa berubah?", a: "Harga dapat disesuaikan sewaktu-waktu mengikuti program promosi kampus. Biaya yang ditagihkan adalah nominal resmi saat checkout." },
+          { q: "Bagaimana cara mendapatkan invoice pembayaran?", a: "Bukti invoice resmi otomatis dikirimkan ke email Anda dan dapat diunduh ulang di menu Profil &gt; Pengaturan &gt; Riwayat Pembayaran." },
+          { q: "Apakah ada diskon khusus mahasiswa?", a: "Ada! Kami menyediakan diskon akademik 30% dengan memverifikasi kartu tanda mahasiswa (KTM) aktif melalui formulir kontak." },
+          { q: "Bagaimana cara menggunakan kode promo?", a: "Pada drawer keranjang belanja, masukkan kode voucher ke kolom 'Kode Promo' lalu tekan tombol 'Gunakan'." },
+          { q: "Pembayaran saya gagal, apa yang harus dilakukan?", a: "Pastikan batas waktu transfer belum terlampaui. Jika saldo telah terpotong namun status belum aktif, kirim bukti bayar ke support@herbinfoai.id." },
+          { q: "Apakah bisa refund setelah 7 hari?", a: "Setelah melewati periode garansi 7 hari, pengembalian dana tidak dapat diproses secara pro-rata, namun Anda dapat membatalkan perpanjangan berikutnya." },
+          { q: "Bagaimana cara update metode pembayaran?", a: "Buka menu Profil &gt; Pengaturan Akun &gt; Langganan & Pembayaran &gt; 'Kelola Metode Pembayaran'." },
+          { q: "Apakah ada biaya transaksi tersembunyi?", a: "Tidak ada. Seluruh biaya administrasi platform dicantumkan secara transparan pada rincian tagihan final." },
+          { q: "Bagaimana cara berlangganan untuk fakultas atau laboratorium?", a: "Silakan pilih produk 'SaaS Institutional License' di E-Store untuk terhubung dengan representatif tim kemitraan kami." },
+          { q: "Apakah paket langganan bisa dijadikan hadiah (gift)?", a: "Bisa, centang opsi 'Kirim sebagai hadiah' saat checkout dan masukkan alamat email rekan mahasiswa yang dituju." },
+          { q: "Bagaimana cara memeriksa status transaksi?", a: "Status pembelian (Berhasil / Menunggu Pembayaran / Dibatalkan) tercatat secara rapi pada riwayat akun di halaman Profil." },
+          { q: "Saya tidak menerima email invoice konfirmasi?", a: "Periksa tab Spam/Promosi email Anda. Bila tidak ditemukan, silakan hubungi tim helpdesk dengan melampirkan ID transaksi." }
+        ]
+      },
+      {
+        id: "cat-pro",
+        categoryName: "Langganan Pro",
+        icon: "⚡",
+        desc: "Fitur Pro, upgrade, downgrade, dan refund",
+        items: [
+          { q: "Apa perbedaan Akun Free dan Akun Pro?", a: "Akun Free memiliki kuota scan terbatas, 10 chat AI per hari, dan watermark laporan. Akun Pro memberikan akses unlimited AI Pharma, ekspor PDF bebas watermark, dan inspeksi AR 3D menyeluruh." },
+          { q: "Berapa biaya langganan Akun Pro?", a: "Tersedia pilihan fleksibel: 1 Bulan (Rp 19.000), 3 Bulan (Rp 49.000), 6 Bulan (Rp 89.000), dan 1 Tahun (Rp 159.000 - Hemat 30%)." },
+          { q: "Bagaimana cara upgrade ke status Pro?", a: "Buka menu E-Store, pilih kartu 'HerbLearn Pro Subscription', tentukan durasi langganan, dan selesaikan pembayaran." },
+          { q: "Bagaimana cara membatalkan perpanjangan otomatis?", a: "Kunjungi halaman Profil &gt; Pengaturan &gt; Kelola Langganan &gt; 'Batalkan Perpanjangan'. Fitur Pro Anda tetap aktif hingga masa berlaku berakhir." },
+          { q: "Apakah bisa downgrade dari Pro ke Free?", a: "Bisa, cukup batalkan perpanjangan paket. Akun akan otomatis kembali ke tier Free saat periode aktif berakhir tanpa denda." },
+          { q: "Bagaimana cara memperpanjang masa aktif langganan?", a: "Anda dapat membeli paket baru kapan saja sebelum masa aktif habis; sisa hari aktif akan diakumulasikan secara otomatis." },
+          { q: "Apakah lisensi akun Pro bisa dipindahtangankan?", a: "Tidak, lisensi terdaftar unik pada identitas email dan nomor induk mahasiswa akun bersangkutan." },
+          { q: "Di mana saya bisa mengecek sisa masa aktif Pro?", a: "Buka halaman Profil. Kartu status langganan di bagian atas akan menampilkan tanggal kedaluwarsa akun Anda." },
+          { q: "Apakah tersedia masa uji coba (free trial) Pro?", a: "Tersedia uji coba gratis 7 hari untuk mahasiswa pendaftar baru yang menggunakan alamat email universitas berakhiran .ac.id." },
+          { q: "Bagaimana cara mengajukan klaim garansi refund?", a: "Kirim email permohonan ke support@herbinfoai.id dalam 7 hari pertama aktivasi dengan menyertakan bukti kendala sistem." },
+          { q: "Apakah tarif langganan akan naik otomatis?", a: "Pengguna dengan perpanjangan otomatis aktif akan selalu menikmati jaminan tarif awal selama langganan tidak terputus." },
+          { q: "Bagaimana cara memperbarui data kartu debit/kredit?", a: "Pengaturan kartu disimpan dengan enkripsi di gateway pembayaran mitra kami dan dapat dikelola pada menu Profil Pengguna." },
+          { q: "Berapa hematnya jika mengambil paket 1 tahun?", a: "Paket tahunan seharga Rp 159.000 memberikan penghematan hingga 30% dibanding akumulasi pembayaran 12 bulan satuan." },
+          { q: "Bagaimana tanda terima tagihan bulanan diterbitkan?", a: "Kuitansi digital bertanda tangan elektronik otomatis digenerate dan dikirimkan ke email terdaftar Anda tiap siklus perpanjangan." }
+        ]
+      },
+      {
+        id: "cat-laporan",
+        categoryName: "Laporan Praktikum",
+        icon: "📄",
+        desc: "Pembuatan, export, dan pengiriman laporan",
+        items: [
+          { q: "Bagaimana cara membuat laporan otomatis?", a: "Buka halaman Laporan Praktikum (laporan.html), isi data praktikum dan reaksi lab, lalu tekan tombol 'Buatkan Laporan Sekarang'." },
+          { q: "Data apa saja yang wajib diisi di formulir?", a: "Judul praktikum, nama mahasiswa, NIM/Kelompok, reaksi warna fitokimia tabung, dan metode ekstraksi pelarut." },
+          { q: "Bagaimana cara menghubungkan data dari AR Scan?", a: "Sistem secara otomatis menarik spesimen dan gambar mikroskopis terakhir yang Anda pindai di halaman AR Scan ke draf laporan." },
+          { q: "Format berkas apa saja yang bisa diunduh?", a: "Hasil akhir dapat diunduh langsung dalam format dokumen PDF resmi berstandar A4 serta format DOCX untuk pengguna Pro." },
+          { q: "Apakah draf laporan masih bisa disunting?", a: "Tentu. Setiap perubahan teks pada formulir di sebelah kiri akan langsung memperbarui tampilan pratinjau lembar A4 secara real-time." },
+          { q: "Bagaimana cara mengirim laporan langsung ke dosen?", a: "Mahasiswa di universitas yang berlangganan SaaS Kampus dapat menekan tombol 'Kirim ke Dosen' untuk masuk ke portal evaluasi asisten." },
+          { q: "Apakah ada batasan jumlah halaman laporan?", a: "Secara default sistem menyusun rangkuman komprehensif 1–3 halaman, namun tidak ada batasan halaman untuk lampiran data pengamatan." },
+          { q: "Template praktikum apa saja yang tersedia?", a: "Tersedia 4 template: Fitokimia Dasar, Farmakognosi Lanjut, Uji Aktivitas Biologi (Antioksidan/Antibakteri), dan Formulasi Herbal." },
+          { q: "Apakah draf laporan tersimpan jika tab browser tertutup?", a: "Ya, draf laporan tersimpan secara lokal di peramban Anda melalui localStorage sehingga tidak akan hilang saat halaman disegarkan." },
+          { q: "Bisakah tautan laporan dibagikan ke anggota kelompok?", a: "Pengguna akun Pro dapat menghasilkan link berbagi (shareable link) agar anggota kelompok dapat meninjau data praktikum bersama." },
+          { q: "Bagaimana cara menghapus arsip laporan lama?", a: "Kunjungi halaman Profil &gt; Tab Riwayat Laporan, lalu tekan tombol 'Hapus' pada kartu dokumen yang ingin dibersihkan." }
+        ]
+      },
+      {
+        id: "cat-ai",
+        categoryName: "AI Pharma Assistant",
+        icon: "🤖",
+        desc: "Chat AI, API Key, dan kemampuan AI",
+        items: [
+          { q: "Apa itu AI Pharma Assistant?", a: "AI Pharma Assistant adalah asisten kecerdasan buatan berbasis model bahasa besar yang dikhususkan pada bidang farmakognosi, etnomedisin, dan analisis fitokimia." },
+          { q: "Bagaimana cara membuka ruang obrolan AI?", a: "Klik tombol 'Chat AI' di pojok kanan atas bilah navigasi atau buka jendela mengambang di pojok kanan bawah." },
+          { q: "Apakah wajib memasukkan API Key sendiri?", a: "Tidak wajib. Layanan dasar sudah terhubung otomatis ke server kami. Pemasukan Google Gemini API Key pribadi bersifat opsional bagi developer." },
+          { q: "Bagaimana cara mendapatkan Google Gemini API Key gratis?", a: "Anda dapat mengunjungi situs resmi Google AI Studio (aistudio.google.com), login menggunakan akun Google, dan membuat API key baru." },
+          { q: "Apakah jawaban AI selalu 100% akurat secara medis?", a: "Model AI kami dirancang untuk tujuan edukasi saintifik. Untuk diagnosa atau terapi klinis pasien nyata, rujukan dokter dan apoteker tetap menjadi acuan utama." },
+          { q: "Bahasa apa saja yang didukung oleh AI?", a: "AI optimal merespons dalam Bahasa Indonesia ilmiah, Bahasa Inggris medis, serta memahami terminologi lokal tanaman dalam bahasa daerah (Jawa/Sunda)." },
+          { q: "Berapa batas pertanyaan harian?", a: "Pengguna akun Free dibatasi 10 percakapan per hari, sementara pengguna berstatus Akun Pro mendapatkan kuota percakapan tanpa batas." },
+          { q: "Bisakah AI menganalisis gambar simplisia?", a: "Bisa, melalui integrasi Gemini Multimodal Vision pada halaman AR Scan dan ruang obrolan Chat AI." },
+          { q: "Bagaimana cara menghapus riwayat percakapan AI?", a: "Tekan tombol 'Bersihkan Chat' di pojok obrolan untuk mengosongkan riwayat sesi yang tersimpan di memori browser." }
+        ]
+      },
+      {
+        id: "cat-saas",
+        categoryName: "Kerjasama Institusi",
+        icon: "🏛️",
+        desc: "SaaS Kampus, lisensi, dan partnership",
+        items: [
+          { q: "Apa itu skema SaaS Kampus HerbInfoAI?", a: "SaaS Kampus adalah lisensi terpadu untuk fakultas farmasi atau biologi yang mencakup dashboard dosen, rekapitulasi nilai praktikum, dan akses AR angkatan." },
+          { q: "Bagaimana penentuan biaya lisensi institusi?", a: "Biaya kemitraan disesuaikan secara proporsional berdasarkan jumlah mahasiswa aktif dan modul praktikum yang diintegrasikan." },
+          { q: "Bagaimana prosedur pendaftaran untuk universitas?", a: "Perwakilan fakultas dapat mengajukan permohonan melalui form di halaman Kontak atau berkirim email langsung ke sales@herbinfoai.id." },
+          { q: "Apa saja hak akses pada dashboard dosen?", a: "Dosen dapat mengunggah silabus panduan praktikum, memantau pengumpulan laporan mahasiswa secara real-time, dan mengoreksi nilai." },
+          { q: "Apakah tersedia periode uji coba (pilot project) kampus?", a: "Ya, kami menyediakan program uji coba institusional gratis selama 30 hari untuk 1 kelas percontohan." },
+          { q: "Bagaimana metode onboarding mahasiswa satu angkatan?", a: "Admin laboratorium kampus cukup mengunggah daftar nomor induk mahasiswa (NIM) via berkas CSV atau menghubungkannya ke SSO universitas." },
+          { q: "Di mana lokasi penyimpanan server data mahasiswa?", a: "Seluruh server dan basis data institusi dihosting di pusat data berstandar tier-3 yang berlokasi di wilayah hukum Indonesia." },
+          { q: "Bagaimana prosedur kerjasama penelitian bahan alam?", a: "Lembaga riset dapat mengajukan kolaborasi ekstraksi data fitokimia atau uji in-silico melalui kontak tim riset di research@herbinfoai.id." }
+        ]
+      }
+    ];
+
+    /* --------------------------------------------------------------------------
+       LIFECYCLE & INITIALIZATION
+       -------------------------------------------------------------------------- */
+    document.addEventListener("DOMContentLoaded", () => {
+      initMobileMenu();
+      renderAllFaqSections();
+      initFeedbackCounters();
+    });
+
+    function showToast(msg) {
+      const toast = document.getElementById("appToast");
+      const text = document.getElementById("toastMsg");
+      text.innerText = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    function initMobileMenu() {
+      const toggle = document.getElementById("menuToggle");
+      const menu = document.getElementById("mobileMenu");
+      if (toggle && menu) {
+        toggle.addEventListener("click", () => menu.classList.toggle("open"));
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       RENDER ALL FAQ SECTIONS & ITEMS
+       -------------------------------------------------------------------------- */
+    function renderAllFaqSections() {
+      const container = document.getElementById("faqContentContainer");
+      container.innerHTML = faqDatabase.map(cat => `
+        <div class="faq-category-block" id="${cat.id}">
+          <div class="cat-section-header">
+            <div class="cat-title-text">
+              <h2><span>${cat.icon}</span> ${cat.categoryName}</h2>
+              <p>${cat.desc} &bull; ${cat.items.length} Pertanyaan</p>
+            </div>
+            <div class="cat-toggle-btns">
+              <button class="cat-btn-small" onclick="toggleAllInCategory('${cat.id}', 'expand')">Buka Semua</button>
+              <button class="cat-btn-small" onclick="toggleAllInCategory('${cat.id}', 'collapse')">Tutup Semua</button>
+            </div>
+          </div>
+
+          <div class="faq-accordion-stack">
+            ${cat.items.map((item, idx) => `
+              <div class="faq-item" data-category="${cat.id}" id="faq-${cat.id}-${idx}">
+                <div class="faq-question" onclick="toggleFAQ('${cat.id}-${idx}')">
+                  <span>${item.q}</span>
+                  <span class="faq-icon" id="icon-${cat.id}-${idx}">+</span>
+                </div>
+                <div class="faq-answer" id="answer-${cat.id}-${idx}">
+                  <p>${item.a}</p>
+                  <div class="faq-related-links">
+                    <a href="katalog.html">📖 Baca lebih lanjut di Katalog Herbal</a>
+                    <a href="javascript:void(0)" onclick="openAiChatModal('${item.q}')">🤖 Tanya AI Pharma Assistant</a>
+                    <a href="kontak.html">📧 Hubungi Dukungan Teknis</a>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    /* --------------------------------------------------------------------------
+       ACCORDION CONTROLLER (EXPAND / COLLAPSE)
+       -------------------------------------------------------------------------- */
+    function toggleFAQ(uniqueId) {
+      const answer = document.getElementById(`answer-${uniqueId}`);
+      const icon = document.getElementById(`icon-${uniqueId}`);
+      
+      const isOpen = answer.style.display === 'block';
+      if (!isOpen) {
+        answer.style.display = 'block';
+        icon.textContent = '×';
+        icon.style.transform = 'rotate(90deg)';
+      } else {
+        answer.style.display = 'none';
+        icon.textContent = '+';
+        icon.style.transform = 'none';
+      }
+    }
+
+    function toggleAllInCategory(categoryId, action) {
+      const items = document.querySelectorAll(`[data-category="${categoryId}"]`);
+      items.forEach(item => {
+        const answer = item.querySelector('.faq-answer');
+        const icon = item.querySelector('.faq-icon');
+        if (action === 'expand') {
+          answer.style.display = 'block';
+          icon.textContent = '×';
+          icon.style.transform = 'rotate(90deg)';
+        } else {
+          answer.style.display = 'none';
+          icon.textContent = '+';
+          icon.style.transform = 'none';
+        }
+      });
+    }
+
+    function scrollToCategory(catId) {
+      const el = document.getElementById(catId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       SEARCH & AUTO-SUGGEST DROPDOWN LOGIC
+       -------------------------------------------------------------------------- */
+    function handleSearchSuggest(query) {
+      const dropdown = document.getElementById("suggestDropdown");
+      const cleanQ = query.trim().toLowerCase();
+
+      if (cleanQ.length < 2) {
+        dropdown.style.display = "none";
+        return;
+      }
+
+      const matches = [];
+      faqDatabase.forEach(cat => {
+        cat.items.forEach((item, idx) => {
+          if (item.q.toLowerCase().includes(cleanQ) || item.a.toLowerCase().includes(cleanQ)) {
+            matches.push({
+              catId: cat.id,
+              catName: cat.categoryName,
+              idx: idx,
+              question: item.q
+            });
+          }
+        });
+      });
+
+      if (matches.length === 0) {
+        dropdown.innerHTML = `<div style="padding:14px; text-align:center; color:#64748B; font-size:0.85rem;">Tidak menemukan FAQ terkait. Tekan "Cari dengan AI" untuk jawaban instan.</div>`;
+        dropdown.style.display = "block";
+        return;
+      }
+
+      dropdown.innerHTML = matches.slice(0, 5).map(m => {
+        // Highlight keyword
+        const regex = new RegExp(`(${cleanQ})`, "gi");
+        const highlighted = m.question.replace(regex, `<mark>$1</mark>`);
+        return `
+          <div class="suggest-item" onclick="selectSuggestItem('${m.catId}', ${m.idx})">
+            <span>${highlighted}</span>
+            <span class="suggest-category-tag">${m.catName}</span>
+          </div>
+        `;
+      }).join('');
+
+      dropdown.style.display = "block";
+    }
+
+    function selectSuggestItem(catId, idx) {
+      document.getElementById("suggestDropdown").style.display = "none";
+      const target = document.getElementById(`faq-${catId}-${idx}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const answer = document.getElementById(`answer-${catId}-${idx}`);
+        const icon = document.getElementById(`icon-${catId}-${idx}`);
+        answer.style.display = 'block';
+        icon.textContent = '×';
+        target.style.boxShadow = "0 0 0 3px var(--secondary)";
+        setTimeout(() => target.style.boxShadow = "", 2500);
+      }
+    }
+
+    function executeFaqSearch() {
+      const q = document.getElementById("mainSearchInput").value.trim().toLowerCase();
+      document.getElementById("suggestDropdown").style.display = "none";
+      if (!q) return;
+
+      let foundCount = 0;
+      document.querySelectorAll(".faq-item").forEach(item => {
+        const text = item.innerText.toLowerCase();
+        if (text.includes(q)) {
+          item.style.display = "block";
+          item.querySelector(".faq-answer").style.display = "block";
+          item.querySelector(".faq-icon").textContent = "×";
+          foundCount++;
+        } else {
+          item.style.display = "none";
+        }
+      });
+
+      showToast(`Menemukan ${foundCount} pertanyaan terkait "${q}".`);
+    }
+
+    function quickSearchTag(tag) {
+      document.getElementById("mainSearchInput").value = tag;
+      executeFaqSearch();
+    }
+
+    // Klik luar dropdown untuk menutup
+    document.addEventListener("click", (e) => {
+      const wrap = document.querySelector(".search-outer-wrap");
+      if (!wrap.contains(e.target)) {
+        document.getElementById("suggestDropdown").style.display = "none";
+      }
+    });
+
+    /* --------------------------------------------------------------------------
+       FEEDBACK & LOCALSTORAGE VOTING
+       -------------------------------------------------------------------------- */
+    function initFeedbackCounters() {
+      const storedCount = localStorage.getItem("herbinfo_faq_upvotes") || 1234;
+      document.getElementById("voteCountDisplay").innerText = parseInt(storedCount, 10).toLocaleString("id-ID");
+    }
+
+    function handleVote(choice) {
+      if (choice === 'yes') {
+        let count = parseInt(localStorage.getItem("herbinfo_faq_upvotes") || 1234, 10);
+        count++;
+        localStorage.setItem("herbinfo_faq_upvotes", count);
+        document.getElementById("voteCountDisplay").innerText = count.toLocaleString("id-ID");
+        document.getElementById("feedbackFormSlide").style.display = "none";
+        showToast("Terima kasih atas tanggapan positif Anda!");
+      } else {
+        document.getElementById("feedbackFormSlide").style.display = "block";
+      }
+    }
+
+    function submitFeedbackText() {
+      const text = document.getElementById("feedbackText").value.trim();
+      if (!text) return;
+
+      let feedbacks = JSON.parse(localStorage.getItem("herbinfo_faq_feedback") || "[]");
+      feedbacks.push({ text, timestamp: new Date().toISOString() });
+      localStorage.setItem("herbinfo_faq_feedback", JSON.stringify(feedbacks));
+
+      document.getElementById("feedbackText").value = "";
+      document.getElementById("feedbackFormSlide").style.display = "none";
+      showToast("Masukan Anda berhasil disimpan. Kami akan segera mengevaluasinya!");
+    }
+
+    /* --------------------------------------------------------------------------
+       MODAL CHAT AI INTEGRATION
+       -------------------------------------------------------------------------- */
+    function toggleChatModal(show) {
+      const modal = document.getElementById("chatModalOverlay");
+      modal.style.display = show ? "flex" : "none";
+    }
+
+    function closeChatModal(e) {
+      if (e.target.id === "chatModalOverlay") {
+        toggleChatModal(false);
+      }
+    }
+
+    function openAiChatModal(initialPrompt = "") {
+      toggleChatModal(true);
+      if (initialPrompt) {
+        sendAiQuestion(initialPrompt);
+      }
+    }
+
+    function askAiFromSearch() {
+      const val = document.getElementById("mainSearchInput").value.trim();
+      openAiChatModal(val || "Halo AI Pharma, saya ingin bertanya seputar cara pemakaian Web AR.");
+    }
+
+    function submitCustomAiPrompt() {
+      const prompt = document.getElementById("aiCustomPrompt").value.trim();
+      if (!prompt) return;
+      openAiChatModal(prompt);
+      document.getElementById("aiCustomPrompt").value = "";
+    }
+
+    function sendModalChatMessage() {
+      const input = document.getElementById("modalChatInput");
+      const text = input.value.trim();
+      if (!text) return;
+      sendAiQuestion(text);
+      input.value = "";
+    }
+
+    function sendAiQuestion(text) {
+      const body = document.getElementById("modalChatBody");
+      
+      // User bubble
+      const userBubble = document.createElement("div");
+      userBubble.className = "chat-bubble user";
+      userBubble.innerText = text;
+      body.appendChild(userBubble);
+      body.scrollTop = body.scrollHeight;
+
+      // Simulated AI Bot response
+      setTimeout(() => {
+        const botBubble = document.createElement("div");
+        botBubble.className = "chat-bubble bot";
+        
+        let answer = "Pertanyaan Anda telah kami analisis melalui basis data Farmakope Herbal dan panduan Web AR.";
+        const low = text.toLowerCase();
+        if (low.includes("ar") || low.includes("scan")) {
+          answer = "Untuk AR Scan, buka menu AR Scan, berikan izin akses kamera webcam, posisikan sampel simplisia di tengah retikel, dan model 3D akan dimuat secara instan.";
+        } else if (low.includes("pro") || low.includes("harga") || low.includes("langganan")) {
+          answer = "Paket Pro B2C mulai dari Rp 19.000/bulan dengan benefit AI Pharma 24/7, export PDF resmi praktikum tanpa watermark, dan akses database 3D penuh.";
+        } else if (low.includes("refund")) {
+          answer = "Pengajuan garansi uang kembali dapat dilakukan dalam waktu 7 hari sejak transaksi dengan mengirimkan nomor invoice ke support@herbinfoai.id.";
+        } else if (low.includes("pdf") || low.includes("laporan")) {
+          answer = "Laporan praktikum otomatis dapat disusun di menu 'Laporan Praktikum'. Tekan tombol 'Buatkan Laporan Sekarang' dan unduh dokumen PDF siap cetak.";
+        }
+        
+        botBubble.innerText = answer;
+        body.appendChild(botBubble);
+        body.scrollTop = body.scrollHeight;
+      }, 700);
+    }
+  </script>
+</body>
+</html>
