@@ -1,0 +1,3447 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="HerbInfoAI - AR Scan Tanaman Herbal Berbasis Web AR, 3D Model Viewer, dan AI Pharma Assistant." />
+  <title>AR Scan &amp; 3D Model Tanaman — HerbInfoAI</title>
+
+  <!-- Google Fonts: Poppins & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Google Model Viewer Library (Official Web Component) -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+  <!--
+    TensorFlow.js + Teachable Machine Image Classifier
+    CDN: @tensorflow/tfjs@1.7.4 (dipin; versi saat model dilatih per metadata.json tfjsVersion)
+    CDN: @teachablemachine/image@0.8.5 (dipin; 0.8.4-alpha2 tidak tersedia di npm registry publik)
+    Smoke test wajib dilakukan developer — lihat herbinfo-scan-plan.md § Keputusan Versi CDN
+    Jika ada error backend TF.js di browser, coba ganti tfjs ke @tensorflow/tfjs@2.8.6
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.7.4/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.5/dist/teachablemachine-image.min.js"></script>
+
+  <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & DESIGN SYSTEM
+       ========================================================================== */
+    :root {
+      --primary: #2D6A4F;       /* Hijau Tua */
+      --secondary: #52B788;     /* Hijau Medium */
+      --accent: #95D5B2;        /* Hijau Muda */
+      --bg-main: #F8FDF5;       /* Putih Kehijauan */
+      --bg-card: #FFFFFF;
+      --text-dark: #1B4332;
+      --text-muted: #52796F;
+      --text-light: #FFFFFF;
+      --border-color: rgba(82, 183, 136, 0.22);
+      --shadow-subtle: 0 10px 25px -5px rgba(45, 106, 79, 0.08), 0 8px 10px -6px rgba(45, 106, 79, 0.04);
+      --shadow-hover: 0 20px 30px -10px rgba(45, 106, 79, 0.16);
+      --font-heading: 'Poppins', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      color: var(--text-dark);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-heading);
+      color: var(--text-dark);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+    }
+
+    button, input, textarea {
+      font-family: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Ikon SVG branding (menggantikan emoji) */
+    .ic {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+
+    .ic-sm {
+      width: 15px;
+      height: 15px;
+    }
+
+    .ic-lg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(82, 183, 136, 0.15);
+      border: 1px solid var(--accent);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+      transition: var(--transition);
+    }
+
+    .btn-primary:hover {
+      background: #1f4e39;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(45, 106, 79, 0.35);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      padding: 11px 22px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      border: 2px solid var(--primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(45, 106, 79, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px dashed var(--border-color);
+      padding: 11px 20px;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .btn-ghost:hover {
+      color: var(--primary);
+      border-color: var(--primary);
+      background: rgba(82, 183, 136, 0.08);
+    }
+
+    /* Toast Notification */
+    .toast-box {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      background: #1B4332;
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: var(--transition);
+      border-left: 4px solid var(--secondary);
+    }
+
+    .toast-box.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       2. NAVIGATION BAR (STICKY)
+       ========================================================================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(248, 253, 245, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition);
+    }
+
+    .navbar-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 80px;
+    }
+
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+    }
+
+    .logo-text h1 {
+      font-size: 1.35rem;
+      letter-spacing: -0.5px;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .logo-text h1 span {
+      color: var(--secondary);
+    }
+
+    .logo-text p {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      list-style: none;
+      gap: 8px;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      border-radius: var(--radius-full);
+      position: relative;
+    }
+
+    .nav-item a:hover {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.12);
+    }
+
+    .nav-item.active a {
+      color: var(--primary);
+      background-color: rgba(82, 183, 136, 0.18);
+      font-weight: 600;
+    }
+
+    .nav-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-chat-ai {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--primary);
+      color: var(--text-light);
+      padding: 10px 20px;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(45, 106, 79, 0.25);
+      transition: var(--transition);
+    }
+
+    .btn-chat-ai:hover {
+      background-color: #1f4e39;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(45, 106, 79, 0.35);
+    }
+
+    .user-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-full);
+      border: 2px solid var(--secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #E8F5E9;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+      overflow: hidden;
+    }
+
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--primary);
+      padding: 8px;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      background: #fff;
+      position: absolute;
+      top: 80px;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      border-bottom: 2px solid var(--accent);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu .nav-item a {
+      padding: 12px 16px;
+      width: 100%;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION - AR SCAN
+       ========================================================================== */
+    .ar-hero {
+      padding: 60px 0 40px;
+      text-align: center;
+      position: relative;
+      background: radial-gradient(circle at 50% 20%, rgba(149, 213, 178, 0.22) 0%, transparent 70%);
+    }
+
+    .ar-hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(var(--accent) 0.8px, transparent 0.8px);
+      background-size: 28px 28px;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .ar-hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .ar-hero-content h1 {
+      font-size: 2.8rem;
+      letter-spacing: -0.8px;
+      margin: 16px 0 14px;
+    }
+
+    .ar-hero-content h1 span {
+      background: linear-gradient(120deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .ar-hero-content p {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ==========================================================================
+       4. UPLOAD & SCAN AREA
+       ========================================================================== */
+    .section-scanner {
+      padding: 20px 0 60px;
+    }
+
+    .scanner-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-subtle);
+      overflow: hidden;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .scanner-tabs {
+      display: flex;
+      background: rgba(82, 183, 136, 0.08);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 16px 20px;
+      border: none;
+      background: transparent;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition);
+    }
+
+    .tab-btn.active {
+      background: var(--bg-card);
+      color: var(--primary);
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .tab-content-panel {
+      padding: 36px 30px;
+    }
+
+    .dropzone-area {
+      border: 2px dashed var(--secondary);
+      border-radius: var(--radius-md);
+      background: rgba(240, 255, 244, 0.45);
+      padding: 40px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .dropzone-area.dragover {
+      background: rgba(149, 213, 178, 0.3);
+      border-color: var(--primary);
+      transform: scale(1.01);
+    }
+
+    .dropzone-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 16px;
+      background: rgba(82, 183, 136, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .preview-container {
+      display: none;
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      max-height: 320px;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-subtle);
+      object-fit: cover;
+      border: 2px solid var(--accent);
+    }
+
+    .webcam-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .webcam-viewport-wrapper {
+      width: 100%;
+      max-width: 540px;
+      aspect-ratio: 4/3;
+      background: #0f1f17;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--border-color);
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+    }
+
+    #webcamVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .webcam-placeholder-screen {
+      color: #95D5B2;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .webcam-reticle {
+      display: none;
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border: 2px dashed rgba(149, 213, 178, 0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: spinSlow 15s linear infinite;
+    }
+
+    @keyframes spinSlow {
+      100% { transform: rotate(360deg); }
+    }
+
+    .webcam-controls {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    #captureCanvas {
+      display: none;
+    }
+
+    .scanner-actions {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+    }
+
+    .model-error-banner {
+      display: none;
+      align-items: flex-start;
+      gap: 10px;
+      background: #fff5f5;
+      border: 1px solid #fc8181;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      color: #c53030;
+    }
+
+    /* Scanning Overlay */
+    .scanning-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(18, 40, 30, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: #fff;
+      padding: 24px;
+    }
+
+    .scanning-modal {
+      background: #FFFFFF;
+      color: var(--text-dark);
+      padding: 36px 40px;
+      border-radius: var(--radius-lg);
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: var(--shadow-hover);
+      position: relative;
+    }
+
+    .loading-pulse-ring {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      border: 4px solid rgba(82, 183, 136, 0.2);
+      border-top-color: var(--primary);
+      animation: spinRing 1s linear infinite;
+    }
+
+    @keyframes spinRing {
+      to { transform: rotate(360deg); }
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 10px;
+      background: #E2E8F0;
+      border-radius: var(--radius-full);
+      margin: 20px 0 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      transition: width 0.3s ease;
+    }
+
+    .scanning-log-text {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      min-height: 24px;
+    }
+
+    /* ==========================================================================
+       5. RESULT SECTION DENGAN 3D MODEL VIEWER TAB VIEW
+       ========================================================================== */
+    .section-results {
+      padding: 40px 0 80px;
+      display: none; /* Aktif setelah scan */
+    }
+
+    .results-layout {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .results-left {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* NAVIGATION TABS HASIL SCAN */
+    .result-view-tabs {
+      display: flex;
+      background: #FFFFFF;
+      padding: 6px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-subtle);
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .res-tab-btn {
+      flex: 1;
+      padding: 10px 18px;
+      border-radius: var(--radius-full);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: var(--transition);
+    }
+
+    .res-tab-btn:hover {
+      color: var(--primary);
+      background: rgba(82, 183, 136, 0.1);
+    }
+
+    .res-tab-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+    }
+
+    /* RESULT TAB PANELS */
+    .res-panel-content {
+      display: none;
+      animation: fadeInTab 0.3s ease;
+    }
+
+    .res-panel-content.active {
+      display: block;
+    }
+
+    @keyframes fadeInTab {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 28px;
+      box-shadow: var(--shadow-subtle);
+      margin-bottom: 20px;
+    }
+
+    /* Tab 1: Header Tanaman */
+    .result-main-header {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .result-plant-thumbnail {
+      width: 140px;
+      height: 140px;
+      border-radius: var(--radius-md);
+      object-fit: cover;
+      border: 2px solid var(--secondary);
+      flex-shrink: 0;
+    }
+
+    .result-main-info {
+      flex: 1;
+    }
+
+    .verified-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #E8F5E9;
+      color: var(--primary);
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .result-latin-name {
+      font-style: italic;
+      color: var(--text-muted);
+      font-size: 1rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .result-family-name {
+      font-size: 0.85rem;
+      color: #64748B;
+      margin-bottom: 12px;
+    }
+
+    .confidence-meter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .meter-bg {
+      flex: 1;
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      width: 95%;
+      height: 100%;
+      background: var(--secondary);
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .benefit-box {
+      background: rgba(240, 255, 244, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .benefit-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .benefit-desc {
+      font-size: 0.8rem;
+      color: #4A5568;
+      line-height: 1.4;
+    }
+
+    .rejected-title {
+      font-size: 1.05rem;
+      color: #c53030;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       6. TAB 2: 3D MODEL VIEWER & HOTSPOTS STYLING
+       ========================================================================== */
+    .viewer-3d-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-subtle);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+
+    .viewer-toolbar-header {
+      padding: 16px 22px;
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .viewer-toolbar-left h3 {
+      font-size: 1.15rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .viewer-toolbar-left p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .viewer-tools-group {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tool-btn-sm {
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-color);
+      background: #FFFFFF;
+      color: var(--text-dark);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: var(--transition);
+    }
+
+    .tool-btn-sm:hover, .tool-btn-sm.active {
+      background: rgba(82, 183, 136, 0.16);
+      border-color: var(--secondary);
+      color: var(--primary);
+    }
+
+    /* Komponen Model-Viewer */
+    model-viewer#plant-3d-viewer {
+      width: 100%;
+      height: 520px;
+      background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #F0FFF4 80%, #E8F5E9 100%);
+      position: relative;
+      outline: none;
+      --poster-color: transparent;
+    }
+
+    /* Custom Slot AR Button */
+    .custom-ar-button {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #FFFFFF;
+      border: none;
+      padding: 12px 22px;
+      border-radius: var(--radius-full);
+      font-size: 0.88rem;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(45, 106, 79, 0.35);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      z-index: 100;
+    }
+
+    .custom-ar-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(45, 106, 79, 0.45);
+    }
+
+    /* Petunjuk Interaksi 3D */
+    .viewer-hint-overlay {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 0.74rem;
+      color: var(--text-dark);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Anotasi Kontrol di Bawah Viewer */
+    .viewer-bottom-guide {
+      padding: 16px 22px;
+      background: #FAFEF9;
+      border-top: 1px solid var(--border-color);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      font-size: 0.78rem;
+    }
+
+    .guide-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #4A5568;
+    }
+
+    .guide-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--secondary);
+      flex-shrink: 0;
+    }
+
+    /* Tab 3: Fitokimia */
+    .phytochem-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .phyto-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .phyto-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .phyto-bar-track {
+      width: 100%;
+      height: 10px;
+      background: #EDF2F7;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .phyto-bar-val {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--secondary));
+      border-radius: var(--radius-full);
+    }
+
+    /* Monografi & Standar Mutu Panel */
+    .mono-banner {
+      background: #fffbeb;
+      border: 1px solid #d97706;
+      border-radius: var(--radius-sm);
+      padding: 9px 14px;
+      font-size: 0.78rem;
+      color: #92400e;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .mono-bahan-toggle {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .mono-bahan-btn {
+      padding: 5px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      background: #fff;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: var(--text-dark);
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .mono-bahan-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .mono-section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin: 16px 0 6px;
+    }
+
+    .mono-text-block {
+      font-size: 0.83rem;
+      color: var(--text-dark);
+      line-height: 1.65;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 13px;
+    }
+
+    .mono-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 4px;
+    }
+
+    .mono-table th {
+      text-align: left;
+      padding: 6px 10px;
+      background: var(--bg-surface);
+      border-bottom: 2px solid var(--border-color);
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .mono-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: top;
+      color: var(--text-dark);
+      line-height: 1.45;
+    }
+
+    .mono-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .mono-badge-min {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #d1fae5;
+      color: #065f46;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .mono-badge-max {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .mono-source {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .mono-null {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .molecule-preview-box {
+      margin-top: 16px;
+      border-radius: var(--radius-md);
+      background: #0f1f17;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      color: #fff;
+    }
+
+    .molecule-thumb {
+      width: 110px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--secondary);
+    }
+
+    .molecule-text h4 {
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .molecule-text p {
+      color: #95D5B2;
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+    }
+
+    /* Action Buttons Bar */
+    .result-actions-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    /* AI Pharma Panel (Sticky Kanan) */
+    .ai-pharma-panel {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-subtle);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 640px;
+      position: sticky;
+      top: 100px;
+    }
+
+    .ai-panel-header {
+      background: linear-gradient(135deg, var(--primary), #1a4f38);
+      color: #fff;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ai-avatar-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ai-chat-body {
+      flex: 1;
+      padding: 18px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #FAFDF9;
+    }
+
+    .chat-bubble {
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .chat-bubble.assistant {
+      align-self: flex-start;
+      background: #FFFFFF;
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+
+    .chat-bubble.user {
+      align-self: flex-end;
+      background: var(--primary);
+      color: #FFFFFF;
+      border-bottom-right-radius: 4px;
+    }
+
+    .quick-replies {
+      padding: 8px 16px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .quick-chip {
+      background: rgba(82, 183, 136, 0.12);
+      color: var(--primary);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-full);
+      padding: 5px 12px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+
+    .quick-chip:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .ai-input-wrapper {
+      padding: 14px 16px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 8px;
+    }
+
+    .ai-input-wrapper input {
+      flex: 1;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    .ai-input-wrapper input:focus {
+      border-color: var(--secondary);
+    }
+
+    .ai-send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    /* Riwayat Scan Section */
+    .section-history {
+      padding: 70px 0;
+      background: linear-gradient(180deg, rgba(82, 183, 136, 0.05) 0%, transparent 100%);
+    }
+
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .history-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .history-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--secondary);
+    }
+
+    .history-thumb {
+      width: 100%;
+      height: 130px;
+      object-fit: cover;
+      background: #e2e8f0;
+    }
+
+    .history-body {
+      padding: 14px;
+    }
+
+    .history-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .history-latin {
+      font-size: 0.78rem;
+      font-style: italic;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .history-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      color: #64748B;
+    }
+
+    .empty-history {
+      text-align: center;
+      padding: 50px 20px;
+      background: #fff;
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--border-color);
+      grid-column: 1 / -1;
+    }
+
+    /* Popular Herbs Section */
+    .section-popular-try {
+      padding: 70px 0 100px;
+    }
+
+    .popular-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 34px;
+    }
+
+    .popular-card {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      box-shadow: var(--shadow-subtle);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .popular-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .popular-img-wrapper {
+      position: relative;
+      height: 150px;
+      overflow: hidden;
+    }
+
+    .popular-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--primary);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+    }
+
+    .popular-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .popular-name {
+      font-size: 1.05rem;
+      margin-bottom: 2px;
+    }
+
+    .popular-latin {
+      font-size: 0.78rem;
+      font-style: italic;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .popular-btn {
+      margin-top: auto;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-full);
+      background: transparent;
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+    }
+
+    .popular-card:hover .popular-btn {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    /* Footer */
+    .site-footer {
+      background: #12281E;
+      color: #E2E8F0;
+      padding: 70px 0 24px;
+      border-top: 1px solid rgba(82, 183, 136, 0.2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .footer-col h4 {
+      color: #FFFFFF;
+      font-size: 1.05rem;
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+      width: 28px;
+      height: 2px;
+      background: var(--secondary);
+    }
+
+    .footer-desc {
+      font-size: 0.88rem;
+      color: #A0AEC0;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 0.88rem;
+      color: #CBD5E0;
+    }
+
+    .footer-links a:hover {
+      color: var(--secondary);
+      padding-left: 4px;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #A0AEC0;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    @media (max-width: 1024px) {
+      .results-layout {
+        grid-template-columns: 1fr;
+      }
+      .ai-pharma-panel {
+        height: 520px;
+        position: static;
+      }
+      .viewer-bottom-guide {
+        grid-template-columns: 1fr;
+      }
+      .popular-grid, .history-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-actions {
+        display: none;
+      }
+      .hamburger-btn {
+        display: block;
+      }
+      .ar-hero-content h1 {
+        font-size: 2.1rem;
+      }
+      .result-main-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      .result-plant-thumbnail {
+        margin: 0 auto;
+      }
+      model-viewer#plant-3d-viewer {
+        height: 380px;
+      }
+      .popular-grid, .history-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       NAVIGATION BAR (Sticky Top)
+       ========================================================================== -->
+  <header class="navbar">
+    <div class="container navbar-container">
+      <!-- Logo Kiri -->
+      <!-- PLACEHOLDER LOGO: logo-herbinfoai.svg
+           Ganti ikon SVG di bawah dengan <img src="logo-herbinfoai.svg" alt="HerbInfoAI"> jika file tersedia -->
+      <a href="index.html" class="logo-wrapper">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>HerbInfo<span>AI</span></h1>
+          <p>Explore . Learn . Preserve</p>
+        </div>
+      </a>
+
+      <!-- Menu Tengah -->
+      <ul class="nav-links">
+        <li class="nav-item">
+          <a href="index.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </span>
+            Beranda
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="ar-scan.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-.9-.9"/></svg>
+            </span>
+            AR Scan
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="katalog.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+            </span>
+            Katalog Herbal
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="estore.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            </span>
+            E-Store
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="laporan.html">
+            <span class="nav-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+            </span>
+            Laporan Praktikum
+          </a>
+        </li>
+      </ul>
+
+      <!-- Nav Kanan -->
+      <div class="nav-actions">
+        <a href="profil.html" class="user-avatar" title="Akun Pengguna">
+          <!-- Placeholder avatar: inisial atau foto profil pengguna -->
+          <span>HI</span>
+        </a>
+      </div>
+
+      <!-- Hamburger Button (Mobile) -->
+      <button class="hamburger-btn" id="menuToggle" aria-label="Toggle Navigation">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-menu" id="mobileMenu">
+      <li class="nav-item">
+        <a href="index.html">
+          <svg class="ic" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Beranda
+        </a>
+      </li>
+      <li class="nav-item active">
+        <a href="ar-scan.html">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-.9-.9"/></svg>
+          AR Scan
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="katalog.html">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          Katalog Herbal
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="estore.html">
+          <svg class="ic" viewBox="0 0 24 24"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          E-Store
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="laporan.html">
+          <svg class="ic" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+          Laporan Praktikum
+        </a>
+      </li>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="ar-hero">
+      <div class="ar-hero-bg"></div>
+      <div class="container ar-hero-content">
+        <div class="badge">
+          <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          Web AR &amp; 3D Plant Anatomy
+        </div>
+        <h1>Scan &amp; Analisis 3D <span>Tanaman Herbal</span></h1>
+        <p>Identifikasi simplisia via foto atau webcam secara real-time. Periksa model 3D anatomi organ, struktur fitokimia molekuler, dan konsultasikan dosis medis bersama AI Pharma Assistant.</p>
+      </div>
+    </section>
+
+    <!-- UPLOAD & WEBCAM SECTION -->
+    <section class="section-scanner">
+      <div class="container">
+        <div class="scanner-card">
+          <div class="scanner-tabs">
+            <button class="tab-btn active" id="tabUploadBtn" onclick="switchScanTab('upload')">
+              <svg class="ic" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><path d="M12 10v6"/><path d="m9 13 3-3 3 3"/></svg>
+              Tab 1: Upload Gambar
+            </button>
+            <button class="tab-btn" id="tabWebcamBtn" onclick="switchScanTab('webcam')">
+              <svg class="ic" viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+              Tab 2: Webcam Capture
+            </button>
+          </div>
+
+          <!-- Tab 1: Upload -->
+          <div class="tab-content-panel" id="panelUpload">
+            <div class="dropzone-area" id="dropArea">
+              <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp" style="display: none;" />
+              <div class="dropzone-icon">
+                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <h3 style="font-size:1.15rem; margin-bottom:6px;">Drag &amp; drop gambar tanaman di sini, atau klik untuk browse</h3>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Format yang didukung: JPG, PNG, WEBP (Maksimal 10MB)</p>
+              <button class="btn-secondary" type="button" onclick="document.getElementById('fileInput').click()">Pilih File Gambar</button>
+            </div>
+
+            <div class="preview-container" id="previewContainer">
+              <img id="imagePreview" class="preview-image" alt="Pratinjau Tanaman" />
+              <div style="margin-top: 10px;">
+                <button class="btn-ghost" onclick="resetUpload()">Ganti Foto</button>
+              </div>
+            </div>
+
+            <!-- Status model dan banner error -->
+            <div id="modelErrorBanner" class="model-error-banner">
+              <svg class="ic" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              <span>Gagal memuat model klasifikasi. Pastikan file <code>models/plant-classifier/</code> tersedia dan koneksi internet aktif, lalu muat ulang halaman.</span>
+            </div>
+            <div class="scanner-actions">
+              <span id="modelStatusText" style="font-size: 0.85rem; color: var(--text-muted);">Status: memuat model untuk 3 kelas tanaman herbal...</span>
+              <button class="btn-primary" id="btnScanUpload" onclick="processScan('upload')" disabled>
+                <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                Scan &amp; Identifikasi Tanaman
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab 2: Webcam -->
+          <div class="tab-content-panel" id="panelWebcam" style="display: none;">
+            <div class="webcam-container">
+              <div class="webcam-viewport-wrapper">
+                <video id="webcamVideo" autoplay playsinline></video>
+                <div class="webcam-reticle" id="webcamReticle"></div>
+                <div class="webcam-placeholder-screen" id="webcamPlaceholder">
+                  <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:12px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                  <h4>Kamera Belum Aktif</h4>
+                  <p style="font-size: 0.85rem; color: #A0AEC0; margin-top: 4px;">Klik "Aktifkan Kamera" di bawah dan beri izin akses browser.</p>
+                </div>
+              </div>
+
+              <div class="webcam-controls">
+                <button class="btn-secondary" id="btnStartCamera" onclick="startWebcam()">
+                  <svg class="ic" viewBox="0 0 24 24"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2" ry="2"/></svg>
+                  Aktifkan Kamera
+                </button>
+                <button class="btn-primary" id="btnCapturePhoto" onclick="captureWebcamPhoto()" style="display: none;">
+                  <svg class="ic" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                  Ambil Foto &amp; Scan
+                </button>
+                <button class="btn-ghost" id="btnStopCamera" onclick="stopWebcam()" style="display: none;">Matikan Kamera</button>
+              </div>
+            </div>
+            <canvas id="captureCanvas"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCANNING LOADING SIMULATION MODAL -->
+    <div class="scanning-overlay" id="scanningOverlay">
+      <div class="scanning-modal">
+        <div class="loading-pulse-ring"></div>
+        <h3 id="scanTitleText" style="margin-bottom: 6px;">Menganalisis Morfologi Tanaman...</h3>
+        <p id="scanSubtitleText" class="scanning-log-text">Mendeteksi tekstur daun &amp; rimpang...</p>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="scanProgressFill"></div>
+        </div>
+        <span id="scanPercentText" style="font-weight: 700; color: var(--primary); font-size: 0.9rem;">0%</span>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         HASIL SCAN DENGAN OPTION A: 3D MODEL VIEWER TAB VIEW
+         ========================================================================== -->
+    <section class="section-results" id="resultsSection">
+      <div class="container">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; flex-wrap:wrap; gap:10px;">
+          <div class="badge">Hasil Identifikasi AR &amp; Anatomi 3D</div>
+          <span style="font-size:0.8rem; color:var(--text-muted);">ID Spesimen: <strong id="specimenCode">SP-2026-CURCUMA</strong></span>
+        </div>
+
+        <div class="results-layout">
+          <!-- SISI KIRI: TAB CONTENT HASIL IDENTIFIKASI, MODEL 3D, FITOKIMIA -->
+          <div class="results-left">
+
+            <!-- TAB BAR NAVIGATION HASIL SCAN -->
+            <div class="result-view-tabs">
+              <button class="res-tab-btn active" id="btnResIdent" onclick="switchResultTab('identifikasi')">
+                <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                Hasil Identifikasi
+              </button>
+              <button class="res-tab-btn" id="btnRes3D" onclick="switchResultTab('model3d')">
+                <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                Model 3D Tanaman
+              </button>
+              <button class="res-tab-btn" id="btnResPhyto" onclick="switchResultTab('fitokimia')">
+                <svg class="ic ic-sm" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+                Monografi &amp; Standar Mutu
+              </button>
+            </div>
+
+            <!-- PANEL 1: HASIL IDENTIFIKASI (DEFAULT) -->
+            <div class="res-panel-content active" id="panelResIdent">
+              <!-- Card Utama -->
+              <div class="result-card">
+                <div class="result-main-header">
+                  <!-- PLACEHOLDER: scan-result-plant.jpg -->
+                  <img id="resPlantImg" src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=500&q=80" alt="Hasil Scan Tanaman" class="result-plant-thumbnail" />
+
+                  <div class="result-main-info">
+                    <div class="verified-pill">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      Estimasi Model AI
+                    </div>
+                    <h2 id="resPlantName" style="font-size:1.8rem; margin-bottom:2px;">—</h2>
+                    <span id="resLatinName" class="result-latin-name">—</span>
+                    <div id="resFamilyName" class="result-family-name"></div>
+
+                    <div class="confidence-meter">
+                      <span>Skor Model:</span>
+                      <div class="meter-bg">
+                        <div class="meter-fill" id="resConfidenceFill"></div>
+                      </div>
+                      <span id="resConfidenceVal">—</span>
+                    </div>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Skor model bukan jaminan identifikasi yang benar.</p>
+
+                    <!-- Tombol Cepat Buka 3D -->
+                    <div style="margin-top:14px;">
+                      <button class="btn-primary" style="padding: 6px 16px; font-size: 0.8rem;" onclick="switchResultTab('model3d')">
+                        <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        Buka Interaksi Model 3D &rarr;
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card Aktivitas Farmakologis — diisi oleh renderPharmacologyCards() -->
+              <div class="result-card">
+                <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Aktivitas Farmakologis &mdash; Referensi Edukasi</h3>
+                <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:12px;">Informasi referensi tanaman, bukan hasil pengukuran dari foto.</p>
+                <div class="benefits-grid" id="pharmacologyGrid"></div>
+              </div>
+
+              <!-- Panel Penolakan Identifikasi (tersembunyi default) -->
+              <div id="rejectedResultPanel" class="result-card" style="display:none; border-left: 4px solid #e53e3e;">
+                <h3 class="rejected-title">
+                  <svg class="ic" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                  Identifikasi Tidak Berhasil
+                </h3>
+                <p id="rejectedResultMsg" style="font-size:0.9rem; color:var(--text-dark); line-height:1.6;"></p>
+              </div>
+            </div>
+
+            <!-- PANEL 2: GOOGLE MODEL VIEWER 3D -->
+            <div class="res-panel-content" id="panelRes3D">
+              <div class="viewer-3d-card">
+                <!-- Toolbar Atas 3D Viewer -->
+                <div class="viewer-toolbar-header">
+                  <div class="viewer-toolbar-left">
+                    <h3>
+                      <svg class="ic" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                      <span id="viewerPlantTitle">Model 3D Anatomi: Kunyit</span>
+                    </h3>
+                    <p>Format GLB &bull; Geser dengan mouse/jari untuk memutar 360&deg; &bull; Zoom in/out</p>
+                  </div>
+                  <div class="viewer-tools-group">
+                    <button class="tool-btn-sm" id="btnToggleRotate" onclick="toggleAutoRotate()">
+                      <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                      <span id="rotateLabel">Auto-Rotate: On</span>
+                    </button>
+                    <button class="tool-btn-sm" onclick="resetCameraView()">
+                      <svg class="ic ic-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                      Reset Kamera
+                    </button>
+                  </div>
+                </div>
+
+                <!-- KOMPONEN GOOGLE MODEL VIEWER -->
+                <!-- MENGGUNAKAN FILE LOKAL: models/kunyit.glb -->
+                <model-viewer
+                  id="plant-3d-viewer"
+                  src="models/kunyit.glb"
+                  alt="Model 3D Anatomi Tanaman Kunyit"
+                  auto-rotate
+                  camera-controls
+                  touch-action="pan-y"
+                  ar
+                  ar-modes="webxr scene-viewer quick-look"
+                  shadow-intensity="1"
+                  exposure="1"
+                  camera-orbit="45deg 55deg 2.5m"
+                  min-camera-orbit="auto auto 0.8m"
+                  max-camera-orbit="auto auto 5m"
+                  interaction-prompt="auto"
+                  interaction-prompt-threshold="500"
+                  environment-image="neutral"
+                >
+                  <!-- Loading Progress Bar -->
+                  <div slot="progress-bar" style="background: var(--secondary); height: 4px;"></div>
+
+                  <!-- Petunjuk Gesture -->
+                  <div class="viewer-hint-overlay">
+                    <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                    <span>Klik &amp; tahan untuk inspeksi anatomi 3D</span>
+                  </div>
+
+                  <!-- Tombol Masuk Mode AR Kamera Nyata -->
+                  <button slot="ar-button" class="custom-ar-button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/></svg>
+                    Lihat di Ruangan (Web AR)
+                  </button>
+                </model-viewer>
+
+                <!-- Fallback 2D: ditampilkan saat file GLB tidak tersedia -->
+                <div id="viewer3dFallback" style="display:none; flex-direction:column; align-items:center; justify-content:center; padding:28px; text-align:center; gap:12px;">
+                  <img src="" alt="Foto tanaman" style="max-width:200px; border-radius:10px; object-fit:cover;" />
+                  <p style="font-size:0.85rem; color:var(--text-muted); font-style:italic;">Model 3D segera hadir — belum tersedia untuk tanaman ini.</p>
+                </div>
+
+                <!-- Petunjuk Anotasi Bagian Organ -->
+                <div class="viewer-bottom-guide">
+                  <div class="guide-item">
+                    <span class="guide-dot"></span>
+                    <span><strong>Status Model 3D:</strong> <span id="guideModelStatus">—</span></span>
+                  </div>
+                  <div class="guide-item">
+                    <span class="guide-dot" style="background:var(--secondary);"></span>
+                    <span><strong>Bagian ditampilkan:</strong> <span id="guidePlantPart">—</span></span>
+                  </div>
+                  <div class="guide-item">
+                    <span class="guide-dot" style="background:var(--primary);"></span>
+                    <span><strong>Kompatibilitas AR:</strong> WebXR, Scene Viewer</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANEL 3: FITOKIMIA & MOLEKUL -->
+            <div class="res-panel-content" id="panelResPhyto">
+              <div class="result-card">
+                <h3 style="font-size: 1.15rem; margin-bottom: 4px;">Monografi &amp; Standar Mutu</h3>
+
+                <!-- Banner wajib — diisi JS, tetap visible -->
+                <div class="mono-banner" id="monoBanner">
+                  Angka berikut adalah batas mutu acuan FHI, bukan hasil pengukuran foto.
+                </div>
+
+                <!-- Toggle pilih jenis bahan — diisi oleh renderMonografiPanel() -->
+                <div class="mono-bahan-toggle" id="monoBahanToggle"></div>
+
+                <!-- Konten monografi — diisi oleh renderMonografiPanel() -->
+                <div id="monoContent">
+                  <p class="mono-null">Pilih tanaman untuk melihat data monografi.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons Footer -->
+            <div class="result-actions-bar">
+              <button class="btn-secondary" onclick="saveToReportDraft()">
+                <svg class="ic" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                Simpan ke Laporan Praktikum
+              </button>
+              <button class="btn-secondary" onclick="saveToCatalogFavorites()">
+                <svg class="ic" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Simpan ke Favorit
+              </button>
+              <button class="btn-primary" onclick="focusAIChat()">
+                <svg class="ic" viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+                Tanya AI Pharma
+              </button>
+              <button class="btn-ghost" onclick="resetScanSession()">
+                <svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+                Scan Sampel Lain
+              </button>
+            </div>
+          </div>
+
+          <!-- SISI KANAN: AI PHARMA ASSISTANT (STICKY PANEL) -->
+          <div class="ai-pharma-panel" id="aiAssistantBox">
+            <div class="ai-panel-header">
+              <div class="ai-avatar-circle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4v1H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4Z"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
+              </div>
+              <div>
+                <h4 style="color:#fff; font-size: 0.95rem;">AI Pharma Assistant</h4>
+                <span style="font-size: 0.72rem; color: var(--accent);">● Konsultan Fitofarmaka 24/7</span>
+              </div>
+            </div>
+
+            <div class="ai-chat-body" id="chatThread">
+              <div class="chat-bubble assistant">
+                Halo! Saya AI Pharma Assistant. Setelah Anda memindai atau memilih tanaman, saya siap membantu menjawab pertanyaan seputar senyawa fitokimia, monografi farmakope, atau cara pengolahan simplisia.
+              </div>
+            </div>
+
+            <div class="quick-replies">
+              <button class="quick-chip" onclick="sendTopicReply('mekanisme')">Mekanisme Kerja</button>
+              <button class="quick-chip" onclick="sendTopicReply('efekSamping')">Efek Samping</button>
+              <button class="quick-chip" onclick="sendTopicReply('pengolahan')">Pengolahan Simplisia</button>
+              <button class="quick-chip" onclick="sendTopicReply('bagianDigunakan')">Bagian yang Digunakan</button>
+            </div>
+
+            <div class="ai-input-wrapper">
+              <input type="text" id="aiUserPrompt" placeholder="Tanya tentang tanaman atau model 3D ini..." onkeydown="if(event.key === 'Enter') handleUserSendMessage()" />
+              <button class="ai-send-btn" onclick="handleUserSendMessage()" title="Kirim" aria-label="Kirim">
+                <svg class="ic" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: RIWAYAT SCAN -->
+    <section class="section-history">
+      <div class="container">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div class="badge">Aktivitas Terbaru</div>
+            <h2 style="font-size: 1.8rem; margin-top: 8px;">Riwayat Scan Anda</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">Daftar 10 riwayat pemindaian terakhir lengkap dengan tautan inspeksi 3D.</p>
+          </div>
+          <button class="btn-ghost" onclick="clearAllHistory()" style="font-size: 0.8rem; padding: 6px 14px;">Bersihkan Riwayat</button>
+        </div>
+        <div class="history-grid" id="historyGridContainer"></div>
+      </div>
+    </section>
+
+    <!-- SECTION: TANAMAN POPULER DENGAN 3D READY -->
+    <section class="section-popular-try">
+      <div class="container">
+        <div style="text-align: center; max-width: 650px; margin: 0 auto;">
+          <div class="badge">Model 3D Siap Pakai</div>
+          <h2 style="font-size: 2rem; margin-top: 8px;">Tanaman Populer untuk Dicoba</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Tampilan data tanaman dari sistem — <strong>bukan hasil scan Anda</strong>. Untuk identifikasi dari foto, gunakan fitur scan di atas.</p>
+        </div>
+
+        <div class="popular-grid">
+          <!-- Kunyit -->
+          <div class="popular-card">
+            <div class="popular-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80" alt="Kunyit" />
+              <span class="popular-badge">Contoh Data</span>
+            </div>
+            <div class="popular-body">
+              <h4 class="popular-name">Kunyit</h4>
+              <span class="popular-latin">Curcuma longa L.</span>
+              <button class="popular-btn" onclick="demoScanPlant('Kunyit')">
+                Lihat Data &amp; Model 3D &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Jahe -->
+          <div class="popular-card">
+            <div class="popular-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=400&q=80" alt="Jahe" />
+              <span class="popular-badge">Contoh Data</span>
+            </div>
+            <div class="popular-body">
+              <h4 class="popular-name">Jahe</h4>
+              <span class="popular-latin">Zingiber officinale Roscoe</span>
+              <button class="popular-btn" onclick="demoScanPlant('Jahe')">
+                Lihat Data &amp; Model 3D &rarr;
+              </button>
+            </div>
+          </div>
+
+          <!-- Temulawak -->
+          <div class="popular-card">
+            <div class="popular-img-wrapper">
+              <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80" alt="Temulawak" />
+              <span class="popular-badge">Contoh Data</span>
+            </div>
+            <div class="popular-body">
+              <h4 class="popular-name">Temulawak</h4>
+              <span class="popular-latin">Curcuma xanthorrhiza Roxb.</span>
+              <button class="popular-btn" onclick="demoScanPlant('Temulawak')">
+                Lihat Data &amp; Model 3D &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h2 style="font-size:1.3rem; color:#fff; margin-bottom:8px;">HerbInfo<span style="color:var(--secondary);">AI</span></h2>
+          <p class="footer-desc">Platform teknologi farmasi terintegrasi Web AR, 3D Model Viewer, dan AI Pharma Assistant untuk riset dan edukasi tanaman herbal nusantara.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigasi</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Beranda</a></li>
+            <li><a href="ar-scan.html">AR Scan &amp; 3D</a></li>
+            <li><a href="katalog.html">Katalog Herbal</a></li>
+            <li><a href="estore.html">E-Store</a></li>
+            <li><a href="laporan.html">Laporan Praktikum</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Bantuan &amp; Lab</h4>
+          <ul class="footer-links">
+            <li><a href="tentang.html">Tentang HerbInfoAI</a></li>
+            <li><a href="kontak.html">Kontak &amp; Lab Kampus</a></li>
+            <li><a href="profil.html">Profil Pengguna</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Standar AR</h4>
+          <p style="font-size:0.85rem; color:#A0AEC0;">Dukungan WebXR Device API, SceneViewer Android, dan iOS AR QuickLook.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div>&copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.</div>
+        <div style="display:flex; gap:16px;">
+          <a href="privacy.html">Kebijakan Privasi</a>
+          <a href="terms.html">Syarat &amp; Ketentuan</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Box -->
+  <div class="toast-box" id="appToast">
+    <span id="toastMessage">Pemberitahuan</span>
+  </div>
+
+  <script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
+  <script src="https://files.bpcontent.cloud/2026/10/18/07/20261018072234-X4CADX8W.js" defer></script>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC DENGAN PENGENDALI 3D MODEL VIEWER
+       ========================================================================== -->
+  <script>
+    let currentUploadedDataUrl = null;
+    let cameraStream = null;
+    let currentActiveScanData = null;
+    let isAutoRotating = true;
+    let scanInProgress = false;
+
+    // =========================================================================
+    // KONFIGURASI KLASIFIKASI MODEL
+    // Label asli dibaca dari models/plant-classifier/metadata.json
+    // labels: ["Kunyit","Temulawak","Jahe","BukanTanamanHerbal"]
+    // =========================================================================
+    const CONFIDENCE_THRESHOLD = 0.70;
+    const MODEL_PATH = "models/plant-classifier/";
+
+    // Kelas herbal yang diterima → kunci plantData (case-sensitive, sama persis dengan label model)
+    const LABEL_MAP = {
+      "Kunyit":     "Kunyit",
+      "Temulawak":  "Temulawak",
+      "Jahe":       "Jahe"
+    };
+
+    // Kelas yang selalu ditolak, berapapun skornya (array untuk antisipasi model versi berikutnya)
+    const REJECT_LABELS = ["BukanTanamanHerbal"];
+
+    let classifierModel      = null;
+    let modelLoadError       = false;
+    let educationData        = null; // diisi oleh loadEducationData()
+    let educationLoadErr     = false;
+    let plantReferenceData   = null; // diisi oleh loadPlantReferenceData()
+    let plantRefLoadErr      = false;
+    let activeMonoBahanKey   = null; // jenis bahan yang sedang ditampilkan di tab monografi
+
+    // =========================================================================
+    // DATA REFERENSI TANAMAN
+    // latinName & family: diverifikasi dari Farmakope Herbal Indonesia Edisi II (2017)
+    // compound & compoundMinKadar: null — menunggu plant-reference.json terkurasi
+    // image: URL Unsplash (bukan data farmasi)
+    // =========================================================================
+    const plantData = {
+      "Kunyit": {
+        latinName:        "Curcuma longa L.",
+        family:           "Zingiberaceae",
+        compound:         null,
+        compoundMinKadar: null,
+        image: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=500&q=80"
+      },
+      "Temulawak": {
+        latinName:        "Curcuma xanthorrhiza Roxb.",
+        family:           "Zingiberaceae",
+        compound:         null,
+        compoundMinKadar: null,
+        image: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=500&q=80"
+      },
+      "Jahe": {
+        latinName:        "Zingiber officinale Roscoe",
+        family:           "Zingiberaceae",
+        compound:         null,
+        compoundMinKadar: null,
+        image: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=500&q=80"
+      }
+    };
+
+    // Database konfigurasi 3D Viewer — 3 tanaman yang dikenali model
+    const plant3dModels = {
+      "Kunyit": {
+        glb:   "models/kunyit.glb",
+        part:  "Rimpang",
+        title: "Model 3D Anatomi: Kunyit (Curcuma longa)"
+      },
+      "Jahe": {
+        glb:   "models/jahe.glb",
+        part:  "Rimpang",
+        title: "Model 3D Anatomi: Jahe (Zingiber officinale)"
+      },
+      "Temulawak": {
+        glb:   "models/temulawak.glb",
+        part:  "Rimpang",
+        title: "Model 3D Anatomi: Temulawak (Curcuma xanthorrhiza)"
+      }
+    };
+
+    // =========================================================================
+    // LOAD MODEL TEACHABLE MACHINE (sekali saat halaman dibuka)
+    // =========================================================================
+    async function loadClassifierModel() {
+      const statusEl = document.getElementById("modelStatusText");
+      const bannerEl = document.getElementById("modelErrorBanner");
+      if (classifierModel) return; // sudah dimuat, tidak perlu ulang
+
+      if (statusEl) statusEl.textContent = "Memuat model klasifikasi...";
+
+      try {
+        const modelURL    = MODEL_PATH + "model.json";
+        const metaURL     = MODEL_PATH + "metadata.json";
+        classifierModel   = await tmImage.load(modelURL, metaURL);
+
+        // Verifikasi label runtime terhadap LABEL_MAP dan REJECT_LABELS
+        const runtimeLabels = classifierModel.getClassLabels();
+        const knownLabels   = [...Object.keys(LABEL_MAP), ...REJECT_LABELS];
+        runtimeLabels.forEach(lbl => {
+          if (!knownLabels.includes(lbl)) {
+            console.warn(`[HerbInfo] Label model tidak dikenali di kode: "${lbl}". Perbarui LABEL_MAP atau REJECT_LABELS.`);
+          }
+        });
+
+        if (statusEl) {
+          statusEl.textContent = "Model siap digunakan";
+          statusEl.style.color = "var(--secondary)";
+        }
+      } catch (err) {
+        modelLoadError = true;
+        console.error("[HerbInfo] Gagal memuat model:", err);
+        if (statusEl) {
+          statusEl.textContent = "Gagal memuat model";
+          statusEl.style.color = "#e53e3e";
+        }
+        if (bannerEl) bannerEl.style.display = "flex";
+      }
+    }
+
+    // =========================================================================
+    // KLASIFIKASI GAMBAR
+    // Mengembalikan objek status terstruktur — tidak melempar exception
+    // =========================================================================
+    async function classifyImage(imgElement) {
+      if (!classifierModel) {
+        return { status: "model_unavailable" };
+      }
+
+      const predictions = await classifierModel.predict(imgElement);
+
+      // Hitung top secara eksplisit — urutan array predict() tidak dijamin
+      const top = predictions.reduce((a, b) => b.probability > a.probability ? b : a);
+
+      // Cek 1: kelas penolak
+      if (REJECT_LABELS.includes(top.className)) {
+        return { status: "rejected", reason: "non_herbal", probability: top.probability };
+      }
+
+      // Cek 2: threshold kepercayaan
+      if (top.probability < CONFIDENCE_THRESHOLD) {
+        return { status: "rejected", reason: "low_confidence", label: top.className, probability: top.probability };
+      }
+
+      // Cek 3: label ada di mapping
+      if (!(top.className in LABEL_MAP)) {
+        return { status: "rejected", reason: "unmapped_label", label: top.className };
+      }
+
+      return {
+        status:   "accepted",
+        label:    top.className,
+        plantKey: LABEL_MAP[top.className],
+        probability: top.probability
+      };
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initMobileMenu();
+      initDragAndDrop();
+      renderScanHistory();
+      checkUrlParameters();
+      loadClassifierModel();       // muat model klasifikasi di background
+      loadEducationData();         // muat materi edukasi di background
+      loadPlantReferenceData();    // muat data monografi FHI di background
+    });
+
+    // 1. Toast Notification Helper
+    function showToast(msg) {
+      const toast = document.getElementById("appToast");
+      const text = document.getElementById("toastMessage");
+      text.innerText = msg;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    // 2. Mobile Menu
+    function initMobileMenu() {
+      const toggle = document.getElementById("menuToggle");
+      const menu = document.getElementById("mobileMenu");
+      if (toggle && menu) {
+        toggle.addEventListener("click", () => menu.classList.toggle("open"));
+      }
+    }
+
+    // 3. Tab Scanner (Upload vs Webcam)
+    function switchScanTab(tabName) {
+      const btnUpload = document.getElementById("tabUploadBtn");
+      const btnWebcam = document.getElementById("tabWebcamBtn");
+      const panelUpload = document.getElementById("panelUpload");
+      const panelWebcam = document.getElementById("panelWebcam");
+
+      if (tabName === 'upload') {
+        btnUpload.classList.add("active");
+        btnWebcam.classList.remove("active");
+        panelUpload.style.display = "block";
+        panelWebcam.style.display = "none";
+        stopWebcam();
+      } else {
+        btnWebcam.classList.add("active");
+        btnUpload.classList.remove("active");
+        panelWebcam.style.display = "block";
+        panelUpload.style.display = "none";
+      }
+    }
+
+    // 4. Tab Result Views (Identifikasi vs 3D Model vs Fitokimia)
+    function switchResultTab(tabKey) {
+      // Tombol Tab
+      document.getElementById("btnResIdent").classList.toggle("active", tabKey === 'identifikasi');
+      document.getElementById("btnRes3D").classList.toggle("active", tabKey === 'model3d');
+      document.getElementById("btnResPhyto").classList.toggle("active", tabKey === 'fitokimia');
+
+      // Konten Tab
+      document.getElementById("panelResIdent").classList.toggle("active", tabKey === 'identifikasi');
+      document.getElementById("panelRes3D").classList.toggle("active", tabKey === 'model3d');
+      document.getElementById("panelResPhyto").classList.toggle("active", tabKey === 'fitokimia');
+
+      // Khusus saat masuk tab 3D, paksa rendering refresh pada Google Model Viewer
+      if (tabKey === 'model3d') {
+        const viewer = document.getElementById("plant-3d-viewer");
+        if (viewer && viewer.dismissPoster) {
+          viewer.dismissPoster();
+        }
+      }
+    }
+
+    // 5. Kontrol Khusus 3D Model Viewer
+    function toggleAutoRotate() {
+      const viewer = document.getElementById("plant-3d-viewer");
+      const btn = document.getElementById("btnToggleRotate");
+      const label = document.getElementById("rotateLabel");
+      isAutoRotating = !isAutoRotating;
+      viewer.autoRotate = isAutoRotating;
+      if (label) label.textContent = `Auto-Rotate: ${isAutoRotating ? 'On' : 'Off'}`;
+      btn.classList.toggle("active", isAutoRotating);
+    }
+
+    function resetCameraView() {
+      const viewer = document.getElementById("plant-3d-viewer");
+      if (viewer) {
+        viewer.cameraOrbit = "45deg 55deg 2.5m";
+        viewer.fieldOfView = "auto";
+        showToast("Posisi kamera 3D direset.");
+      }
+    }
+
+    function update3dModelSource(plantName) {
+      const viewer     = document.getElementById("plant-3d-viewer");
+      const titleEl    = document.getElementById("viewerPlantTitle");
+      const fallback2d = document.getElementById("viewer3dFallback");
+      const statusEl   = document.getElementById("guideModelStatus");
+      const partEl     = document.getElementById("guidePlantPart");
+      const config     = plant3dModels[plantName];
+
+      if (!config) {
+        // Tanaman tidak dikenali — sembunyikan viewer, tampilkan placeholder
+        if (viewer)    viewer.style.display = "none";
+        if (fallback2d) fallback2d.style.display = "flex";
+        if (titleEl)   titleEl.innerText = "Model 3D tidak tersedia";
+        if (statusEl)  statusEl.textContent = "Belum tersedia";
+        if (partEl)    partEl.textContent = "—";
+        return;
+      }
+
+      // Sembunyikan fallback 2D, tampilkan viewer
+      if (fallback2d) fallback2d.style.display = "none";
+      if (viewer)     viewer.style.display = "";
+
+      // Set judul dan guide segera (sebelum GLB selesai dimuat)
+      titleEl.innerText = config.title;
+      if (statusEl) statusEl.textContent = "Tersedia";
+      if (partEl)   partEl.textContent   = config.part;
+
+      viewer.src = config.glb;
+
+      // Jika GLB gagal dimuat → tampilkan placeholder 2D, koreksi status
+      viewer.addEventListener("error", () => {
+        console.warn(`[HerbInfo] File GLB tidak ditemukan: ${config.glb}`);
+        viewer.style.display = "none";
+        if (fallback2d) {
+          const fb  = plantData[plantName];
+          const img = fallback2d.querySelector("img");
+          if (img && fb) img.src = fb.image;
+          fallback2d.style.display = "flex";
+        }
+        if (statusEl) statusEl.textContent = "Belum tersedia";
+      }, { once: true });
+    }
+
+    // 6. File API & Webcam Capture
+    function initDragAndDrop() {
+      const dropArea = document.getElementById("dropArea");
+      const fileInput = document.getElementById("fileInput");
+
+      ['dragenter', 'dragover'].forEach(name => {
+        dropArea.addEventListener(name, (e) => {
+          e.preventDefault();
+          dropArea.classList.add("dragover");
+        });
+      });
+
+      ['dragleave', 'drop'].forEach(name => {
+        dropArea.addEventListener(name, (e) => {
+          e.preventDefault();
+          dropArea.classList.remove("dragover");
+        });
+      });
+
+      dropArea.addEventListener("drop", (e) => {
+        handleFiles(e.dataTransfer.files);
+      });
+
+      fileInput.addEventListener("change", function () {
+        handleFiles(this.files);
+      });
+    }
+
+    function handleFiles(files) {
+      if (!files || files.length === 0) return;
+      const file = files[0];
+      const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+      if (!validTypes.includes(file.type)) {
+        showToast("Format file tidak didukung! Harap gunakan JPG, PNG, atau WEBP.");
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        showToast("Ukuran file terlalu besar! Maksimum 10MB.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        currentUploadedDataUrl = e.target.result;
+        document.getElementById("imagePreview").src = currentUploadedDataUrl;
+        document.getElementById("previewContainer").style.display = "block";
+        document.getElementById("dropArea").style.display = "none";
+        document.getElementById("btnScanUpload").disabled = false;
+        showToast("Foto berhasil dimuat. Siap dipindai!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetUpload() {
+      currentUploadedDataUrl = null;
+      document.getElementById("fileInput").value = "";
+      document.getElementById("previewContainer").style.display = "none";
+      document.getElementById("dropArea").style.display = "block";
+      document.getElementById("btnScanUpload").disabled = true;
+    }
+
+    async function startWebcam() {
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "environment" }
+        });
+        const video = document.getElementById("webcamVideo");
+        video.srcObject = cameraStream;
+        video.style.display = "block";
+        document.getElementById("webcamPlaceholder").style.display = "none";
+        document.getElementById("webcamReticle").style.display = "block";
+        document.getElementById("btnStartCamera").style.display = "none";
+        document.getElementById("btnCapturePhoto").style.display = "inline-flex";
+        document.getElementById("btnStopCamera").style.display = "inline-flex";
+        showToast("Kamera aktif. Arahkan simplisia ke tengah retikel.");
+      } catch (err) {
+        showToast("Akses kamera ditolak atau tidak didukung peramban.");
+      }
+    }
+
+    function stopWebcam() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+      const video = document.getElementById("webcamVideo");
+      if (video) video.style.display = "none";
+      document.getElementById("webcamPlaceholder").style.display = "block";
+      document.getElementById("webcamReticle").style.display = "none";
+      document.getElementById("btnStartCamera").style.display = "inline-flex";
+      document.getElementById("btnCapturePhoto").style.display = "none";
+      document.getElementById("btnStopCamera").style.display = "none";
+    }
+
+    function captureWebcamPhoto() {
+      const video = document.getElementById("webcamVideo");
+      const canvas = document.getElementById("captureCanvas");
+      if (!cameraStream || !video) return;
+
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      currentUploadedDataUrl = canvas.toDataURL("image/jpeg", 0.9);
+      stopWebcam();
+      processScan('webcam');
+    }
+
+    // 7. Proses Scan & Render Hasil
+    async function processScan(sourceType) {
+      // Anti double-submit
+      if (scanInProgress) return;
+
+      // Validasi gambar
+      if (!currentUploadedDataUrl) {
+        showToast("Tidak ada gambar. Silakan upload atau ambil foto terlebih dahulu.");
+        return;
+      }
+
+      scanInProgress = true;
+
+      const overlay     = document.getElementById("scanningOverlay");
+      const fill        = document.getElementById("scanProgressFill");
+      const percentText = document.getElementById("scanPercentText");
+      const logText     = document.getElementById("scanSubtitleText");
+
+      // Bersihkan hasil scan lama sebelum memulai
+      const resSection = document.getElementById("resultsSection");
+      resSection.style.display = "none";
+      document.getElementById("resPlantName").innerText  = "";
+      document.getElementById("resLatinName").innerText  = "";
+      document.getElementById("resFamilyName").innerHTML = "";
+
+      overlay.style.display = "flex";
+      fill.style.width = "0%";
+      percentText.innerText = "0%";
+      logText.innerText = "Mempersiapkan gambar...";
+
+      try {
+        // Fase 1: animasi 0–65% sambil model bekerja
+        let progress = 0;
+        const phase1 = setInterval(() => {
+          if (progress < 65) {
+            progress += 3;
+            fill.style.width = progress + "%";
+            percentText.innerText = progress + "%";
+            if (progress === 30) logText.innerText = "Menganalisis gambar dengan model AI...";
+          }
+        }, 60);
+
+        // Pilih elemen gambar sesuai sumber
+        const imgElement = sourceType === 'webcam'
+          ? document.getElementById("captureCanvas")
+          : document.getElementById("imagePreview");
+
+        // Jalankan prediksi
+        const result = await classifyImage(imgElement);
+
+        // Fase 2: selesaikan progress ke 100%
+        clearInterval(phase1);
+        fill.style.width = "100%";
+        percentText.innerText = "100%";
+        logText.innerText = "Selesai.";
+
+        await new Promise(r => setTimeout(r, 400));
+        overlay.style.display = "none";
+
+        // Keputusan berdasarkan hasil klasifikasi
+        if (result.status === "model_unavailable") {
+          displayRejectedResult("model_unavailable");
+          return;
+        }
+
+        if (result.status === "rejected") {
+          displayRejectedResult(result.reason);
+          return;
+        }
+
+        // Diterima — lookup data referensi
+        const ref = plantData[result.plantKey] ?? null;
+        displayScanResult({ plantKey: result.plantKey, probability: result.probability, ref, image: currentUploadedDataUrl });
+
+      } finally {
+        scanInProgress = false;
+      }
+    }
+
+    // Tampilkan hasil identifikasi yang diterima
+    function displayScanResult(payload) {
+      const { plantKey, probability, ref, image } = payload;
+      const refNone = "Data referensi belum tersedia";
+
+      // Utamakan latinName & family dari plant-reference.json bila ada
+      const pRef     = plantReferenceData && plantReferenceData[plantKey];
+      const latinName = pRef ? pRef.namaIlmiah : (ref ? ref.latinName : refNone);
+      const family    = pRef ? pRef.famili     : (ref ? ref.family    : refNone);
+
+      currentActiveScanData = {
+        plantName:  plantKey,
+        latinName:  latinName,
+        family:     family,
+        confidence: Math.round(probability * 1000) / 10, // 1 desimal
+        image:      image
+      };
+
+      document.getElementById("resPlantImg").src  = image;
+      document.getElementById("resPlantName").innerText  = plantKey;
+      document.getElementById("resLatinName").innerText  = latinName;
+
+      const famEl = document.getElementById("resFamilyName");
+      famEl.textContent = "";
+      const famStrong = document.createElement("strong");
+      famStrong.textContent = family;
+      famEl.append("Famili: ", famStrong);
+
+      const scoreStr = (probability * 100).toFixed(1) + "%";
+      document.getElementById("resConfidenceVal").innerText  = scoreStr;
+      document.getElementById("resConfidenceFill").style.width = (probability * 100).toFixed(1) + "%";
+
+      // Tampilkan / sembunyikan panel ditolak
+      const rejPanel = document.getElementById("rejectedResultPanel");
+      if (rejPanel) rejPanel.style.display = "none";
+
+      // 3D Viewer
+      update3dModelSource(plantKey);
+
+      // Kartu aktivitas farmakologis
+      renderPharmacologyCards(plantKey);
+
+      // Tab monografi — tampilkan data dari plant-reference.json
+      renderMonografiPanel(plantKey);
+
+      // Tampilkan hasil
+      const resSection = document.getElementById("resultsSection");
+      resSection.style.display = "block";
+      resSection.scrollIntoView({ behavior: 'smooth' });
+
+      // Simpan ke riwayat (hanya untuk identifikasi yang diterima)
+      saveScanToHistory(currentActiveScanData);
+      showToast(`Teridentifikasi: ${plantKey}. Skor model: ${scoreStr}`);
+    }
+
+    // Tampilkan panel penolakan identifikasi
+    function displayRejectedResult(reason) {
+      const messages = {
+        "model_unavailable": "Model klasifikasi belum dimuat. Muat ulang halaman dan pastikan koneksi internet aktif.",
+        "non_herbal":        "Gambar tidak terdeteksi sebagai tanaman herbal. Coba foto bagian daun atau rimpang dengan latar yang jelas.",
+        "low_confidence":    `Skor model terlalu rendah untuk identifikasi (threshold: ${(CONFIDENCE_THRESHOLD * 100).toFixed(0)}%). Coba pencahayaan lebih baik atau sudut foto berbeda.`,
+        "unmapped_label":    "Kelas tanaman ini belum didukung oleh sistem saat ini."
+      };
+      const msg = messages[reason] || "Identifikasi tidak dapat dilakukan.";
+
+      // Bersihkan panel hasil positif
+      document.getElementById("resPlantName").innerText  = "Tidak Dapat Diidentifikasi";
+      document.getElementById("resLatinName").innerText  = "—";
+      document.getElementById("resFamilyName").innerHTML = "";
+      document.getElementById("resConfidenceVal").innerText  = "—";
+      document.getElementById("resConfidenceFill").style.width = "0%";
+      const resPlantImg = document.getElementById("resPlantImg");
+      if (resPlantImg) resPlantImg.src = currentUploadedDataUrl || "";
+
+      // Tampilkan panel penolakan
+      const rejPanel = document.getElementById("rejectedResultPanel");
+      if (rejPanel) {
+        rejPanel.style.display = "block";
+        const rejMsg = document.getElementById("rejectedResultMsg");
+        if (rejMsg) rejMsg.innerText = msg;
+      }
+
+      const resSection = document.getElementById("resultsSection");
+      resSection.style.display = "block";
+      resSection.scrollIntoView({ behavior: 'smooth' });
+
+      // Kosongkan kartu farmakologi dan monografi — tidak ada tanaman aktif setelah ditolak
+      renderPharmacologyCards(null);
+      renderMonografiPanel(null);
+
+      currentActiveScanData = null;
+    }
+
+    // Demo Instan dari Tanaman Populer — BYPASS model, langsung displayScanResult
+    function demoScanPlant(plantKey) {
+      const ref = plantData[plantKey];
+      if (!ref) {
+        showToast("Data demo untuk tanaman ini belum tersedia.");
+        return;
+      }
+      displayScanResult({
+        plantKey,
+        probability: 1.0, // demo: skor ditampilkan sebagai 100% (bukan hasil model)
+        ref,
+        image: ref.image
+      });
+      switchResultTab('model3d');
+    }
+
+    function resetScanSession() {
+      resetUpload();
+      stopWebcam();
+      renderPharmacologyCards(null); // bersihkan kartu agar tidak tertinggal
+      renderMonografiPanel(null);    // bersihkan monografi
+      document.getElementById("resultsSection").style.display = "none";
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 8. Integrasi LocalStorage
+    function saveScanToHistory(data) {
+      let history = JSON.parse(localStorage.getItem("herbinfo_scan_history") || "[]");
+      const newEntry = {
+        id: "SCAN-" + Date.now(),
+        plantKey:  data.plantName,
+        plantName: data.plantName,
+        latinName: data.latinName,
+        confidence: data.confidence,
+        image: data.image,
+        timestamp: new Date().toLocaleDateString('id-ID', {
+          day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        })
+      };
+
+      history.unshift(newEntry);
+      if (history.length > 10) history = history.slice(0, 10);
+      localStorage.setItem("herbinfo_scan_history", JSON.stringify(history));
+      renderScanHistory();
+    }
+
+    function renderScanHistory() {
+      const container = document.getElementById("historyGridContainer");
+      const history = JSON.parse(localStorage.getItem("herbinfo_scan_history") || "[]");
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="empty-history">
+            <h4>Belum ada riwayat scan</h4>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">Scan tanaman pertamamu untuk melihat visualisasi anatomi 3D!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = history.map(item => {
+        const safeKey = (item.plantKey || item.plantName || "").replace(/'/g, "\\'");
+        return `
+          <div class="history-card" onclick="loadHistoricItem('${safeKey}')">
+            <img src="${item.image}" alt="${item.plantName}" class="history-thumb" />
+            <div class="history-body">
+              <div class="history-title">${item.plantName}</div>
+              <div class="history-latin">${item.latinName}</div>
+              <div class="history-meta">
+                <span>${item.timestamp}</span>
+                <strong style="color:var(--primary);">${item.confidence}%</strong>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Muat ulang hasil dari riwayat menggunakan plantKey → demoScanPlant
+    function loadHistoricItem(plantKey) {
+      if (plantData[plantKey]) {
+        demoScanPlant(plantKey);
+      } else {
+        showToast("Data tanaman ini tidak lagi tersedia di sistem.");
+      }
+    }
+
+    function clearAllHistory() {
+      if (confirm("Kosongkan semua riwayat scan?")) {
+        localStorage.removeItem("herbinfo_scan_history");
+        renderScanHistory();
+        showToast("Riwayat scan berhasil dibersihkan.");
+      }
+    }
+
+    function saveToReportDraft() {
+      if (!currentActiveScanData) return;
+      const reportDraft = {
+        sampleName:  currentActiveScanData.plantName,
+        latinName:   currentActiveScanData.latinName,
+        modelScore:  currentActiveScanData.confidence + "%",
+        dateAdded:   new Date().toISOString(),
+        has3DModel:  true,
+        notes: "Hasil observasi AR Scan & 3D Model Viewer HerbInfoAI."
+      };
+      localStorage.setItem("herbinfo_laporan_draft", JSON.stringify(reportDraft));
+      showToast("Data hasil scan & 3D berhasil disimpan ke draft Laporan Praktikum!");
+    }
+
+    function saveToCatalogFavorites() {
+      if (!currentActiveScanData) return;
+      let favorites = JSON.parse(localStorage.getItem("herbinfo_katalog_favorit") || "[]");
+      const exists = favorites.some(item => item.latinName === currentActiveScanData.latinName);
+
+      if (!exists) {
+        favorites.push({
+          name: currentActiveScanData.plantName,
+          latinName: currentActiveScanData.latinName,
+          image: currentActiveScanData.image
+        });
+        localStorage.setItem("herbinfo_katalog_favorit", JSON.stringify(favorites));
+        showToast("Disimpan ke Katalog Favorit.");
+      } else {
+        showToast("Tanaman ini sudah ada di daftar favorit.");
+      }
+    }
+
+    // 9. AI Pharma Assistant Chat Handler
+    function focusAIChat() {
+      const panel = document.getElementById("aiAssistantBox");
+      const input = document.getElementById("aiUserPrompt");
+      panel.scrollIntoView({ behavior: 'smooth' });
+      input.focus();
+    }
+
+    function handleUserSendMessage() {
+      const input = document.getElementById("aiUserPrompt");
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      appendChatMessage("user", msg);
+      input.value = "";
+      setTimeout(() => generatePharmaReply(msg), 700);
+    }
+
+    // =========================================================================
+    // MATERI EDUKASI — plant-education.json
+    // =========================================================================
+
+    async function loadEducationData() {
+      try {
+        const res = await fetch("data/plant-education.json");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        educationData = await res.json();
+      } catch (err) {
+        educationLoadErr = true;
+        console.warn("[HerbInfo] Gagal memuat plant-education.json:", err);
+      }
+    }
+
+    // =========================================================================
+    // KARTU AKTIVITAS FARMAKOLOGIS
+    // =========================================================================
+
+    function buildPharmacologyCard(slot, index) {
+      const box = document.createElement("div");
+      box.className = "benefit-box";
+
+      const isReady = slot.status === "siap_tayang"
+        && slot.judul && slot.isi && slot.jenisBukti && slot.sumber;
+
+      const titleEl = document.createElement("div");
+      titleEl.className = "benefit-title";
+
+      const descEl = document.createElement("div");
+      descEl.className = "benefit-desc";
+
+      if (isReady) {
+        titleEl.textContent = slot.judul;
+
+        const isiNode = document.createElement("p");
+        isiNode.textContent = slot.isi;
+        descEl.appendChild(isiNode);
+
+        const buktiNode = document.createElement("p");
+        buktiNode.style.cssText = "font-size:0.74rem; color:var(--text-muted); margin-top:4px;";
+        buktiNode.textContent = "Jenis bukti: " + slot.jenisBukti;
+        descEl.appendChild(buktiNode);
+
+        if (slot.bagianDanSediaan) {
+          const bagianNode = document.createElement("p");
+          bagianNode.style.cssText = "font-size:0.74rem; color:var(--text-muted);";
+          bagianNode.textContent = "Bagian/sediaan: " + slot.bagianDanSediaan;
+          descEl.appendChild(bagianNode);
+        }
+
+        const sumberNode = document.createElement("p");
+        sumberNode.style.cssText = "font-size:0.74rem; color:var(--text-muted); margin-top:4px;";
+        const halamanStr = slot.halaman ? ", h. " + slot.halaman : "";
+        sumberNode.textContent = "Sumber: " + slot.sumber + halamanStr;
+        descEl.appendChild(sumberNode);
+      } else {
+        titleEl.textContent = "Aktivitas " + (index + 1);
+        titleEl.style.color = "var(--text-muted)";
+        descEl.style.cssText = "color:var(--text-muted); font-style:italic;";
+        descEl.textContent = "Data referensi belum tersedia";
+      }
+
+      box.appendChild(titleEl);
+      box.appendChild(descEl);
+      return box;
+    }
+
+    function renderPharmacologyCards(plantKey) {
+      const grid = document.getElementById("pharmacologyGrid");
+      if (!grid) return;
+
+      grid.innerHTML = "";
+
+      if (!plantKey) return;
+
+      const slots = educationData
+        && educationData[plantKey]
+        && Array.isArray(educationData[plantKey].aktivitasFarmakologis)
+        ? educationData[plantKey].aktivitasFarmakologis
+        : null;
+
+      for (let i = 0; i < 4; i++) {
+        const slot = slots ? (slots[i] || null) : null;
+        const fallbackSlot = { status: "belum_diisi" };
+        grid.appendChild(buildPharmacologyCard(slot || fallbackSlot, i));
+      }
+    }
+
+    const TOPIC_LABELS = {
+      mekanisme:      "mekanisme kerja",
+      efekSamping:    "efek samping",
+      pengolahan:     "pengolahan simplisia",
+      bagianDigunakan:"bagian yang digunakan"
+    };
+
+    const DEFAULT_REPLIES = {
+      mekanisme:      "Informasi {topik} {plant} belum tersedia pada aplikasi ini.",
+      efekSamping:    "Informasi {topik} {plant} belum tersedia pada aplikasi ini.",
+      pengolahan:     "Informasi {topik} {plant} belum tersedia pada aplikasi ini.",
+      bagianDigunakan:"Informasi {topik} {plant} belum tersedia pada aplikasi ini."
+    };
+
+    const KEYWORD_MAP = [
+      { keys: ["mekanisme", "farmakologi", "kerja", "aktivitas"],        topic: "mekanisme"       },
+      { keys: ["efek samping", "kontraindikasi", "toksik", "bahaya"],    topic: "efekSamping"     },
+      { keys: ["olah", "simplisia", "ekstrak", "pengolahan", "proses"],  topic: "pengolahan"      },
+      { keys: ["bagian", "organ", "digunakan", "rimpang", "daun"],       topic: "bagianDigunakan" }
+    ];
+
+    function sendTopicReply(topicKey) {
+      const label = TOPIC_LABELS[topicKey] || topicKey;
+      appendChatMessage("user", "Informasi " + label);
+      setTimeout(() => replyWithTopic(topicKey), 600);
+    }
+
+    function sendQuickReply(text) {
+      appendChatMessage("user", text);
+      setTimeout(() => generatePharmaReply(text), 600);
+    }
+
+    function appendChatMessage(sender, text) {
+      const thread = document.getElementById("chatThread");
+      const bubble = document.createElement("div");
+      bubble.className = `chat-bubble ${sender}`;
+      bubble.textContent = text;
+      thread.appendChild(bubble);
+      thread.scrollTop = thread.scrollHeight;
+    }
+
+    function replyWithTopic(topicKey) {
+      if (!currentActiveScanData) {
+        appendChatMessage("assistant", "Silakan lakukan scan atau pilih tanaman terlebih dahulu.");
+        return;
+      }
+
+      const plantKey = currentActiveScanData.plantName;
+      const label    = TOPIC_LABELS[topicKey] || topicKey;
+
+      if (educationLoadErr) {
+        appendChatMessage("assistant", "Materi edukasi belum dapat dimuat. Periksa koneksi dan muat ulang halaman.");
+        return;
+      }
+
+      const entry = educationData
+        && educationData[plantKey]
+        && educationData[plantKey][topicKey];
+
+      if (entry && entry.status === "siap_tayang" && entry.isi && entry.sumber) {
+        const halamanStr = entry.halaman ? `, h. ${entry.halaman}` : "";
+        const lines = [
+          entry.isi,
+          `Sumber: ${entry.sumber}${halamanStr}`,
+          "— Materi edukasi, bukan rekomendasi pengobatan atau dosis."
+        ];
+        lines.forEach(line => appendChatMessage("assistant", line));
+      } else {
+        const template = DEFAULT_REPLIES[topicKey] || "Informasi {topik} {plant} belum tersedia.";
+        const msg = template
+          .replace("{topik}", label)
+          .replace("{plant}", plantKey);
+        appendChatMessage("assistant", msg);
+      }
+    }
+
+    function generatePharmaReply(question) {
+      if (!currentActiveScanData) {
+        appendChatMessage("assistant", "Silakan lakukan scan atau pilih tanaman terlebih dahulu.");
+        return;
+      }
+
+      const plantKey  = currentActiveScanData.plantName;
+      const pRef      = plantReferenceData && plantReferenceData[plantKey];
+      const ref       = plantData[plantKey];
+      const latinName = pRef ? pRef.namaIlmiah : (ref ? ref.latinName : plantKey);
+      const q         = question.toLowerCase();
+
+      const MONO_KEYS = {
+        identitas:  ["nama ilmiah", "nama latin", "famili", "latin", "identitas"],
+        pemerian:   ["pemerian", "penampakan", "warna", "bau", "rasa", "bentuk"],
+        senyawa:    ["senyawa", "identitas kimia", "klt", "kromatografi"],
+        kadar:      ["kadar", "kandungan", "minyak atsiri", "kurkumin", "gingerol", "xantorrhizol",
+                     "batas mutu", "parameter mutu", "susut", "abu"],
+        definisi:   ["definisi", "apa itu", "pengertian", "simplisia", "ekstrak"]
+      };
+
+      if (pRef) {
+        const bahanKey = activeMonoBahanKey || pRef.bahanDefault;
+        const bahan    = pRef.bahan && pRef.bahan[bahanKey];
+
+        if (MONO_KEYS.identitas.some(k => q.includes(k))) {
+          appendChatMessage("assistant",
+            `${plantKey}: nama ilmiah ${pRef.namaIlmiah}, famili ${pRef.famili}.`
+          );
+          appendChatMessage("assistant",
+            `Sumber: Farmakope Herbal Indonesia Edisi II (2017).`
+          );
+          return;
+        }
+
+        if (MONO_KEYS.pemerian.some(k => q.includes(k)) && bahan) {
+          appendChatMessage("assistant", bahan.pemerian || "Data pemerian belum tersedia.");
+          appendChatMessage("assistant", `Sumber: ${_monoSumber(bahan)}`);
+          return;
+        }
+
+        if (MONO_KEYS.senyawa.some(k => q.includes(k)) && bahan) {
+          const ids = bahan.senyawaIdentitas;
+          if (ids && ids.length) {
+            appendChatMessage("assistant",
+              `Senyawa identitas ${plantKey} (${bahan.jenisBahan}): ` +
+              ids.map(s => s.nama + (s.metodeIdentifikasi ? " (" + s.metodeIdentifikasi + ")" : "")).join(", ") + "."
+            );
+          } else {
+            appendChatMessage("assistant", "Data senyawa identitas belum tersedia.");
+          }
+          appendChatMessage("assistant", `Sumber: ${_monoSumber(bahan)}`);
+          return;
+        }
+
+        if (MONO_KEYS.kadar.some(k => q.includes(k))) {
+          const bahanKeys = Object.keys(pRef.bahan || {});
+          if (bahanKeys.length === 0) {
+            appendChatMessage("assistant", "Data kadar belum tersedia.");
+            return;
+          }
+          appendChatMessage("assistant", `Kandungan kimia ${plantKey} per jenis bahan:`);
+          bahanKeys.forEach(bk => {
+            const b = pRef.bahan[bk];
+            if (!b || !b.kandunganKimia || b.kandunganKimia.length === 0) return;
+            appendChatMessage("assistant", `${b.namaLatinBahan || bk}:`);
+            b.kandunganKimia.forEach(k => {
+              const batas = k.jenisBatas === "minimum" ? "tidak kurang dari" : "tidak lebih dari";
+              appendChatMessage("assistant",
+                `  ${k.nama}: ${batas} ${k.nilai} ${k.satuan}${k.hubungan ? " (" + k.hubungan + ")" : ""}.`
+              );
+            });
+            appendChatMessage("assistant", `  Sumber: ${_monoSumber(b)}`);
+          });
+          return;
+        }
+
+        if (MONO_KEYS.definisi.some(k => q.includes(k)) && bahan) {
+          appendChatMessage("assistant", bahan.definisi || "Data definisi belum tersedia.");
+          appendChatMessage("assistant", `Sumber: ${_monoSumber(bahan)}`);
+          return;
+        }
+      }
+
+      for (const { keys, topic } of KEYWORD_MAP) {
+        if (keys.some(k => q.includes(k))) {
+          replyWithTopic(topic);
+          return;
+        }
+      }
+
+      const topikList = Object.values(TOPIC_LABELS).join(", ");
+      appendChatMessage("assistant",
+        `Tanaman aktif: ${plantKey} (${latinName}). ` +
+        `Topik yang tersedia: ${topikList}. Atau tanya tentang pemerian, kadar, senyawa identitas.`
+      );
+    }
+
+    function _monoSumber(bahan) {
+      const s = bahan && bahan.sumber;
+      if (!s) return "Sumber tidak tersedia.";
+      let str = `${s.judul} Edisi ${s.edisi} (${s.tahun})`;
+      if (s.halamanAwal) str += `, h. ${s.halamanAwal}`;
+      if (s.halamanAkhir && s.halamanAkhir !== s.halamanAwal) str += `–${s.halamanAkhir}`;
+      return str + ".";
+    }
+
+    // =========================================================================
+    // LOAD & RENDER MONOGRAFI (plant-reference.json)
+    // =========================================================================
+
+    async function loadPlantReferenceData() {
+      try {
+        const res = await fetch("data/plant-reference.json");
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        plantReferenceData = await res.json();
+      } catch (err) {
+        plantRefLoadErr = true;
+        console.warn("[HerbInfo] Gagal memuat plant-reference.json:", err);
+      }
+    }
+
+    function renderMonografiPanel(plantKey) {
+      const toggleEl  = document.getElementById("monoBahanToggle");
+      const contentEl = document.getElementById("monoContent");
+      if (!toggleEl || !contentEl) return;
+
+      toggleEl.innerHTML = "";
+      contentEl.innerHTML = "";
+
+      if (!plantKey) {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = "Pilih tanaman untuk melihat data monografi.";
+        contentEl.appendChild(p);
+        activeMonoBahanKey = null;
+        return;
+      }
+
+      if (plantRefLoadErr) {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = "Data monografi belum dapat dimuat. Periksa koneksi dan muat ulang halaman.";
+        contentEl.appendChild(p);
+        return;
+      }
+
+      const pRef = plantReferenceData && plantReferenceData[plantKey];
+      if (!pRef || !pRef.bahan) {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = `Data referensi monografi ${plantKey} belum tersedia.`;
+        contentEl.appendChild(p);
+        activeMonoBahanKey = null;
+        return;
+      }
+
+      const bahanKeys = Object.keys(pRef.bahan);
+      const defaultKey = pRef.bahanDefault || bahanKeys[0];
+      activeMonoBahanKey = defaultKey;
+
+      bahanKeys.forEach(bk => {
+        const b   = pRef.bahan[bk];
+        const btn = document.createElement("button");
+        btn.className = "mono-bahan-btn" + (bk === defaultKey ? " active" : "");
+        btn.textContent = b.namaLatinBahan || bk;
+        btn.addEventListener("click", () => {
+          activeMonoBahanKey = bk;
+          document.querySelectorAll(".mono-bahan-btn").forEach(el => el.classList.remove("active"));
+          btn.classList.add("active");
+          buildMonografiContent(pRef.bahan[bk], contentEl);
+        });
+        toggleEl.appendChild(btn);
+      });
+
+      buildMonografiContent(pRef.bahan[defaultKey], contentEl);
+    }
+
+    function buildMonografiContent(bahan, targetEl) {
+      const NULL_STR = "Data belum tersedia";
+      targetEl.innerHTML = "";
+
+      function section(label) {
+        const h = document.createElement("div");
+        h.className = "mono-section-title";
+        h.textContent = label;
+        targetEl.appendChild(h);
+      }
+
+      function textBlock(text) {
+        const d = document.createElement("div");
+        d.className = "mono-text-block";
+        d.textContent = text || NULL_STR;
+        if (!text) d.classList.add("mono-null");
+        targetEl.appendChild(d);
+      }
+
+      function table(rows, headers) {
+        const tbl = document.createElement("table");
+        tbl.className = "mono-table";
+        const thead = document.createElement("thead");
+        const tr    = document.createElement("tr");
+        headers.forEach(h => {
+          const th = document.createElement("th");
+          th.textContent = h;
+          tr.appendChild(th);
+        });
+        thead.appendChild(tr);
+        tbl.appendChild(thead);
+        const tbody = document.createElement("tbody");
+        rows.forEach(row => {
+          const tr2 = document.createElement("tr");
+          row.forEach(cell => {
+            const td = document.createElement("td");
+            if (cell && cell._badge) {
+              const span = document.createElement("span");
+              span.className = cell._class;
+              span.textContent = cell._text;
+              td.appendChild(span);
+            } else {
+              td.textContent = cell !== null && cell !== undefined ? String(cell) : NULL_STR;
+              if (cell === null || cell === undefined) td.classList.add("mono-null");
+            }
+            tr2.appendChild(td);
+          });
+          tbody.appendChild(tr2);
+        });
+        tbl.appendChild(tbody);
+        targetEl.appendChild(tbl);
+      }
+
+      if (bahan.definisi) {
+        section("Definisi");
+        textBlock(bahan.definisi);
+      }
+
+      section("Pemerian");
+      textBlock(bahan.pemerian);
+
+      if (bahan.mikroskopis) {
+        section("Mikroskopis");
+        textBlock(bahan.mikroskopis);
+      }
+
+      section("Senyawa Identitas");
+      if (bahan.senyawaIdentitas && bahan.senyawaIdentitas.length) {
+        table(
+          bahan.senyawaIdentitas.map(s => [
+            s.nama,
+            s.metodeIdentifikasi,
+            s.halaman
+          ]),
+          ["Senyawa", "Metode", "Halaman"]
+        );
+      } else {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = NULL_STR;
+        targetEl.appendChild(p);
+      }
+
+      if (bahan.klt) {
+        section("Profil KLT");
+        const klt = bahan.klt;
+        table(
+          [
+            ["Fase gerak",  klt.faseGerak],
+            ["Fase diam",   klt.faseDiam],
+            ["Larutan uji", klt.larutanUji],
+            ["Pembanding",  klt.larutanPembanding],
+            ["Volume",      klt.volumePenotolan],
+            ["Deteksi",     klt.deteksi]
+          ],
+          ["Parameter", "Keterangan"]
+        );
+      }
+
+      section("Parameter Mutu");
+      if (bahan.parameterMutu && bahan.parameterMutu.length) {
+        table(
+          bahan.parameterMutu.map(p => [
+            p.nama,
+            { _badge: true,
+              _class: p.jenisBatas === "minimum" ? "mono-badge-min" : "mono-badge-max",
+              _text:  p.jenisBatas === "minimum" ? "Min" : "Maks" },
+            p.nilai + " " + p.satuan,
+            p.keterangan
+          ]),
+          ["Parameter", "Batas", "Nilai", "Keterangan"]
+        );
+      } else {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = NULL_STR;
+        targetEl.appendChild(p);
+      }
+
+      section("Kandungan Kimia");
+      if (bahan.kandunganKimia && bahan.kandunganKimia.length) {
+        table(
+          bahan.kandunganKimia.map(k => [
+            k.nama,
+            { _badge: true,
+              _class: k.jenisBatas === "minimum" ? "mono-badge-min" : "mono-badge-max",
+              _text:  k.jenisBatas === "minimum" ? "Min" : "Maks" },
+            k.nilai + " " + k.satuan,
+            k.keterangan,
+            k.hubungan || "—"
+          ]),
+          ["Senyawa", "Batas", "Nilai", "Keterangan", "Hubungan"]
+        );
+      } else {
+        const p = document.createElement("p");
+        p.className = "mono-null";
+        p.textContent = NULL_STR;
+        targetEl.appendChild(p);
+      }
+
+      if (bahan.metodePenetapanKadarRingkas) {
+        section("Metode Penetapan Kadar (Ringkasan)");
+        const mpk = bahan.metodePenetapanKadarRingkas;
+        Object.entries(mpk).forEach(([k, v]) => {
+          if (k === "catatan") return;
+          textBlock(v);
+        });
+      }
+
+      if (bahan.sumber) {
+        const s    = bahan.sumber;
+        const div  = document.createElement("div");
+        div.className = "mono-source";
+        const halStr = s.halamanAwal
+          ? `, h. ${s.halamanAwal}${s.halamanAkhir && s.halamanAkhir !== s.halamanAwal ? "–" + s.halamanAkhir : ""}`
+          : "";
+        div.textContent = `Sumber: ${s.judul} Edisi ${s.edisi} (${s.tahun})${halStr}.`;
+        targetEl.appendChild(div);
+      }
+    }
+
+    // 10. Handler Parameter URL (Bila datang dari halaman lain)
+    function checkUrlParameters() {
+      const params = new URLSearchParams(window.location.search);
+      const plantParam = params.get('plant');
+      if (plantParam && plantData[plantParam]) {
+        demoScanPlant(plantParam);
+      }
+    }
+  </script>
+</body>
+</html>
+
+Catatan tambahan: judul viewer 3D sekarang dibungkus `<span id="viewerPlantTitle">` di dalam `<h3>` berikon, dan tombol auto-rotate menggunakan `<span id="rotateLabel">` sehingga JS tidak lagi menimpa ikon SVG saat teks berubah.
