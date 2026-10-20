@@ -757,7 +757,7 @@
 
     .stats-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 30px;
     }
 
@@ -830,24 +830,7 @@
     }
 
     .herb-photo-credit {
-      position: absolute;
-      left: 10px;
-      bottom: 10px;
-      max-width: calc(100% - 20px);
-      padding: 4px 8px;
-      border-radius: var(--radius-full);
-      background: rgba(27, 67, 50, 0.78);
-      color: #fff;
-      font-size: 0.68rem;
-      line-height: 1.3;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .herb-photo-credit:hover {
-      background: var(--primary);
-      color: #fff;
+      display: none;
     }
 
     .herb-img-wrapper img {
@@ -958,8 +941,11 @@
     }
 
     .herb-dialog {
-      width: min(620px, calc(100% - 32px));
-      max-height: min(85vh, 760px);
+      display: none;
+      flex-direction: row;
+      width: min(920px, calc(100% - 32px));
+      height: min(680px, 88vh);
+      max-height: 88vh;
       margin: auto;
       padding: 0;
       border: 1px solid var(--border-color);
@@ -967,7 +953,11 @@
       color: var(--text-dark);
       background: var(--bg-card);
       box-shadow: 0 24px 70px rgba(27, 67, 50, 0.28);
-      overflow: auto;
+      overflow: hidden;
+    }
+
+    .herb-dialog[open] {
+      display: flex;
     }
 
     .herb-dialog::backdrop {
@@ -975,23 +965,36 @@
       backdrop-filter: blur(4px);
     }
 
+    .herb-dialog-visual {
+      display: flex;
+      flex: 0 0 42%;
+      flex-direction: column;
+      min-width: 0;
+      padding: 18px;
+      background: var(--bg-main);
+    }
+
     .herb-dialog-photo-pair {
-      width: 100%;
-      height: 220px;
+      display: grid;
+      flex: 1;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+      min-height: 0;
+      overflow: hidden;
+      border-radius: var(--radius-md);
     }
 
     .herb-dialog-photo-pair.has-pair {
-      display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 3px;
     }
 
     .herb-dialog-image {
       width: 100%;
-      height: 220px;
+      height: 100%;
+      min-height: 0;
       display: block;
       object-fit: cover;
-      background: var(--bg-main);
+      background: #FFFFFF;
     }
 
     .herb-dialog-image[hidden] {
@@ -999,15 +1002,14 @@
     }
 
     .herb-dialog-credit {
-      display: block;
-      padding: 7px 16px;
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      text-align: right;
+      display: none;
     }
 
     .herb-dialog-content {
-      padding: 26px;
+      flex: 1;
+      min-width: 0;
+      overflow-y: auto;
+      padding: 30px;
     }
 
     .herb-dialog-header {
@@ -1038,6 +1040,7 @@
       flex: 0 0 auto;
       width: 38px;
       height: 38px;
+      padding: 0;
       border: 1px solid var(--border-color);
       border-radius: 50%;
       background: var(--bg-main);
@@ -1045,6 +1048,14 @@
       font-size: 1.5rem;
       line-height: 1;
       cursor: pointer;
+    }
+
+    .herb-dialog-close-form {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      z-index: 10;
+      margin: 0;
     }
 
     .herb-dialog-close:hover {
@@ -1352,6 +1363,23 @@
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 36px;
+      }
+
+      .herb-dialog {
+        width: min(680px, calc(100% - 32px));
+        height: min(780px, 90vh);
+        max-height: 90vh;
+        flex-direction: column;
+      }
+
+      .herb-dialog-visual {
+        flex: 0 0 36%;
+        min-height: 190px;
+        padding: 14px;
+      }
+
+      .herb-dialog-content {
+        padding: 22px;
       }
 
       .footer-grid {
@@ -1681,22 +1709,13 @@
           <!-- Stat 1 -->
           <div class="stat-item fade-in-scroll">
             <div class="stat-icon">
-              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
-            </div>
-            <div class="stat-number" data-target="500">500+</div>
-            <div class="stat-label">Tanaman Herbal</div>
-          </div>
-
-          <!-- Stat 2 -->
-          <div class="stat-item fade-in-scroll">
-            <div class="stat-icon">
               <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="m10.5 10.5-4 7"/><path d="m13.5 13.5 4-7"/></svg>
             </div>
             <div class="stat-number" data-target="50">50+</div>
             <div class="stat-label">Senyawa Fitokimia 3D</div>
           </div>
 
-          <!-- Stat 3 -->
+          <!-- Stat 2 -->
           <div class="stat-item fade-in-scroll">
             <div class="stat-icon">
               <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -1705,7 +1724,7 @@
             <div class="stat-label">Mahasiswa & Peneliti</div>
           </div>
 
-          <!-- Stat 4 -->
+          <!-- Stat 3 -->
           <div class="stat-item fade-in-scroll">
             <div class="stat-icon">
               <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -1733,8 +1752,8 @@
           <!-- PLACEHOLDER FOTO: herb-jahe.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Ginger_Plant_vs.jpg" alt="Tanaman jahe dan bunganya (Zingiber officinale)" loading="lazy" />
-              <a class="herb-photo-credit" href="https://commons.wikimedia.org/wiki/File:Ginger_Plant_vs.jpg" target="_blank" rel="noopener noreferrer">Foto: Venkatx5 / Wikimedia Commons</a>
+              <img src="images/jahe.jpg" alt="Rimpang jahe segar dengan irisan (Zingiber officinale)" loading="lazy" />
+              <span class="herb-photo-credit">Foto pilihan pengguna</span>
               <span class="herb-badge">Imunomodulator</span>
             </div>
             <div class="herb-body">
@@ -1770,12 +1789,9 @@
           <!-- Card 3: Temulawak -->
           <!-- PLACEHOLDER FOTO: herb-temulawak.jpg -->
           <div class="herb-card fade-in-scroll">
-            <div class="herb-img-wrapper herb-photo-pair">
-              <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c7/Tomulawa_%28Curcuma_zanthorrhiza%29_01.jpg/500px-Tomulawa_%28Curcuma_zanthorrhiza%29_01.jpg" alt="Foto asli tanaman temulawak dengan daun dan batang" loading="lazy" />
-              <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/3/32/Tomulawa_%28Curcuma_zanthorrhiza%29_03.jpg/500px-Tomulawa_%28Curcuma_zanthorrhiza%29_03.jpg" alt="Foto asli akar dan rimpang temulawak" loading="lazy" />
-              <span class="herb-photo-label">Tanaman</span>
-              <span class="herb-photo-label herb-photo-label-root">Akar &amp; rimpang</span>
-              <a class="herb-photo-credit" href="https://commons.wikimedia.org/wiki/File:Tomulawa_(Curcuma_zanthorrhiza)_03.jpg" target="_blank" rel="noopener noreferrer">Foto: Rahmatlahay / Wikimedia Commons</a>
+            <div class="herb-img-wrapper">
+              <img src="images/temulawak.jpg" alt="Rimpang temulawak dan bubuknya" loading="lazy" />
+              <span class="herb-photo-credit">Foto pilihan pengguna</span>
               <span class="herb-badge">Digestif</span>
             </div>
             <div class="herb-body">
@@ -1793,8 +1809,8 @@
           <!-- PLACEHOLDER FOTO: herb-lidah-buaya.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Aloevera_Plant.jpg" alt="Lidah buaya hijau segar dengan daun tebal berduri (Aloe vera)" loading="lazy" />
-              <a class="herb-photo-credit" href="https://commons.wikimedia.org/wiki/File:Aloevera_Plant.jpg" target="_blank" rel="noopener noreferrer">Foto: Wikimedia Commons</a>
+              <img src="images/lidah-buaya.jpg" alt="Tanaman lidah buaya dengan daun berdaging dan gel (Aloe vera)" loading="lazy" />
+              <span class="herb-photo-credit">Foto pilihan pengguna</span>
               <span class="herb-badge">Dermatologis</span>
             </div>
             <div class="herb-body">
@@ -1812,8 +1828,8 @@
           <!-- PLACEHOLDER FOTO: herb-sirih.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://live.staticflickr.com/5128/5273307331_6f552a465d_b.jpg" alt="Daun sirih hijau segar dilihat dari dekat (Piper betle)" loading="lazy" />
-              <a class="herb-photo-credit" href="https://www.flickr.com/photos/49694447@N00/5273307331" target="_blank" rel="noopener noreferrer">Foto: Kumaravel / Flickr (CC BY 2.0)</a>
+              <img src="images/sirih.jpg" alt="Daun sirih segar (Piper betle)" loading="lazy" />
+              <span class="herb-photo-credit">Foto pilihan pengguna</span>
               <span class="herb-badge">Antiseptik</span>
             </div>
             <div class="herb-body">
@@ -1831,7 +1847,7 @@
           <!-- PLACEHOLDER FOTO: herb-jahe-merah.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://images.pexels.com/photos/10899474/pexels-photo-10899474.jpeg?auto=compress&amp;w=700" alt="Foto asli rimpang jahe segar" loading="lazy" />
+              <img src="https://images.pexels.com/photos/10899474/pexels-photo-10899474.jpeg?auto=compress&amp;w=700" alt="Foto rimpang jahe segar; varietas merah tidak dapat dipastikan dari foto" loading="lazy" />
               <a class="herb-photo-credit" href="https://www.pexels.com/photo/a-bowl-of-ginger-10899474/" target="_blank" rel="noopener noreferrer">Foto: Engin Akyurt / Pexels</a>
               <span class="herb-badge">Analgesik Alami</span>
             </div>
@@ -1850,11 +1866,16 @@
     </section>
 
     <dialog class="herb-dialog" id="herbDialog" aria-labelledby="herbDialogTitle">
-      <div class="herb-dialog-photo-pair" id="herbDialogPhotoPair">
-        <img class="herb-dialog-image" id="herbDialogImage" alt="" />
-        <img class="herb-dialog-image" id="herbDialogSecondaryImage" alt="" hidden />
+      <form method="dialog" class="herb-dialog-close-form">
+        <button type="submit" class="herb-dialog-close" id="herbDialogClose" aria-label="Tutup detail">&times;</button>
+      </form>
+      <div class="herb-dialog-visual">
+        <div class="herb-dialog-photo-pair" id="herbDialogPhotoPair">
+          <img class="herb-dialog-image" id="herbDialogImage" alt="" />
+          <img class="herb-dialog-image" id="herbDialogSecondaryImage" alt="" hidden />
+        </div>
+        <a class="herb-dialog-credit" id="herbDialogCredit" target="_blank" rel="noopener noreferrer"></a>
       </div>
-      <a class="herb-dialog-credit" id="herbDialogCredit" target="_blank" rel="noopener noreferrer"></a>
       <div class="herb-dialog-content">
         <div class="herb-dialog-header">
           <div>
@@ -1862,7 +1883,6 @@
             <h3 class="herb-dialog-title" id="herbDialogTitle"></h3>
             <p class="herb-dialog-latin" id="herbDialogLatin"></p>
           </div>
-          <button type="button" class="herb-dialog-close" id="herbDialogClose" aria-label="Tutup detail">&times;</button>
         </div>
         <p class="herb-dialog-description" id="herbDialogDescription"></p>
         <h4>Kandungan yang dikenal</h4>
@@ -2120,7 +2140,7 @@
             fields.secondaryImage.removeAttribute("src");
             fields.secondaryImage.alt = "";
           }
-          fields.credit.href = credit ? credit.href : "";
+          fields.credit.href = credit instanceof HTMLAnchorElement ? credit.href : "";
           fields.credit.textContent = credit ? credit.textContent : "";
           fields.credit.hidden = !credit;
           fields.badge.textContent = herb.badge;
@@ -2137,7 +2157,6 @@
         });
       });
 
-      closeButton.addEventListener("click", () => dialog.close());
       dialog.addEventListener("click", (event) => {
         if (event.target === dialog) dialog.close();
       });
