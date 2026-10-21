@@ -206,5 +206,209 @@
         }
       }
     }
+  },
+  "Temulawak": {
+    "plantKey": "Temulawak",
+    "namaIndonesia": "Temulawak",
+    "namaIlmiah": "Curcuma xanthorrhiza Roxb.",
+    "famili": "Zingiberaceae",
+    "statusPemeriksaan": "perlu_diperiksa",
+    "bahanDefault": "rimpangSimplisia",
+    "bahan": {
+      "rimpangSimplisia": {
+        "jenisBahan": "simplisia",
+        "bagianTanaman": "Rimpang",
+        "namaLatinBahan": "Curcumae Xanthorrhizae Rhizoma",
+        "definisi": "Rimpang temulawak adalah rimpang Curcuma xanthorrhiza Roxb., suku Zingiberaceae, mengandung minyak atsiri tidak kurang dari 1,20% v/b dan/atau kurkumin tidak kurang dari 2,30%.",
+        "pemerian": "Berupa irisan rimpang, keping tipis, bentuk bulat atau agak jorong, ringan, keras, mudah patah, permukaan luar berkerut, warna cokelat kuning hingga cokelat, bidang irisan melengkung tidak beraturan, tidak rata, sering dengan tonjolan melingkar pada batas antara korteks dengan silinder pusat, korteks sempit, bekas patahan berdebu; warna kuning jingga hingga cokelat jingga terang; bau khas aromatik; rasa tajam dan pahit.",
+        "mikroskopis": "Fragmen pengenal adalah amilum, parenkim korteks, sklerenkim, berkas pengangkut dengan penebalan tipe tangga, dan jaringan gabus.",
+        "senyawaIdentitas": [
+          {
+            "nama": "Xantorizol",
+            "metodeIdentifikasi": "KLT",
+            "halaman": 499
+          }
+        ],
+        "klt": {
+          "faseGerak": "Toluen P - etil asetat P (93:7)",
+          "faseDiam": "Silika gel 60 GF254",
+          "larutanUji": "0,1% dalam toluen P",
+          "larutanPembanding": "Xantorizol 0,1% dalam toluen P",
+          "volumePenotolan": "20 µL Larutan uji dan 5 µL Larutan pembanding",
+          "deteksi": "Biru permanen LP dan amonium hidroksida P",
+          "halaman": 499
+        },
+        "parameterMutu": [
+          {
+            "nama": "Susut pengeringan",
+            "jenisBatas": "maksimum",
+            "nilai": "10",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 10%",
+            "metode": null,
+            "halaman": 501
+          },
+          {
+            "nama": "Abu total",
+            "jenisBatas": "maksimum",
+            "nilai": "4,8",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 4,8%",
+            "metode": null,
+            "halaman": 501
+          },
+          {
+            "nama": "Abu tidak larut asam",
+            "jenisBatas": "maksimum",
+            "nilai": "0,7",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 0,7%",
+            "metode": null,
+            "halaman": 501
+          },
+          {
+            "nama": "Sari larut air",
+            "jenisBatas": "minimum",
+            "nilai": "9,1",
+            "satuan": "%",
+            "keterangan": "Tidak kurang dari 9,1%",
+            "metode": null,
+            "halaman": 501
+          },
+          {
+            "nama": "Sari larut etanol",
+            "jenisBatas": "minimum",
+            "nilai": "3,6",
+            "satuan": "%",
+            "keterangan": "Tidak kurang dari 3,6%",
+            "metode": null,
+            "halaman": 501
+          }
+        ],
+        "kandunganKimia": [
+          {
+            "nama": "Minyak atsiri",
+            "jenisBatas": "minimum",
+            "nilai": "1,20",
+            "satuan": "% v/b",
+            "keterangan": "Tidak kurang dari 1,20% v/b",
+            "hubungan": "dan/atau",
+            "metode": "Penetapan Kadar Minyak Atsiri <71>",
+            "halaman": 501
+          },
+          {
+            "nama": "Kurkumin",
+            "jenisBatas": "minimum",
+            "nilai": "2,30",
+            "satuan": "%",
+            "keterangan": "Tidak kurang dari 2,30%",
+            "hubungan": "dan/atau",
+            "metode": "Kromatografi Lapis Tipis (KLT) Densitometri <61>",
+            "panjangGelombang": "lebih kurang 425 nm",
+            "halaman": 501
+          }
+        ],
+        "metodePenetapanKadarRingkas": {
+          "kurkumin": "Penetapan kadar kurkumin dengan KLT Densitometri pada panjang gelombang serapan maksimum lebih kurang 425 nm, memakai larutan uji simplisia dalam etanol P dan kurva kalibrasi kurkumin pembanding.",
+          "catatan": "Ringkasan edukasi; bukan salinan penuh prosedur buku."
+        },
+        "sumber": {
+          "judul": "Farmakope Herbal Indonesia",
+          "edisi": "II",
+          "tahun": 2017,
+          "halamanAwal": 498,
+          "halamanAkhir": 503,
+          "halamanSpesifik": null
+        }
+      },
+      "ekstrakKental": {
+        "jenisBahan": "ekstrak_kental",
+        "bagianTanaman": "Rimpang",
+        "namaLatinBahan": "Curcumae Xanthorrhizae Rhizomae Extractum Spissum",
+        "definisi": "Ekstrak kental rimpang temulawak adalah ekstrak yang dibuat dari rimpang Curcuma xanthorrhiza Roxb., suku Zingiberaceae, mengandung minyak atsiri tidak kurang dari 2,80% v/b dan/atau kurkumin tidak kurang dari 6,70%.",
+        "pemerian": "Ekstrak kental; warna kuning kecokelatan; bau khas; rasa pahit.",
+        "mikroskopis": null,
+        "senyawaIdentitas": [
+          {
+            "nama": "Xantorizol",
+            "metodeIdentifikasi": null,
+            "halaman": 502
+          }
+        ],
+        "klt": null,
+        "rendemen": {
+          "jenisBatas": "minimum",
+          "nilai": "18,0",
+          "satuan": "%",
+          "keterangan": "Tidak kurang dari 18,0%",
+          "halaman": 502
+        },
+        "caraPembuatan": null,
+        "parameterMutu": [
+          {
+            "nama": "Kadar air",
+            "jenisBatas": "maksimum",
+            "nilai": "10",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 10%",
+            "metode": null,
+            "halaman": 502
+          },
+          {
+            "nama": "Abu total",
+            "jenisBatas": "maksimum",
+            "nilai": "7,8",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 7,8%",
+            "metode": null,
+            "halaman": 502
+          },
+          {
+            "nama": "Abu tidak larut asam",
+            "jenisBatas": "maksimum",
+            "nilai": "1,6",
+            "satuan": "%",
+            "keterangan": "Tidak lebih dari 1,6%",
+            "metode": null,
+            "halaman": 502
+          }
+        ],
+        "kandunganKimia": [
+          {
+            "nama": "Minyak atsiri",
+            "jenisBatas": "minimum",
+            "nilai": "2,80",
+            "satuan": "% v/b",
+            "keterangan": "Tidak kurang dari 2,80% v/b",
+            "hubungan": "dan/atau",
+            "metode": "Penetapan Kadar Minyak Atsiri <71>",
+            "halaman": 502
+          },
+          {
+            "nama": "Kurkumin",
+            "jenisBatas": "minimum",
+            "nilai": "6,70",
+            "satuan": "%",
+            "keterangan": "Tidak kurang dari 6,70%",
+            "hubungan": "dan/atau",
+            "metode": "Kromatografi Lapis Tipis (KLT) Densitometri <61>",
+            "panjangGelombang": "lebih kurang 425 nm",
+            "halaman": 502
+          }
+        ],
+        "metodePenetapanKadarRingkas": {
+          "kurkumin": "Penetapan kadar kurkumin dengan KLT Densitometri pada panjang gelombang serapan maksimum lebih kurang 425 nm, memakai larutan uji ekstrak dalam etanol P dan kurva kalibrasi kurkumin pembanding.",
+          "catatan": "Ringkasan edukasi; bukan salinan penuh prosedur buku."
+        },
+        "sumber": {
+          "judul": "Farmakope Herbal Indonesia",
+          "edisi": "II",
+          "tahun": 2017,
+          "halamanAwal": 498,
+          "halamanAkhir": 503,
+          "halamanSpesifik": null
+        }
+      }
+    }
   }
 }
