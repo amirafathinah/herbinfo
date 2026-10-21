@@ -1361,23 +1361,36 @@
 
     .footer-bottom {
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 24px;
+      padding-top: 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       color: #A0AEC0;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 20px 32px;
     }
 
     .footer-legal-links {
       display: flex;
-      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px 28px;
+    }
+
+    .footer-legal-links a {
+      white-space: nowrap;
     }
 
     .footer-legal-links a:hover {
       color: #FFFFFF;
+    }
+
+    @media (max-width: 768px) {
+      .footer-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
 
     /* ==========================================================================
@@ -1851,12 +1864,11 @@
       <div class="footer-bottom">
         <div>
           &copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.
-          <small style="display:block; margin-top:6px; color:#A0AEC0; font-size:0.75rem;">Kredit foto: Temulawak — <a href="https://commons.wikimedia.org/wiki/File:Tomulawa_(Curcuma_zanthorrhiza)_03.jpg" target="_blank" rel="noopener noreferrer">Rahmatlahay</a>; Lengkuas — <a href="https://commons.wikimedia.org/wiki/File:Thai_ginger_(Alpinia_galanga).jpg" target="_blank" rel="noopener noreferrer">Susan Slater</a>; Kencur — <a href="https://commons.wikimedia.org/wiki/File:Kaempferia_galanga.jpg" target="_blank" rel="noopener noreferrer">Hariadhi</a>. Foto Lengkuas dan Kencur berlisensi <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</small>
         </div>
         <div class="footer-legal-links">
           <a href="privacy.html">Kebijakan Privasi</a>
           <a href="terms.html">Syarat &amp; Ketentuan</a>
-          <a href="disclaimer.html">Medical Disclaimer</a>
+          <a href="disclaimer.html">Standar Akademik</a>
         </div>
       </div>
     </div>
@@ -1893,10 +1905,10 @@
       },
       {
         id: 2,
-        commonName: "Sirih",
+        commonName: "Daun Sirih",
         latinName: "Piper betle L.",
         family: "Piperaceae",
-        localName: "Sirih",
+        localName: "Daun Sirih",
         activeCompound: "Eugenol",
         indication: "Antiinflamasi",
         organ: "Daun",
