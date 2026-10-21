@@ -746,52 +746,6 @@
     }
 
     /* ==========================================================================
-       6. STATISTIK / TRUST INDICATORS
-       ========================================================================== */
-    .section-stats {
-      padding: 60px 0;
-      background: linear-gradient(135deg, rgba(45, 106, 79, 0.05), rgba(82, 183, 136, 0.1));
-      border-top: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-    }
-
-    .stat-item {
-      text-align: center;
-      padding: 10px;
-    }
-
-    .stat-icon {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 12px;
-      color: var(--secondary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .stat-number {
-      font-size: 2.3rem;
-      font-family: var(--font-heading);
-      font-weight: 800;
-      color: var(--primary);
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-
-    .stat-label {
-      font-size: 0.92rem;
-      font-weight: 500;
-      color: var(--text-muted);
-    }
-
-    /* ==========================================================================
        7. FEATURED HERBS PREVIEW
        ========================================================================== */
     .section-herbs {
@@ -1296,23 +1250,36 @@
 
     .footer-bottom {
       border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 24px;
+      padding-top: 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       color: #A0AEC0;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 20px 32px;
     }
 
     .footer-legal-links {
       display: flex;
-      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px 28px;
+    }
+
+    .footer-legal-links a {
+      white-space: nowrap;
     }
 
     .footer-legal-links a:hover {
       color: #FFFFFF;
+    }
+
+    @media (max-width: 768px) {
+      .footer-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
 
     /* ==========================================================================
@@ -1360,11 +1327,6 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 36px;
-      }
-
       .herb-dialog {
         width: min(680px, calc(100% - 32px));
         height: min(780px, 90vh);
@@ -1405,10 +1367,6 @@
       }
 
       .herbs-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stats-grid {
         grid-template-columns: 1fr;
       }
 
@@ -1701,42 +1659,6 @@
     </section>
 
     <!-- ==========================================================================
-         SECTION: STATISTIK / TRUST INDICATOR
-         ========================================================================== -->
-    <section class="section-stats">
-      <div class="container">
-        <div class="stats-grid">
-          <!-- Stat 1 -->
-          <div class="stat-item fade-in-scroll">
-            <div class="stat-icon">
-              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="m10.5 10.5-4 7"/><path d="m13.5 13.5 4-7"/></svg>
-            </div>
-            <div class="stat-number" data-target="50">50+</div>
-            <div class="stat-label">Senyawa Fitokimia 3D</div>
-          </div>
-
-          <!-- Stat 2 -->
-          <div class="stat-item fade-in-scroll">
-            <div class="stat-icon">
-              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <div class="stat-number" data-target="10000">10.000+</div>
-            <div class="stat-label">Mahasiswa & Peneliti</div>
-          </div>
-
-          <!-- Stat 3 -->
-          <div class="stat-item fade-in-scroll">
-            <div class="stat-icon">
-              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            </div>
-            <div class="stat-number">98%</div>
-            <div class="stat-label">Kepuasan Pengguna</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================================================
          SECTION: FEATURED HERBS PREVIEW
          ========================================================================== -->
     <section class="section-herbs">
@@ -1833,7 +1755,7 @@
               <span class="herb-badge">Antiseptik</span>
             </div>
             <div class="herb-body">
-              <h3 class="herb-common-name">Sirih Hijau</h3>
+              <h3 class="herb-common-name">Daun Sirih</h3>
               <span class="herb-latin-name">Piper betle</span>
               <p class="herb-snippet">Mengandung kavikol dan eugenol dengan aktivitas bakterisidal kuat alami untuk higienitas dan kesehatan mukosa.</p>
               <div class="herb-footer">
@@ -1847,8 +1769,8 @@
           <!-- PLACEHOLDER FOTO: herb-jahe-merah.jpg -->
           <div class="herb-card fade-in-scroll">
             <div class="herb-img-wrapper">
-              <img src="https://images.pexels.com/photos/10899474/pexels-photo-10899474.jpeg?auto=compress&amp;w=700" alt="Foto rimpang jahe segar; varietas merah tidak dapat dipastikan dari foto" loading="lazy" />
-              <a class="herb-photo-credit" href="https://www.pexels.com/photo/a-bowl-of-ginger-10899474/" target="_blank" rel="noopener noreferrer">Foto: Engin Akyurt / Pexels</a>
+              <img src="https://images.pexels.com/photos/5202089/pexels-photo-5202089.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=960" alt="Rimpang jahe segar di atas alas merah; varietas merah tidak dapat dipastikan dari foto" loading="lazy" />
+              <a class="herb-photo-credit" href="https://www.pexels.com/photo/ginger-in-red-plate-5202089/" target="_blank" rel="noopener noreferrer">Foto: Kaboompics.com / Pexels</a>
               <span class="herb-badge">Analgesik Alami</span>
             </div>
             <div class="herb-body">
@@ -1983,12 +1905,11 @@
       <div class="footer-bottom">
         <div>
           &copy; 2026 HerbInfoAI. All rights reserved. Preserving Indonesian Biodiversity.
-          <small style="display:block; margin-top:6px; color:#A0AEC0; font-size:0.75rem;">Foto temulawak: <a href="https://commons.wikimedia.org/wiki/File:Tomulawa_(Curcuma_zanthorrhiza)_03.jpg" target="_blank" rel="noopener noreferrer">Rahmatlahay / Wikimedia Commons</a> — <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>.</small>
         </div>
         <div class="footer-legal-links">
           <a href="privacy.html">Kebijakan Privasi</a>
           <a href="terms.html">Syarat &amp; Ketentuan</a>
-          <a href="disclaimer.html">Medical Disclaimer</a>
+          <a href="disclaimer.html">Standar Akademik</a>
         </div>
       </div>
     </div>
@@ -2092,7 +2013,7 @@
           uses: "Gel bagian dalam daun digunakan secara topikal dalam produk perawatan kulit. Hindari mengonsumsi lateks atau kulit daun tanpa arahan tenaga kesehatan."
         },
         sirih: {
-          name: "Sirih Hijau",
+          name: "Daun Sirih",
           latin: "Piper betle",
           badge: "Antiseptik",
           description: "Tanaman merambat tropis yang daunnya telah lama digunakan dalam berbagai praktik tradisional.",
