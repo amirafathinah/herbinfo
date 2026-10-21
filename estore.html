@@ -859,11 +859,62 @@
       background: linear-gradient(180deg, rgba(82, 183, 136, 0.06) 0%, transparent 100%);
     }
 
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
+    .testimonials-marquee {
+      overflow: hidden;
       margin-top: 36px;
+    }
+
+    .testimonials-track {
+      display: flex;
+      width: max-content;
+      animation: testimonials-scroll 32s linear infinite;
+    }
+
+    .testimonials-group {
+      display: flex;
+      flex: 0 0 auto;
+      gap: 28px;
+      padding-right: 28px;
+    }
+
+    .testi-card {
+      flex: 0 0 calc((min(100vw, 1200px) - 112px) / 3);
+      min-width: 0;
+    }
+
+    @keyframes testimonials-scroll {
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .testimonials-marquee:hover .testimonials-track,
+    .testimonials-marquee:focus-within .testimonials-track,
+    .testimonials-marquee.is-paused .testimonials-track {
+      animation-play-state: paused;
+    }
+
+    .testimonials-control-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+
+    .testimonials-toggle {
+      padding: 8px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-full);
+      background: #FFFFFF;
+      color: var(--primary);
+      font: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .testimonials-toggle:hover {
+      border-color: var(--secondary);
+      background: rgba(82, 183, 136, 0.08);
     }
 
     .testi-card {
@@ -1340,9 +1391,6 @@
       .products-grid {
         grid-template-columns: repeat(2, 1fr);
       }
-      .testimonials-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
       .footer-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -1361,8 +1409,8 @@
       .products-grid {
         grid-template-columns: 1fr;
       }
-      .testimonials-grid {
-        grid-template-columns: 1fr;
+      .testi-card {
+        flex-basis: calc(100vw - 48px);
       }
       .footer-grid {
         grid-template-columns: 1fr;
@@ -1372,6 +1420,17 @@
         overflow-x: auto;
         padding-bottom: 8px;
         flex-wrap: nowrap;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .testimonials-track {
+        animation: none;
+      }
+
+      .testimonials-marquee {
+        overflow-x: auto;
+        scrollbar-width: thin;
       }
     }
   </style>
@@ -1741,7 +1800,7 @@
               <tr>
                 <td class="feature-title-col">Koleksi Tanaman</td>
                 <td>20 Tanaman Pilihan</td>
-                <td class="highlight-col">500+ Database Lengkap</td>
+                <td class="highlight-col">Seluruh Koleksi Tanaman</td>
                 <td>Seluruh Database + Kustomisasi</td>
               </tr>
               <tr>
@@ -1816,49 +1875,56 @@
           <p style="color:var(--text-muted); font-size:0.95rem;">Ribuan mahasiswa, laboran, dan dosen telah mempercayai HerbInfoAI untuk pendidikan herbal digital.</p>
         </div>
 
-        <div class="testimonials-grid">
-          <!-- Testi 1 -->
-          <div class="testi-card">
-            <!-- PLACEHOLDER ICON: icon-star.svg -->
-            <div class="testi-stars">★★★★★</div>
-            <p class="testi-quote">"Flashcard AR sangat membantu saya menghafal struktur rimpang dan fitokimia untuk ujian OSCE. Sangat praktis saat belajar mandiri!"</p>
-            <div class="testi-user-wrap">
-              <!-- PLACEHOLDER: avatar-mahasiswa.jpg -->
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Mahasiswa Farmasi" class="testi-avatar" />
-              <div class="testi-info">
-                <h4>Annisa Rahmawati</h4>
-                <span>Mahasiswi S1 Farmasi Klinis</span>
+        <div class="testimonials-marquee" id="testimonialsMarquee">
+          <div class="testimonials-track" id="testimonialsTrack">
+            <div class="testimonials-group">
+              <!-- Testi 1 -->
+              <div class="testi-card">
+                <!-- PLACEHOLDER ICON: icon-star.svg -->
+                <div class="testi-stars">★★★★★</div>
+                <p class="testi-quote">"Flashcard AR sangat membantu saya menghafal struktur rimpang dan fitokimia untuk ujian OSCE. Sangat praktis saat belajar mandiri!"</p>
+                <div class="testi-user-wrap">
+                  <!-- PLACEHOLDER: avatar-mahasiswa.jpg -->
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Mahasiswa Farmasi" class="testi-avatar" />
+                  <div class="testi-info">
+                    <h4>Annisa Rahmawati</h4>
+                    <span>Mahasiswi S1 Farmasi Klinis</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <!-- Testi 2 -->
-          <div class="testi-card">
-            <div class="testi-stars">★★★★★</div>
-            <p class="testi-quote">"Implementasi SaaS Kampus mempermudah pemantauan praktikum 200+ mahasiswa farmakognosi secara serempak. Koreksi laporan jadi jauh lebih cepat."</p>
-            <div class="testi-user-wrap">
-              <!-- PLACEHOLDER: avatar-dosen.jpg -->
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Dosen Farmakognosi" class="testi-avatar" />
-              <div class="testi-info">
-                <h4>Dr. apt. Hendra Wijaya, M.Si.</h4>
-                <span>Kepala Lab Biologi Farmasi</span>
+              <!-- Testi 2 -->
+              <div class="testi-card">
+                <div class="testi-stars">★★★★★</div>
+                <p class="testi-quote">"Implementasi SaaS Kampus mempermudah pemantauan praktikum 200+ mahasiswa farmakognosi secara serempak. Koreksi laporan jadi jauh lebih cepat."</p>
+                <div class="testi-user-wrap">
+                  <!-- PLACEHOLDER: avatar-dosen.jpg -->
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Dosen Farmakognosi" class="testi-avatar" />
+                  <div class="testi-info">
+                    <h4>Dr. apt. Hendra Wijaya, M.Si.</h4>
+                    <span>Kepala Lab Biologi Farmasi</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <!-- Testi 3 -->
-          <div class="testi-card">
-            <div class="testi-stars">★★★★★</div>
-            <p class="testi-quote">"AI Pharma Assistant seperti punya partner peneliti sendiri. Setiap senyawa aktif langsung dikaitkan dengan jurnal monografi fitofarmaka terbaru."</p>
-            <div class="testi-user-wrap">
-              <!-- PLACEHOLDER: avatar-peneliti.jpg -->
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80" alt="Peneliti Herbal" class="testi-avatar" />
-              <div class="testi-info">
-                <h4>dr. Siti Nurhaliza, Sp.FK.</h4>
-                <span>Peneliti Saintifikasi Jamu</span>
+              <!-- Testi 3 -->
+              <div class="testi-card">
+                <div class="testi-stars">★★★★★</div>
+                <p class="testi-quote">"AI Pharma Assistant seperti punya partner peneliti sendiri. Setiap senyawa aktif langsung dikaitkan dengan jurnal monografi fitofarmaka terbaru."</p>
+                <div class="testi-user-wrap">
+                  <!-- PLACEHOLDER: avatar-peneliti.jpg -->
+                  <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80" alt="Peneliti Herbal" class="testi-avatar" />
+                  <div class="testi-info">
+                    <h4>dr. Siti Nurhaliza, Sp.FK.</h4>
+                    <span>Peneliti Saintifikasi Jamu</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+        <div class="testimonials-control-row">
+          <button type="button" class="testimonials-toggle" id="testimonialsToggle" aria-controls="testimonialsMarquee" aria-pressed="false">Jeda ulasan</button>
         </div>
       </div>
     </section>
@@ -1882,7 +1948,7 @@
               <span class="faq-icon-arrow">▼</span>
             </div>
             <div class="faq-body">
-              E-Flashcard adalah paket kartu digital (20 tanaman obat) dengan marker AR yang dibeli sekali seumur hidup. Sedangkan Akun Pro adalah langganan berkala untuk membuka seluruh database (500+ tanaman), konsultasi AI Pharma Assistant tanpa batas, serta fitur ekspor laporan praktikum tanpa limit.
+              E-Flashcard adalah paket kartu digital (20 tanaman obat) dengan marker AR yang dibeli sekali seumur hidup. Sedangkan Akun Pro adalah langganan berkala untuk membuka seluruh koleksi tanaman di katalog, konsultasi AI Pharma Assistant tanpa batas, serta fitur ekspor laporan praktikum tanpa limit.
             </div>
           </div>
 
@@ -2107,6 +2173,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       initMobileMenu();
+      initTestimonialsCarousel();
       updateCartBadge();
       renderCartDrawerItems();
     });
@@ -2132,6 +2199,29 @@
           menu.classList.toggle("open");
         });
       }
+    }
+
+    function initTestimonialsCarousel() {
+      const marquee = document.getElementById("testimonialsMarquee");
+      const track = document.getElementById("testimonialsTrack");
+      const toggle = document.getElementById("testimonialsToggle");
+      const group = track && track.querySelector(".testimonials-group");
+      if (!marquee || !track || !toggle || !group) return;
+
+      const duplicate = group.cloneNode(true);
+      duplicate.setAttribute("aria-hidden", "true");
+      track.append(duplicate);
+
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        toggle.hidden = true;
+        return;
+      }
+
+      toggle.addEventListener("click", () => {
+        const isPaused = marquee.classList.toggle("is-paused");
+        toggle.setAttribute("aria-pressed", String(isPaused));
+        toggle.textContent = isPaused ? "Lanjutkan ulasan" : "Jeda ulasan";
+      });
     }
 
     function openAIChatAssistant() {
