@@ -70,73 +70,73 @@
   ]
 },
   "Temulawak": {
-    "mekanisme": {
-      "isi": null,
-      "sumber": null,
-      "halaman": null,
-      "status": "belum_diisi"
-    },
-    "efekSamping": {
-      "isi": null,
-      "sumber": null,
-      "halaman": null,
-      "status": "belum_diisi"
-    },
-    "pengolahan": {
-      "isi": null,
-      "sumber": null,
-      "halaman": null,
-      "status": "belum_diisi"
-    },
-    "bagianDigunakan": {
-      "isi": null,
-      "sumber": null,
-      "halaman": null,
-      "status": "belum_diisi"
-    },
-    "aktivitasFarmakologis": [
-      {
-        "id": "aktivitas_1",
-        "judul": null,
-        "isi": null,
-        "jenisBukti": null,
-        "bagianDanSediaan": null,
-        "sumber": null,
-        "halaman": null,
-        "status": "belum_diisi"
-      },
-      {
-        "id": "aktivitas_2",
-        "judul": null,
-        "isi": null,
-        "jenisBukti": null,
-        "bagianDanSediaan": null,
-        "sumber": null,
-        "halaman": null,
-        "status": "belum_diisi"
-      },
-      {
-        "id": "aktivitas_3",
-        "judul": null,
-        "isi": null,
-        "jenisBukti": null,
-        "bagianDanSediaan": null,
-        "sumber": null,
-        "halaman": null,
-        "status": "belum_diisi"
-      },
-      {
-        "id": "aktivitas_4",
-        "judul": null,
-        "isi": null,
-        "jenisBukti": null,
-        "bagianDanSediaan": null,
-        "sumber": null,
-        "halaman": null,
-        "status": "belum_diisi"
-      }
-    ]
+  "mekanisme": {
+    "isi": "Senyawa aktif utama, kurkuminoid (terutama kurkumin) dan minyak atsiri (terutama xantorizol), bekerja melalui mekanisme multi-target: 1) Efek hepatoprotektor dengan menstabilkan membran sel hati, mencegah kerusakan oksidatif, dan meningkatkan aktivitas enzim antioksidan endogen (seperti SOD dan glutathione); 2) Efek koleretik dengan merangsang produksi dan sekresi empedu oleh hati, sehingga membantu emulsifikasi dan pencernaan lemak; 3) Penghambatan jalur inflamasi melalui penekanan aktivitas enzim COX-2, LOX, dan faktor transkripsi NF-κB.",
+    "sumber": "World Health Organization (WHO) Monographs on Selected Medicinal Plants Vol. 3 & European Medicines Agency (EMA) HMPC Assessment Report on Curcumae xanthorrhizae rhizoma",
+    "halaman": "Hal. 135-138 (WHO Monographs Vol. 3) / Sec. 2.1 (EMA Report)",
+    "status": "siap_tayang"
   },
+  "efekSamping": {
+    "isi": "Secara umum diakui aman (GRAS). Namun, pada dosis tinggi atau penggunaan jangka panjang, dapat menyebabkan gangguan gastrointestinal ringan (mual, diare, nyeri perut). Kontraindikasi utama pada pasien dengan obstruksi saluran empedu (misalnya batu empedu) karena efek koleretiknya yang dapat memicu kolik empedu. Perlu kehati-hatian jika dikonsumsi bersamaan dengan obat antikoagulan atau antiplatelet (seperti warfarin atau aspirin) karena potensi peningkatan risiko perdarahan.",
+    "sumber": "European Medicines Agency (EMA) HMPC & National Institutes of Health (NIH) - LiverTox",
+    "halaman": "N/A (Dokumen Web / Assessment Report)",
+    "status": "siap_tayang"
+  },
+  "pengolahan": {
+    "isi": "Simplisia berupa irisan melintang rimpang yang dikeringkan (suhu pengeringan tidak lebih dari 60°C). Ekstrak kental dibuat dengan menyari serbuk simplisia menggunakan pelarut etanol (melalui metode maserasi atau perkolasi), kemudian diuapkan dengan penguap vakum atau tekanan rendah hingga diperoleh ekstrak kental. Rendemen ekstrak kental tidak kurang dari 18,0%.",
+    "sumber": "Kementerian Kesehatan RI. Farmakope Herbal Indonesia Edisi II.",
+    "halaman": "498-502",
+    "status": "siap_tayang"
+  },
+  "bagianDigunakan": {
+    "isi": "Rimpang (Rhizoma).",
+    "sumber": "Kementerian Kesehatan RI. Farmakope Herbal Indonesia Edisi II.",
+    "halaman": "498",
+    "status": "siap_tayang"
+  },
+  "aktivitasFarmakologis": [
+    {
+      "id": "aktivitas_1",
+      "judul": "Hepatoprotektor",
+      "isi": "Ekstrak rimpang dan senyawa xantorizol/kurkumin menunjukkan efek perlindungan terhadap kerusakan sel hati (hepatosit) yang diinduksi oleh toksin (seperti CCl4 atau parasetamol) melalui mekanisme stabilisasi membran sel, antioksidan, dan peningkatan regenerasi sel hati.",
+      "jenisBukti": "In vivo (Hewan coba) & In vitro",
+      "bagianDanSediaan": "Rimpang (Ekstrak etanol dan isolat xantorizol/kurkumin)",
+      "sumber": "World Health Organization (WHO) Monographs on Selected Medicinal Plants, Vol. 3",
+      "halaman": "136",
+      "status": "siap_tayang"
+    },
+    {
+      "id": "aktivitas_2",
+      "judul": "Koleretik / Stimulan Empedu",
+      "isi": "Minyak atsiri (terutama xantorizol) dan kurkuminoid merangsang sel-sel hati untuk memproduksi lebih banyak empedu dan meningkatkan aliran empedu ke usus, yang bermanfaat untuk mengatasi dispepsia dan membantu pencernaan lemak.",
+      "jenisBukti": "In vivo & Bukti Klinis Tradisional",
+      "bagianDanSediaan": "Rimpang (Simplisia dan Ekstrak)",
+      "sumber": "European Medicines Agency (EMA) - HMPC Assessment Report on Curcumae xanthorrhizae rhizoma",
+      "halaman": "Section 2.1.2",
+      "status": "siap_tayang"
+    },
+    {
+      "id": "aktivitas_3",
+      "judul": "Antiinflamasi",
+      "isi": "Kurkuminoid bekerja dengan menghambat enzim siklooksigenase (COX) dan lipoksigenase (LOX), serta menekan produksi sitokin pro-inflamasi (seperti TNF-α dan IL-6), sehingga mengurangi respons peradangan.",
+      "jenisBukti": "In vitro dan In vivo",
+      "bagianDanSediaan": "Rimpang (Ekstrak dan fraksi kurkuminoid)",
+      "sumber": "Journal of Ethnopharmacology / NIH PubMed Database",
+      "halaman": "N/A (Artikel Jurnal)",
+      "status": "siap_tayang"
+    },
+    {
+      "id": "aktivitas_4",
+      "judul": "Antioksidan",
+      "isi": "Senyawa fenolik dan kurkuminoid mampu menetralkan spesies oksigen reaktif (ROS) dan radikal bebas (seperti radikal DPPH), serta mencegah peroksidasi lipid pada membran sel.",
+      "jenisBukti": "In vitro",
+      "bagianDanSediaan": "Rimpang (Ekstrak)",
+      "sumber": "Kementerian Kesehatan RI. Farmakope Herbal Indonesia Edisi II (Parameter kandungan kurkumin) & Jurnal Farmasi Terapan",
+      "halaman": "498 (FHI)",
+      "status": "siap_tayang"
+    }
+  ]
+},
   "Jahe": {
     "mekanisme": {
       "isi": null,
